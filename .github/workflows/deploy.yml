@@ -1,7 +1,8 @@
 # Publica el sitio en el hosting por FTP.
-# Por ahora solo se ejecuta a mano (Actions › Publicar sitio › Run workflow)
-# para que nada salga en vivo hasta que el contenido esté listo.
-# Cuando quieran publicar con cada cambio, descomenten el bloque "push".
+# Se ejecuta con cada cambio en main y también a mano
+# (Actions › Publicar sitio › Run workflow).
+# Antes de subir, guarda un respaldo de las páginas que se van a reemplazar
+# (Actions › la ejecución › Artifacts › respaldo-sitio).
 #
 # Secrets necesarios (Settings › Secrets and variables › Actions):
 #   FTP_SERVER      ej. ftp.innovatingkids.com.mx
@@ -13,8 +14,8 @@ name: Publicar sitio
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
 
 concurrency:
   group: deploy
@@ -26,6 +27,22 @@ jobs:
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
+
+      - name: Respaldar páginas actuales del sitio
+        run: |
+          mkdir -p respaldo
+          for f in "" index.html 404.html robots.txt sitemap.xml css/styles.css js/main.js; do
+            name="${f:-inicio.html}"
+            curl -fsSL --max-time 30 "https://www.innovatingkids.com.mx/$f" -o "respaldo/${name//\//_}" || echo "No existe: /$f"
+          done
+          ls -la respaldo
+
+      - name: Guardar respaldo
+        uses: actions/upload-artifact@v4
+        with:
+          name: respaldo-sitio-${{ github.run_number }}
+          path: respaldo/
+          retention-days: 90
 
       - name: Subir por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -43,3 +60,4 @@ jobs:
             .github/**
             README.md
             img/LEEME.txt
+            respaldo/**

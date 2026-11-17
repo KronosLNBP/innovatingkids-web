@@ -29,21 +29,24 @@ Copia la carpeta `img/` del hosting actual a este repositorio. El sitio usa los 
 Recomendado: convertirlas a `.webp` y reducirlas a máximo 1600 px de ancho para que el sitio cargue rápido.
 
 ### 2. WhatsApp
-Edita `js/config.js` con el número real (con lada 52, solo dígitos). Todos los botones de WhatsApp y el formulario lo toman de ahí.
+El número está en `js/config.js` (con lada 52, solo dígitos). Todos los botones de WhatsApp y el formulario lo toman de ahí.
 
-### 3. Datos marcados con [corchetes]
-Busca `[` en `index.html` y reemplaza:
+### 3. Datos por agregar cuando estén listos
+Para publicar se dejaron fuera, sin inventar nada:
 
-- Ciclo o fecha de inicio de inscripciones
+- Fecha de inicio de inscripciones
 - Rango de edades (general y por curso)
 - Máximo de alumnos por grupo
-- Ciudad o colonia del laboratorio, dirección y horario
+- Dirección y horario del laboratorio
 - Testimonio real de una familia (con su autorización)
-- Precios y requisitos de las clases en línea
+- Precios
 - Enlaces de Facebook e Instagram
 
 ### 4. Aviso de privacidad
 `aviso-de-privacidad.html` es un borrador. Complétalo y revísalo con asesoría legal: el formulario recaba datos de menores de edad.
+
+## Publicación
+Cada cambio en `main` se publica solo por FTP (`.github/workflows/deploy.yml`) con los secrets `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` y `FTP_SERVER_DIR`. Antes de subir, el flujo guarda un respaldo de las páginas que reemplaza en los *Artifacts* de cada ejecución (90 días).
 
 ## Cómo funciona el formulario
 No necesita servidor: valida los datos y abre WhatsApp con un mensaje ya escrito (nombre, WhatsApp, edad, curso y modalidad). Si después quieren guardar los registros en una hoja de cálculo o CRM, se puede conectar a Formspree, Google Forms o un webhook.
