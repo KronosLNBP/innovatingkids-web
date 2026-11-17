@@ -1,0 +1,45 @@
+# Publica el sitio en el hosting por FTP.
+# Por ahora solo se ejecuta a mano (Actions › Publicar sitio › Run workflow)
+# para que nada salga en vivo hasta que el contenido esté listo.
+# Cuando quieran publicar con cada cambio, descomenten el bloque "push".
+#
+# Secrets necesarios (Settings › Secrets and variables › Actions):
+#   FTP_SERVER      ej. ftp.innovatingkids.com.mx
+#   FTP_USERNAME    usuario FTP
+#   FTP_PASSWORD    contraseña FTP
+#   FTP_SERVER_DIR  carpeta del sitio en el servidor, con / al final (ej. public_html/)
+
+name: Publicar sitio
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Subir por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          protocol: ftps
+          # Solo sube y borra lo que este flujo haya subido antes:
+          # las fotos que ya están en el servidor (img/) no se tocan.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            README.md
+            img/LEEME.txt
