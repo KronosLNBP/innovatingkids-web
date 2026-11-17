@@ -71,7 +71,7 @@ button, input, select, textarea { font: inherit; }
 .site-header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 72px; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
-.brand img { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; }
+.brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: contain; background: #fff; }
 .brand-name { font-family: var(--font-display); font-size: 20px; letter-spacing: .5px; }
 .brand-name span { color: var(--teal); }
 .main-nav { display: flex; gap: 26px; font-weight: 700; }
@@ -242,6 +242,7 @@ button, input, select, textarea { font: inherit; }
 .site-footer { background: var(--navy-2); color: #B8CBE0; }
 .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px; padding: 56px 24px 32px; }
 .footer-brand { flex: 1 1 300px; display: flex; flex-direction: column; gap: 12px; }
+.footer-logo { width: 96px; height: 96px; border-radius: 50%; background: #fff; }
 .footer-brand .brand-name { color: #fff; font-size: 22px; }
 .footer-brand .brand-name span { color: var(--blue); }
 .footer-brand p { font-size: 15px; line-height: 1.6; max-width: 340px; }
