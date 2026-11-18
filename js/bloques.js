@@ -125,6 +125,75 @@
   }
   function isUnlocked(i) { return i === 0 || !!progress[i - 1]; }
 
+  // ---------- Mundos, héroes y sprites (pixel art original) ----------
+  var SPRITES = {
+    piloto: {
+      pal: { w: '#F4F7FA', k: '#1B2434', c: '#5FD3F3', o: '#F07A2A', O: '#C85A14', y: '#FFD23F', b: '#3A2A20' },
+      rows: ['....wwww....', '...wwwwww...', '..wwkkkkww..', '..wwkcckww..', '..wwkkkkww..', '...wwwwww...',
+        '..oooooooo..', '.ooyooooOoo.', '.oo.oooo.oo.', '....oooo....', '...oo..oo...', '...bb..bb...']
+    },
+    astronauta: {
+      pal: { w: '#FFFFFF', W: '#C9D3DE', b: '#1F63C6', c: '#9FE3FF', r: '#E53935', g: '#8A97A8', k: '#2B3442' },
+      rows: ['...wwwwww...', '..wwwwwwww..', '.wwbbbbbbww.', '.wwbcbbbbww.', '.wwbbbbbbww.', '..wwwwwwww..',
+        '.gwwwrwwwWg.', '.gwwwwwwwWg.', '..wwwwwwww..', '...ww..ww...', '...ww..ww...', '...kk..kk...']
+    },
+    robot: {
+      pal: { t: '#00A3AD', T: '#007A82', y: '#D9FBFF', k: '#0B2545', r: '#FF6B5B', g: '#8A97A8' },
+      rows: ['.....rr.....', '.....kk.....', '...tttttt...', '..tyyyyyyt..', '..tykyykyt..', '..tyyyyyyt..',
+        '...tttttt...', '..gTTTTTTg..', '.gg.TrrT.gg.', '....TTTT....', '...kk..kk...', '...kk..kk...']
+    },
+    caballero: {
+      pal: { p: '#7E57C2', P: '#4B2A8A', g: '#FFD23F', k: '#1B1030', r: '#E53935', b: '#1F63C6', y: '#FFFFFF' },
+      rows: ['.....rr.....', '....rr......', '...pppppp...', '..pggggggp..', '..pkkkkkkp..', '..pppppppp..',
+        '.bbbPppPpp..', 'bbybbpppppp.', 'bbbbbpppp.p.', '.bbb.pPPp...', '....pp..pp..', '....kk..kk..']
+    },
+    droide: {
+      pal: { r: '#D81B60', R: '#9C1047', w: '#FFFFFF', k: '#1B1B1B', y: '#FFD23F' },
+      rows: ['..k......k..', '...k....k...', '...rrrrrr...', '..rrrrrrrr..', '.rrwwrrwwrr.', '.rrwkrrwkrr.',
+        '.rrrrrrrrrr.', '.RrrryyrrrR.', '.R.rrrrrr.R.', '.R.R....R.R.', '...k....k...']
+    },
+    cristal: {
+      pal: { c: '#4FC3F7', m: '#E040FB', w: '#FFFFFF', d: '#7B1FA2' },
+      rows: ['.....cc.....', '....cmmc....', '...cmwmmc...', '..cmwmmmmc..', '..cmmmmmdc..', '...cmmmdc...', '....cmdc....', '.....cc.....']
+    }
+  };
+  var HEROES = [
+    { id: 'ik', name: 'Héroe Innovating Kids' },
+    { id: 'piloto', name: 'Piloto espacial' },
+    { id: 'astronauta', name: 'Astronauta' },
+    { id: 'robot', name: 'Robot explorador' },
+    { id: 'caballero', name: 'Caballero galáctico' }
+  ];
+  var WORLDS = [
+    { id: 'bosque', name: 'Bosque' },
+    { id: 'espacio', name: 'Espacio' }
+  ];
+  var PREFS_KEY = 'ik-bloques-prefs';
+  var prefs = { world: 'bosque', hero: 'ik' };
+  try {
+    var savedPrefs = JSON.parse(localStorage.getItem(PREFS_KEY) || '{}') || {};
+    if (WORLDS.some(function (w) { return w.id === savedPrefs.world; })) prefs.world = savedPrefs.world;
+    if (HEROES.some(function (h) { return h.id === savedPrefs.hero; })) prefs.hero = savedPrefs.hero;
+  } catch (e) { /* sin almacenamiento */ }
+  function savePrefs() {
+    try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch (e) { /* sin almacenamiento */ }
+  }
+  function space() { return prefs.world === 'espacio'; }
+
+  // En el mundo espacial cambian los nombres: gemas → cristales, slimes → droides, bandera → portal
+  var SPACE_WORDS = [
+    [/todas las gemas/g, 'todos los cristales'], [/las gemas/g, 'los cristales'], [/una gema/g, 'un cristal'],
+    [/gemas/g, 'cristales'], [/gema/g, 'cristal'], [/encima de ella/g, 'encima de él'],
+    [/slimes/g, 'droides'], [/slime/g, 'droide'],
+    [/a la bandera/g, 'al portal'], [/la bandera/g, 'el portal'], [/bandera/g, 'portal'],
+    [/los árboles/g, 'los asteroides'], [/árboles/g, 'asteroides']
+  ];
+  function tr(text) {
+    if (!space()) return text;
+    SPACE_WORDS.forEach(function (r) { text = text.replace(r[0], r[1]); });
+    return text;
+  }
+
   // ---------- Estado ----------
   var levelIndex = 0;
   var program = [];
@@ -600,7 +669,7 @@
   function clearHighlight() {
     workspace.querySelectorAll('.is-running').forEach(function (el) { el.classList.remove('is-running'); });
   }
-  function say(msg) { statusEl.textContent = msg; }
+  function say(msg) { statusEl.textContent = tr(msg); }
 
   // ---------- Resultado ----------
   function showOverlay(won, msg, stars) {
@@ -619,7 +688,7 @@
     html += '<button type="button" class="btn btn-ghost-light" data-act="retry">' + (won ? 'Jugar otra vez' : 'Intentar de nuevo') + '</button>';
     html += '</div></div>';
     overlay.innerHTML = html;
-    overlay.querySelector('.overlay-msg').textContent = msg;
+    overlay.querySelector('.overlay-msg').textContent = tr(msg);
     overlay.hidden = false;
     var first = overlay.querySelector('button, a');
     if (first) first.focus({ preventScroll: true });
@@ -648,8 +717,8 @@
       if (progress[i]) for (var k = 0; k < 3; k++) stars += '<i class="' + (k < progress[i] ? 'on' : '') + '"></i>';
       b.innerHTML = '<span class="lvl-num">' + (locked ? ICON_LOCK : (progress[i] && i !== levelIndex ? ICON_CHECK : (i + 1))) + '</span>' +
         '<span class="lvl-stars" aria-hidden="true">' + stars + '</span>';
-      b.setAttribute('aria-label', 'Nivel ' + (i + 1) + ': ' + L.name + (locked ? ' (bloqueado)' : progress[i] ? ' (' + progress[i] + ' de 3 estrellas)' : ''));
-      b.title = 'Nivel ' + (i + 1) + ': ' + L.name;
+      b.setAttribute('aria-label', 'Nivel ' + (i + 1) + ': ' + tr(L.name) + (locked ? ' (bloqueado)' : progress[i] ? ' (' + progress[i] + ' de 3 estrellas)' : ''));
+      b.title = 'Nivel ' + (i + 1) + ': ' + tr(L.name);
       if (i === levelIndex) b.setAttribute('aria-current', 'step');
       b.addEventListener('click', function () { if (!running) setLevel(i); });
       li.appendChild(b);
@@ -682,7 +751,7 @@
       var li = document.createElement('li');
       li.className = (it.done ? 'is-done' : '') + (it.star ? ' is-star' : '');
       li.innerHTML = '<span class="goal-mark" aria-hidden="true">' + (it.done ? ICON_CHECK : '') + '</span><span></span>';
-      li.lastChild.textContent = it.text + (it.done ? ' — listo' : '');
+      li.lastChild.textContent = tr(it.text) + (it.done ? ' — listo' : '');
       goalsEl.appendChild(li);
     });
   }
@@ -697,6 +766,74 @@
     renderGoals();
   }
 
+  function applyTexts() {
+    var L = LEVELS[levelIndex];
+    $('level-kicker').textContent = 'Nivel ' + (levelIndex + 1) + ' de ' + LEVELS.length;
+    $('level-title').textContent = tr(L.name);
+    $('level-goal').textContent = tr(L.goal);
+    $('level-hint').textContent = tr(L.hint);
+    canvas.setAttribute('aria-label', 'Mapa del nivel ' + (levelIndex + 1) + '. ' + tr(L.goal));
+  }
+
+  // ---------- Selector de mundo y héroe ----------
+  var worldPicker = $('world-picker');
+  var heroPicker = $('hero-picker');
+  function renderPickers() {
+    if (worldPicker) {
+      worldPicker.innerHTML = '';
+      WORLDS.forEach(function (w) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'gm-seg-btn';
+        b.textContent = w.name;
+        b.setAttribute('aria-pressed', String(prefs.world === w.id));
+        b.addEventListener('click', function () {
+          if (running || prefs.world === w.id) return;
+          prefs.world = w.id; savePrefs(); applyWorld();
+        });
+        worldPicker.appendChild(b);
+      });
+    }
+    if (heroPicker) {
+      heroPicker.innerHTML = '';
+      HEROES.forEach(function (h) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'gm-hero-btn';
+        b.title = h.name;
+        b.setAttribute('aria-label', h.name);
+        b.setAttribute('aria-pressed', String(prefs.hero === h.id));
+        var c = document.createElement('canvas');
+        var size = 40, r = window.devicePixelRatio || 1;
+        c.width = size * r; c.height = size * r;
+        c.style.width = size + 'px'; c.style.height = size + 'px';
+        c.setAttribute('aria-hidden', 'true');
+        var pc = c.getContext('2d');
+        pc.setTransform(r, 0, 0, r, 0, 0);
+        var main = ctx; ctx = pc;
+        drawHeroSprite(h.id, 0, 0, size, 'down', false, 0.95);
+        ctx = main;
+        b.appendChild(c);
+        b.addEventListener('click', function () {
+          if (prefs.hero === h.id) return;
+          prefs.hero = h.id; savePrefs(); renderPickers(); draw();
+        });
+        heroPicker.appendChild(b);
+      });
+    }
+  }
+  function applyWorld() {
+    var wrap = canvas.parentNode;
+    wrap.classList.toggle('is-space', space());
+    document.querySelector('.gm-app').classList.toggle('is-space', space());
+    renderPickers();
+    applyTexts();
+    renderLevels();
+    renderGoals();
+    if (!running) say('Arma tu programa y presiona Ejecutar.');
+    draw();
+  }
+
   function setLevel(i) {
     if (i < 0 || i >= LEVELS.length || !isUnlocked(i)) return;
     running = false;
@@ -706,12 +843,7 @@
     levelIndex = i;
     program = [];
     selectedId = null;
-    var L = LEVELS[i];
-    $('level-kicker').textContent = 'Nivel ' + (i + 1) + ' de ' + LEVELS.length;
-    $('level-title').textContent = L.name;
-    $('level-goal').textContent = L.goal;
-    $('level-hint').textContent = L.hint;
-    canvas.setAttribute('aria-label', 'Mapa del nivel ' + (i + 1) + '. ' + L.goal);
+    applyTexts();
     hideOverlay();
     renderLevels();
     renderPalette();
@@ -752,6 +884,7 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, T * game.cols, T * game.rows);
     var now = performance.now();
+    if (space()) { drawSpaceMap(T, now); } else {
     for (var y = 0; y < game.rows; y++) {
       for (var x = 0; x < game.cols; x++) {
         ctx.fillStyle = (x + y) % 2 ? '#7CC765' : '#86CF6E';
@@ -775,14 +908,23 @@
         if (game.walls[x + ',' + y]) drawTree(x * T, y * T, T, x, y);
       }
     }
-    drawFlag(game.flag.x * T, game.flag.y * T, T, gemsLeft() === 0, now);
+    }
+    if (space()) drawPortal(game.flag.x * T, game.flag.y * T, T, gemsLeft() === 0, now);
+    else drawFlag(game.flag.x * T, game.flag.y * T, T, gemsLeft() === 0, now);
     Object.keys(game.gems).forEach(function (k) {
       var p = k.split(',');
-      drawGem(+p[0] * T, +p[1] * T, T, now);
+      if (space()) {
+        var fy = Math.sin(now / 300 + +p[0]) * T * 0.03;
+        drawSprite(SPRITES.cristal, +p[0] * T, +p[1] * T - T * 0.12 + fy, T, false, 0.6);
+      } else drawGem(+p[0] * T, +p[1] * T, T, now);
     });
     Object.keys(game.enemies).forEach(function (k) {
       var p = k.split(',');
-      drawSlime(+p[0] * T, +p[1] * T, T, now);
+      if (space()) {
+        var hop = Math.abs(Math.sin(now / 260 + +p[0])) * T * 0.05;
+        shadow(+p[0] * T, +p[1] * T, T);
+        drawSprite(SPRITES.droide, +p[0] * T, +p[1] * T - hop, T, false, 0.72);
+      } else drawSlime(+p[0] * T, +p[1] * T, T, now);
     });
     var hx = game.hero.x, hy = game.hero.y;
     if (anim) {
@@ -792,7 +934,7 @@
       hy = anim.fy + (anim.ty - anim.fy) * e;
     }
     var bob = anim ? 0 : Math.sin(now / 280) * T * 0.015;
-    drawHero(hx * T, hy * T + bob, T, game.dir, game.failed);
+    drawHeroSprite(prefs.hero, hx * T, hy * T + bob, T, game.dir, game.failed);
     effects.forEach(function (f) {
       var k = (now - f.start) / 600;
       var cx = f.x * T + T / 2, cy = f.y * T + T / 2;
@@ -818,6 +960,109 @@
     });
   }
 
+  // Héroe elegido: el dibujo original de Innovating Kids o un sprite de pixel art
+  function drawHeroSprite(id, x, y, T, dir, hurt, scale) {
+    if (id === 'ik' || !SPRITES[id]) { drawHero(x, y, T, dir, hurt); return; }
+    shadow(x, y, T);
+    drawSprite(SPRITES[id], x, y, T, dir === 'left', scale || 0.78, hurt ? '#FF6B5B' : null);
+  }
+  function shadow(x, y, T) {
+    ctx.fillStyle = 'rgba(0,0,0,.25)';
+    ctx.beginPath(); ctx.ellipse(x + T / 2, y + T * 0.88, T * 0.26, T * 0.07, 0, 0, 7); ctx.fill();
+  }
+  // Dibuja un sprite de pixel art centrado en la casilla y apoyado abajo
+  function drawSprite(sp, x, y, T, flip, scale, tint) {
+    var rows = sp.rows, w = rows[0].length, h = rows.length;
+    var px = T * scale / w;
+    var ox = x + (T - w * px) / 2;
+    var oy = y + T - h * px - T * 0.1;
+    for (var r = 0; r < h; r++) {
+      for (var c = 0; c < w; c++) {
+        var ch = rows[r].charAt(flip ? w - 1 - c : c);
+        if (ch === '.') continue;
+        ctx.fillStyle = tint && ch !== 'k' ? tint : sp.pal[ch];
+        var x0 = Math.round(ox + c * px), y0 = Math.round(oy + r * px);
+        ctx.fillRect(x0, y0, Math.round(ox + (c + 1) * px) - x0, Math.round(oy + (r + 1) * px) - y0);
+      }
+    }
+  }
+  function hash(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+  // Mapa espacial: vacío con estrellas, pasarela metálica y asteroides
+  function drawSpaceMap(T, now) {
+    ctx.fillStyle = '#0A1230';
+    ctx.fillRect(0, 0, T * game.cols, T * game.rows);
+    for (var y = 0; y < game.rows; y++) {
+      for (var x = 0; x < game.cols; x++) {
+        for (var i = 0; i < 3; i++) {
+          var sx = hash(x + i * 7, y) , sy = hash(x, y + i * 13);
+          var tw = 0.5 + 0.5 * Math.sin(now / 500 + (x + y + i) * 2);
+          ctx.fillStyle = 'rgba(255,255,255,' + (0.35 + 0.5 * tw * hash(x + i, y + i)) + ')';
+          var sz = Math.max(1, T * 0.03 * (i === 0 ? 1.5 : 1));
+          ctx.fillRect(Math.round(x * T + sx * T), Math.round(y * T + sy * T), sz, sz);
+        }
+      }
+    }
+    for (y = 0; y < game.rows; y++) {
+      for (x = 0; x < game.cols; x++) {
+        if (game.walls[x + ',' + y]) {
+          var hv = hash(x, y);
+          if (hv > 0.45) drawAsteroid(x * T, y * T, T, hv, now);
+          else if (hv < 0.06) drawPlanet(x * T, y * T, T, hv);
+          continue;
+        }
+        ctx.fillStyle = '#1D2945';
+        roundRect(x * T + T * 0.03, y * T + T * 0.03 + 3, T * 0.94, T * 0.94, T * 0.1); ctx.fill();
+        ctx.fillStyle = (x + y) % 2 ? '#3B4C6E' : '#36466A';
+        roundRect(x * T + T * 0.03, y * T + T * 0.03, T * 0.94, T * 0.94, T * 0.1); ctx.fill();
+        ctx.strokeStyle = 'rgba(143,166,189,.35)'; ctx.lineWidth = Math.max(1, T * 0.02);
+        roundRect(x * T + T * 0.12, y * T + T * 0.12, T * 0.76, T * 0.76, T * 0.06); ctx.stroke();
+        ctx.fillStyle = '#9FB3C8';
+        [[0.1, 0.1], [0.9, 0.1], [0.1, 0.9], [0.9, 0.9]].forEach(function (q) {
+          ctx.fillRect(Math.round(x * T + T * q[0] - 1), Math.round(y * T + T * q[1] - 1), Math.max(2, T * 0.04), Math.max(2, T * 0.04));
+        });
+      }
+    }
+  }
+  function drawAsteroid(x, y, T, hv, now) {
+    var cx = x + T / 2, cy = y + T / 2 + Math.sin(now / 900 + hv * 10) * T * 0.03;
+    var r = T * (0.26 + hv * 0.12);
+    ctx.fillStyle = '#5C5F73';
+    ctx.beginPath();
+    for (var i = 0; i < 9; i++) {
+      var a = i / 9 * Math.PI * 2, rr = r * (0.82 + 0.18 * hash(i, hv * 100));
+      if (i === 0) ctx.moveTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); else ctx.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr);
+    }
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#80849A';
+    ctx.beginPath(); ctx.arc(cx - r * 0.25, cy - r * 0.3, r * 0.35, 0, 7); ctx.fill();
+    ctx.fillStyle = '#44475A';
+    ctx.beginPath(); ctx.arc(cx + r * 0.3, cy + r * 0.2, r * 0.22, 0, 7); ctx.arc(cx - r * 0.35, cy + r * 0.35, r * 0.13, 0, 7); ctx.fill();
+  }
+  function drawPlanet(x, y, T, hv) {
+    var cx = x + T / 2, cy = y + T / 2, r = T * 0.22;
+    ctx.fillStyle = '#FF8A65';
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.25)';
+    ctx.beginPath(); ctx.arc(cx - r * 0.3, cy - r * 0.3, r * 0.35, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#FFD23F'; ctx.lineWidth = Math.max(1.5, T * 0.035);
+    ctx.beginPath(); ctx.ellipse(cx, cy, r * 1.6, r * 0.45, -0.35, 0, 7); ctx.stroke();
+  }
+  function drawPortal(x, y, T, ready, now) {
+    var cx = x + T / 2, cy = y + T / 2, r = T * 0.34;
+    var c1 = ready ? '#4FC3F7' : '#FF6B5B', c2 = ready ? '#E040FB' : '#8E2A2A';
+    ctx.save();
+    ctx.globalAlpha = 0.35;
+    ctx.fillStyle = c2;
+    ctx.beginPath(); ctx.ellipse(cx, cy, r, r * 1.1, 0, 0, 7); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = Math.max(2, T * 0.07);
+    for (var i = 0; i < 6; i++) {
+      var a = now / (ready ? 400 : 1200) + i * Math.PI / 3;
+      ctx.strokeStyle = i % 2 ? c1 : c2;
+      ctx.beginPath(); ctx.ellipse(cx, cy, r, r * 1.1, 0, a, a + Math.PI / 4); ctx.stroke();
+    }
+    ctx.restore();
+  }
   function roundRect(x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
@@ -923,4 +1168,5 @@
   var start = 0;
   while (start < LEVELS.length - 1 && progress[start]) start++;
   setLevel(start);
+  applyWorld();
 })();

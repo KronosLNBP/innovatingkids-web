@@ -21,8 +21,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20261118b">
-  <link rel="stylesheet" href="css/bloques.css?v=20261118b">
+  <link rel="stylesheet" href="css/styles.css?v=20261118c">
+  <link rel="stylesheet" href="css/bloques.css?v=20261118c">
 </head>
 <body>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -61,7 +61,7 @@
       <div class="container page-hero-inner">
         <nav class="breadcrumb" aria-label="Ruta de navegación"><a href="index.html">Inicio</a> <span aria-hidden="true">/</span> <span>Programación con bloques</span></nav>
         <h1 class="display">Programación con bloques</h1>
-        <p class="hero-lead">Arma un programa con bloques y guía al héroe hasta la bandera: recoge gemas, esquiva árboles y derrota slimes. Así se aprende a programar: dividiendo un problema en pasos sencillos.</p>
+        <p class="hero-lead">Arma un programa con bloques y guía a tu héroe hasta la meta: recoge tesoros, esquiva obstáculos y derrota enemigos en el bosque o en el espacio. Así se aprende a programar: dividiendo un problema en pasos sencillos.</p>
         <div class="hero-ctas">
           <a class="btn btn-yellow" href="#juego">¡A jugar!</a>
         </div>
@@ -79,6 +79,17 @@
             <nav class="gm-levels-nav" aria-label="Niveles">
               <ol class="gm-levels" id="game-levels"></ol>
             </nav>
+          </div>
+
+          <div class="gm-custom">
+            <div class="gm-opt">
+              <span class="gm-opt-label" id="world-label">Mundo</span>
+              <div class="gm-seg" role="group" aria-labelledby="world-label" id="world-picker"></div>
+            </div>
+            <div class="gm-opt">
+              <span class="gm-opt-label" id="hero-label">Elige tu héroe</span>
+              <div class="gm-heroes" role="group" aria-labelledby="hero-label" id="hero-picker"></div>
+            </div>
           </div>
 
           <div class="gm-body">
@@ -193,7 +204,7 @@
   </div>
 
   <script src="js/config.js"></script>
-  <script src="js/main.js?v=20261118b"></script>
-  <script src="js/bloques.js?v=20261118b"></script>
+  <script src="js/main.js?v=20261118c"></script>
+  <script src="js/bloques.js?v=20261118c"></script>
 </body>
 </html>
