@@ -8,11 +8,14 @@ Es un sitio estático (HTML, CSS y JavaScript, sin compilación). Se puede publi
 
 ```
 index.html                 Página de inicio
+cursos.html                Detalle de los 6 cursos
+programacion-con-bloques.html  Juego de programación con bloques (8 niveles)
 aviso-de-privacidad.html   Aviso de privacidad (borrador)
 404.html                   Página de error
 css/styles.css             Estilos
 js/config.js               Número de WhatsApp (editar aquí)
 js/main.js                 Menú, preguntas frecuentes y formulario
+js/bloques.js              Juego de bloques: niveles, editor arrastrar/soltar y animación (sin librerías)
 img/                       Imágenes (ver abajo)
 robots.txt, sitemap.xml    SEO
 ```
