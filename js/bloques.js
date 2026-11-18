@@ -4,73 +4,120 @@
 (function () {
   'use strict';
 
+  // Capítulos: cada uno introduce una idea nueva de programación
+  var CHAPTERS = [
+    { name: 'Secuencias', desc: 'Dar instrucciones en orden' },
+    { name: 'Ciclos', desc: 'Repetir sin escribir de más' },
+    { name: 'Condicionales', desc: 'Decidir según lo que pasa' },
+    { name: 'Gran reto', desc: 'Usa todo lo que aprendiste' }
+  ];
+  var B_MOVE = ['right', 'left', 'up', 'down'];
+  var B_ATK = B_MOVE.concat(['attack']);
+  var B_LOOP = B_ATK.concat(['repeat']);
+  var B_IF = B_LOOP.concat(['ifEnemy']);
+  var B_UNTIL = B_IF.concat(['untilGoal']);
+  var B_ALL = B_UNTIL.concat(['ifPath']);
+
   // ---------- Niveles ----------
-  // Leyenda: . pasto  # árbol  H héroe  G gema  E slime  F bandera
+  // Leyenda: . camino  # obstáculo  H héroe  G gema  E slime  F bandera
   var LEVELS = [
-    {
-      name: 'Primeros pasos',
-      goal: 'Lleva al héroe hasta la bandera.',
+    // Capítulo 1: Secuencias
+    { ch: 0, name: 'Primeros pasos', goal: 'Lleva al héroe hasta la bandera.',
       hint: 'Arrastra el bloque "mover derecha" a tu programa (o tócalo) y presiona Ejecutar.',
-      map: ['########', '########', '#H...F##', '########', '########', '########'],
-      blocks: ['right', 'left', 'up', 'down'],
-      best: 4
-    },
-    {
-      name: 'La vuelta',
-      goal: 'El camino da vuelta. Llega a la bandera sin chocar con los árboles.',
+      map: ['########', '########', '#H...F##', '########', '########', '########'], blocks: B_MOVE, best: 4 },
+    { ch: 0, name: 'La vuelta', goal: 'El camino da vuelta. Llega a la bandera sin chocar.',
       hint: 'Cuenta los cuadros: primero a la derecha, luego hacia abajo y otra vez a la derecha.',
-      map: ['########', '#H..####', '###.####', '###...F#', '########', '########'],
-      blocks: ['right', 'left', 'up', 'down'],
-      best: 7
-    },
-    {
-      name: 'Cazador de gemas',
-      goal: 'Recoge todas las gemas y después llega a la bandera.',
+      map: ['########', '#H..####', '###.####', '###...F#', '########', '########'], blocks: B_MOVE, best: 7 },
+    { ch: 0, name: 'Hacia arriba', goal: 'Esta vez la bandera está arriba. ¡Encuentra el camino!',
+      hint: 'Usa "mover arriba" antes de ir a la derecha.',
+      map: ['########', '#...F###', '#.######', '#H######', '########', '########'], blocks: B_MOVE, best: 5 },
+    { ch: 0, name: 'Cazador de gemas', goal: 'Recoge todas las gemas y después llega a la bandera.',
       hint: 'Para recoger una gema solo pasa por encima de ella.',
-      map: ['########', '#H.G.###', '####.###', '#F.G.###', '########', '########'],
-      blocks: ['right', 'left', 'up', 'down'],
-      best: 8
-    },
-    {
-      name: '¡Un slime!',
-      goal: 'Un slime bloquea el camino. Derrótalo y llega a la bandera.',
+      map: ['########', '#H.G.###', '####.###', '#F.G.###', '########', '########'], blocks: B_MOVE, best: 8 },
+    { ch: 0, name: '¡Un slime!', goal: 'Un slime bloquea el camino. Derrótalo y llega a la bandera.',
       hint: 'Ponte junto al slime, mirando hacia él, y usa el bloque "atacar".',
-      map: ['########', '########', '#H.E..F#', '########', '########', '########'],
-      blocks: ['right', 'left', 'up', 'down', 'attack'],
-      best: 6
-    },
-    {
-      name: 'El pasillo largo',
-      goal: 'Llega a la bandera usando muy pocos bloques.',
+      map: ['########', '########', '#H.E..F#', '########', '########', '########'], blocks: B_ATK, best: 6 },
+    { ch: 0, name: 'Zigzag', goal: 'Recoge las gemas, derrota al slime y llega a la bandera.',
+      hint: 'Divide el camino en partes: derecha, abajo, y otra vez derecha. El slime está al final.',
+      map: ['########', '#H.G####', '###.####', '###.GEF#', '########', '########'], blocks: B_ATK, best: 8 },
+
+    // Capítulo 2: Ciclos
+    { ch: 1, name: 'El pasillo largo', goal: 'Llega a la bandera usando muy pocos bloques.',
       hint: 'El bloque "repetir" hace lo mismo varias veces. Mete "mover derecha" dentro y elige cuántas veces.',
-      map: ['########', '########', 'H......F', '########', '########', '########'],
-      blocks: ['right', 'left', 'up', 'down', 'attack', 'repeat'],
-      best: 2
-    },
-    {
-      name: 'La escalera',
-      goal: 'Baja la escalera hasta la bandera.',
+      map: ['########', '########', 'H......F', '########', '########', '########'], blocks: B_LOOP, best: 2 },
+    { ch: 1, name: 'La escalera', goal: 'Baja la escalera hasta la bandera.',
       hint: 'Busca el patrón que se repite: derecha, abajo, derecha, abajo…',
-      map: ['H.######', '#..#####', '##..####', '###..###', '####..##', '#####.F#'],
-      blocks: ['right', 'left', 'up', 'down', 'attack', 'repeat'],
-      best: 4
-    },
-    {
-      name: 'Patrulla de slimes',
-      goal: 'Hay slimes en el camino. Llega a la bandera con 4 bloques para ganar 3 estrellas.',
+      map: ['H.######', '#..#####', '##..####', '###..###', '####..##', '#####.F#'], blocks: B_LOOP, best: 4 },
+    { ch: 1, name: 'La vuelta al cuadro', goal: 'Recoge las 2 gemas y llega a la bandera con pocos bloques.',
+      hint: 'Usa un "repetir" para cada lado: derecha, abajo, izquierda y arriba.',
+      map: ['########', '#H...G##', '#F###.##', '#.###.##', '#G....##', '########'], blocks: B_LOOP, best: 8 },
+    { ch: 1, name: 'Montaña', goal: 'Baja y luego sube hasta la bandera.',
+      hint: 'Dos "repetir": uno con derecha y abajo, otro con derecha y arriba.',
+      map: ['H.####F#', '#..##..#', '##....##', '###..###', '########', '########'], blocks: B_LOOP, best: 6 },
+    { ch: 1, name: 'Fila de slimes', goal: 'Los slimes están en orden. Derrótalos con un "repetir".',
+      hint: 'El patrón es: mover derecha, atacar, mover derecha. Al final da un paso más.',
+      map: ['########', '########', 'H.E.E.EF', '########', '########', '########'], blocks: B_LOOP, best: 5 },
+    { ch: 1, name: 'Escalones dobles', goal: 'Cada escalón tiene 2 pasos. Llega a la bandera.',
+      hint: 'Dentro de un "repetir": derecha, derecha, abajo, abajo. ¿Cuántas veces se repite?',
+      map: ['H..#####', '##.#####', '##...###', '####.###', '####..F#', '########'], blocks: B_LOOP, best: 7 },
+    { ch: 1, name: 'Gemas en el techo', goal: 'Sube por cada gema y regresa al pasillo.',
+      hint: 'Patrón: derecha, arriba, abajo, derecha. Repítelo 3 veces y da un paso más.',
+      map: ['########', '#G#G#G##', 'H......F', '########', '########', '########'], blocks: B_LOOP, best: 6 },
+    { ch: 1, name: 'Repetir dentro de repetir', goal: 'Las gemas están al fondo de cada cueva. ¡Recógelas todas!',
+      hint: 'Puedes poner un "repetir" dentro de otro: derecha, sube 2, baja 2, derecha.',
+      map: ['########', '#G#G#G##', '#.#.#.##', 'H......F', '########', '########'], blocks: B_LOOP, best: 8 },
+
+    // Capítulo 3: Condicionales
+    { ch: 2, name: 'Patrulla de slimes', goal: 'Hay slimes en el camino, pero no sabes dónde. Llega a la bandera.',
       hint: 'Dentro de "repetir": "si hay enemigo enfrente" con "atacar" adentro, y después "mover derecha".',
-      map: ['########', '########', 'H.E..E.F', '########', '########', '########'],
-      blocks: ['right', 'left', 'up', 'down', 'attack', 'repeat', 'ifEnemy'],
-      best: 4
-    },
-    {
-      name: 'La gran aventura',
-      goal: 'Recoge las gemas, derrota a los slimes y llega a la bandera.',
+      map: ['########', '########', 'H.E..E.F', '########', '########', '########'], blocks: B_IF, best: 4 },
+    { ch: 2, name: 'Slimes sorpresa', goal: 'Más slimes y una gema. El mismo programa sirve para todo el pasillo.',
+      hint: 'Repite 7 veces: si hay enemigo enfrente, atacar; luego mover derecha.',
+      map: ['########', '########', 'HE.EEG.F', '########', '########', '########'], blocks: B_IF, best: 4 },
+    { ch: 2, name: 'Hasta la meta', goal: 'Un pasillo muy largo. Usa el bloque nuevo "repetir hasta llegar a la meta".',
+      hint: 'Este bloque repite lo de adentro hasta que el héroe llega a la bandera. No tienes que contar.',
+      map: ['##########', '##########', 'H........F', '##########', '##########'], blocks: B_UNTIL, best: 2 },
+    { ch: 2, name: 'Escalera sin contar', goal: 'Baja la escalera sin contar los escalones.',
+      hint: '"Repetir hasta llegar a la meta" con "mover derecha" y "mover abajo" adentro.',
+      map: ['H.######', '#..#####', '##..####', '###..###', '####..##', '#####F##'], blocks: B_UNTIL, best: 3 },
+    { ch: 2, name: 'El camino decide', goal: 'El camino cambia. Usa "si hay camino… si no…" para decidir.',
+      hint: 'Repetir hasta la meta: si hay camino a la derecha, mover derecha; si no, mover abajo.',
+      map: ['H..#####', '##.#####', '##....##', '#####.##', '#####..F', '########'], blocks: B_ALL, best: 4 },
+    { ch: 2, name: 'Laberinto de gemas', goal: 'Recoge las gemas del laberinto con el mismo programa.',
+      hint: 'El programa del nivel anterior funciona aquí. ¡Las gemas se recogen solas al pasar!',
+      map: ['H.G#####', '##.#####', '##G..###', '####.###', '####G..F', '########'], blocks: B_ALL, best: 4 },
+    { ch: 2, name: 'Slimes en el laberinto', goal: 'Ahora hay slimes en el laberinto. Combina las dos condiciones.',
+      hint: 'Dentro de "repetir hasta la meta": primero "si hay enemigo enfrente → atacar", después "si hay camino a la derecha… si no…".',
+      map: ['H.E#####', '##.#####', '##..E.##', '#####.##', '#####..F', '########'], blocks: B_ALL, best: 6 },
+    { ch: 2, name: 'Laberinto al revés', goal: 'La bandera está arriba a la izquierda. ¡Cambia las direcciones!',
+      hint: 'Si hay camino a la izquierda, mover izquierda; si no, mover arriba.',
+      map: ['########', 'F..#####', '##.#####', '##....##', '#####.##', '#####..H'], blocks: B_ALL, best: 4 },
+
+    // Capítulo 4: Gran reto
+    { ch: 3, name: 'La gran aventura', goal: 'Recoge las gemas, derrota a los slimes y llega a la bandera.',
       hint: 'Divide el problema en partes: primero el camino de arriba, luego baja y regresa por abajo.',
-      map: ['H.G.E..#', '######.#', '#F.E.G.#', '########', '########', '########'],
-      blocks: ['right', 'left', 'up', 'down', 'attack', 'repeat', 'ifEnemy'],
-      best: 10
-    }
+      map: ['H.G.E..#', '######.#', '#F.E.G.#', '########', '########', '########'], blocks: B_ALL, best: 10 },
+    { ch: 3, name: 'Fortaleza de slimes', goal: 'Un camino largo con gemas y slimes. Un solo programa para todo.',
+      hint: 'Repetir hasta la meta: si hay enemigo, atacar; si hay camino a la derecha, avanzar; si no, bajar.',
+      map: ['H.G.E.####', '#####.####', '#####G.E.#', '########.#', '########F#', '##########'], blocks: B_ALL, best: 6 },
+    { ch: 3, name: 'El pozo', goal: 'Baja por el pozo derrotando a los slimes.',
+      hint: 'Repetir hasta la meta: si hay enemigo enfrente, atacar; luego mover abajo.',
+      map: ['###H####', '###.####', '###E####', '###.####', '###E####', '###G####', '###F####'], blocks: B_ALL, best: 4 },
+    { ch: 3, name: 'Laberinto de cristal', goal: 'Un laberinto más grande. ¿Tu programa sigue funcionando?',
+      hint: 'Si hay camino a la derecha, avanza; si no, baja. Repite hasta la meta.',
+      map: ['HG..######', '###.######', '###.G..###', '######.###', '######G..F', '##########'], blocks: B_ALL, best: 4 },
+    { ch: 3, name: 'Hacia la cima', goal: 'Empiezas abajo. Sube hasta la bandera.',
+      hint: 'Prefiere subir: si hay camino arriba, mover arriba; si no, mover derecha.',
+      map: ['########', '#####..F', '#####.##', '##....##', '##.#####', 'H..#####'], blocks: B_ALL, best: 4 },
+    { ch: 3, name: 'Cuevas profundas', goal: 'Cada cueva tiene una gema al fondo. ¡Recógelas todas!',
+      hint: 'Repite 3 veces: derecha, sube 3, baja 3, derecha. Al final, un paso más.',
+      map: ['#G#G#G##', '#.#.#.##', '#.#.#.##', 'H......F', '########', '########'], blocks: B_ALL, best: 8 },
+    { ch: 3, name: 'Mega laberinto', goal: 'El laberinto más largo, con gemas y slimes.',
+      hint: 'El programa de "Fortaleza de slimes" te puede servir.',
+      map: ['H.E..#####', '####.#####', '####G.E.##', '#######.##', '#######.##', '#######G.F', '##########'], blocks: B_ALL, best: 6 },
+    { ch: 3, name: 'Gran final', goal: 'El último reto: sube, derrota a los slimes y recoge las gemas.',
+      hint: 'Repetir hasta la meta: si hay enemigo, atacar; si hay camino arriba, subir; si no, avanzar a la derecha.',
+      map: ['##########', '######G..F', '######.###', '###..E.###', '###G######', '###.######', 'H.E.######'], blocks: B_ALL, best: 6 }
   ];
 
   var DIRS = {
@@ -87,12 +134,16 @@
     down: { label: 'mover abajo', icon: '↓', cls: 'b-move', code: 'heroe.mover_abajo()' },
     attack: { label: 'atacar', icon: '⚔', cls: 'b-act', code: 'heroe.atacar()' },
     repeat: { label: 'repetir', icon: '↻', cls: 'b-loop', container: true },
-    ifEnemy: { label: 'si hay enemigo enfrente', icon: '?', cls: 'b-if', container: true, code: 'if heroe.hay_enemigo_enfrente():' }
+    ifEnemy: { label: 'si hay enemigo enfrente', icon: '?', cls: 'b-if', container: true, code: 'if heroe.hay_enemigo_enfrente():' },
+    untilGoal: { label: 'repetir hasta llegar a la meta', icon: '⟳', cls: 'b-loop', container: true, code: 'while not heroe.en_la_meta():' },
+    ifPath: { label: 'si hay camino … si no', icon: '?', cls: 'b-if', container: true, hasElse: true }
   };
+  var PATH_DIRS = [['right', 'derecha', 'derecha'], ['left', 'izquierda', 'izquierda'], ['up', 'arriba', 'arriba'], ['down', 'abajo', 'abajo']];
 
   var MAX_BLOCKS = 40;
   var MAX_ACTIONS = 300;
-  var STORE_KEY = 'ik-bloques-v1';
+  var STORE_KEY = 'ik-bloques-v2';
+  var TEACHER = /[?&]profe=1\b/.test(location.search);
 
   // ---------- Elementos ----------
   var $ = function (id) { return document.getElementById(id); };
@@ -123,7 +174,7 @@
   function saveProgress() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch (e) { /* sin almacenamiento */ }
   }
-  function isUnlocked(i) { return i === 0 || !!progress[i - 1]; }
+  function isUnlocked(i) { return TEACHER || i === 0 || !!progress[i - 1]; }
 
   // ---------- Mundos, héroes y sprites (pixel art original) ----------
   var SPRITES = {
@@ -184,6 +235,7 @@
   var SPACE_WORDS = [
     [/todas las gemas/g, 'todos los cristales'], [/las gemas/g, 'los cristales'], [/una gema/g, 'un cristal'],
     [/gemas/g, 'cristales'], [/gema/g, 'cristal'], [/encima de ella/g, 'encima de él'],
+    [/Gemas/g, 'Cristales'], [/Gema/g, 'Cristal'], [/Slimes/g, 'Droides'], [/Slime/g, 'Droide'],
     [/slimes/g, 'droides'], [/slime/g, 'droide'],
     [/a la bandera/g, 'al portal'], [/la bandera/g, 'el portal'], [/bandera/g, 'portal'],
     [/los árboles/g, 'los asteroides'], [/árboles/g, 'asteroides']
@@ -198,6 +250,7 @@
   var levelIndex = 0;
   var program = [];
   var selectedId = null; // contenedor elegido para agregar bloques con un toque
+  var selectedBranch = 'body'; // 'body' o 'else' (rama "si no")
   var nextId = 1;
   var running = false;
   var timer = null;
@@ -210,14 +263,19 @@
     var n = { id: 'b' + (nextId++), type: type };
     if (BLOCKS[type].container) n.body = [];
     if (type === 'repeat') n.n = 3;
+    if (type === 'ifPath') { n.dir = 'right'; n.elseBody = []; }
     return n;
   }
+  function kids(n) { return (n.body || []).concat(n.elseBody || []); }
+  function branchList(n, branch) { return branch === 'else' ? n.elseBody : n.body; }
   function find(id, list, parent) {
     list = list || program;
     for (var i = 0; i < list.length; i++) {
       if (list[i].id === id) return { list: list, index: i, node: list[i], parent: parent || null };
-      if (list[i].body) {
-        var r = find(id, list[i].body, list[i]);
+      var lists = [list[i].body, list[i].elseBody];
+      for (var j = 0; j < 2; j++) {
+        if (!lists[j]) continue;
+        var r = find(id, lists[j], list[i]);
         if (r) return r;
       }
     }
@@ -225,12 +283,11 @@
   }
   function countBlocks(list) {
     var c = 0;
-    (list || program).forEach(function (n) { c += 1 + (n.body ? countBlocks(n.body) : 0); });
+    (list || program).forEach(function (n) { c += 1 + countBlocks(kids(n)); });
     return c;
   }
   function contains(node, id) {
-    if (!node.body) return false;
-    return node.body.some(function (c) { return c.id === id || contains(c, id); });
+    return kids(node).some(function (c) { return c.id === id || contains(c, id); });
   }
 
   // ---------- Paleta ----------
@@ -260,7 +317,7 @@
     var target = program;
     if (selectedId) {
       var loc = find(selectedId);
-      if (loc && loc.node.body) target = loc.node.body; else selectedId = null;
+      if (loc && loc.node.body) target = branchList(loc.node, selectedBranch) || loc.node.body; else selectedId = null;
     }
     target.push(node);
     renderWorkspace();
@@ -286,15 +343,30 @@
   function renderNode(node) {
     var def = BLOCKS[node.type];
     var el = document.createElement('div');
-    el.className = 'blk ' + def.cls + (def.container ? ' is-container' : '') + (node.id === selectedId ? ' is-selected' : '');
+    el.className = 'blk ' + def.cls + (def.container ? ' is-container' : '') + (node.id === selectedId && selectedBranch === 'body' ? ' is-selected' : '');
     el.dataset.id = node.id;
 
     var head = document.createElement('div');
     head.className = 'blk-head';
     var grip = document.createElement('span');
     grip.className = 'blk-label';
-    grip.innerHTML = '<span class="blk-icon" aria-hidden="true">' + def.icon + '</span><span>' + def.label + '</span>';
+    grip.innerHTML = '<span class="blk-icon" aria-hidden="true">' + def.icon + '</span><span>' + (node.type === 'ifPath' ? 'si hay camino hacia' : def.label) + '</span>';
     head.appendChild(grip);
+
+    if (node.type === 'ifPath') {
+      var dsel = document.createElement('select');
+      dsel.className = 'blk-num blk-dir';
+      dsel.setAttribute('aria-label', 'Dirección del camino');
+      PATH_DIRS.forEach(function (d) {
+        var o = document.createElement('option');
+        o.value = d[0]; o.textContent = d[1];
+        if (d[0] === node.dir) o.selected = true;
+        dsel.appendChild(o);
+      });
+      dsel.addEventListener('change', function () { node.dir = dsel.value; renderWorkspace(); });
+      dsel.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
+      head.appendChild(dsel);
+    }
 
     if (node.type === 'repeat') {
       var sel = document.createElement('select');
@@ -327,30 +399,53 @@
     if (def.container) {
       head.addEventListener('click', function (e) {
         if (justDragged || e.target.closest('select, button')) return;
-        selectedId = selectedId === node.id ? null : node.id;
+        selectedId = selectedId === node.id && selectedBranch === 'body' ? null : node.id;
+        selectedBranch = 'body';
         renderWorkspace();
-        if (selectedId) say('Los bloques que toques se agregarán dentro de "' + def.label + '". Toca otra vez para salir.');
+        if (selectedId) say('Los bloques que toques se agregarán dentro de "' + (node.type === 'ifPath' ? 'si hay camino' : def.label) + '". Toca otra vez para salir.');
       });
     }
     el.appendChild(head);
 
     if (def.container) {
-      var slot = document.createElement('div');
-      slot.className = 'blk-slot';
-      slot.dataset.id = node.id;
-      if (!node.body.length) {
-        var ph = document.createElement('div');
-        ph.className = 'slot-empty';
-        ph.textContent = 'pon bloques aquí';
-        slot.appendChild(ph);
+      el.appendChild(renderSlot(node, 'body'));
+      if (def.hasElse) {
+        var mid = document.createElement('div');
+        mid.className = 'blk-mid' + (node.id === selectedId && selectedBranch === 'else' ? ' is-selected' : '');
+        mid.innerHTML = '<span>si no</span>';
+        mid.addEventListener('pointerdown', function (e) { pointerDown(e, { id: node.id }, el); });
+        mid.addEventListener('click', function () {
+          if (justDragged) return;
+          var same = selectedId === node.id && selectedBranch === 'else';
+          selectedId = same ? null : node.id;
+          selectedBranch = 'else';
+          renderWorkspace();
+          if (!same) say('Los bloques que toques se agregarán en "si no". Toca otra vez para salir.');
+        });
+        el.appendChild(mid);
+        el.appendChild(renderSlot(node, 'else'));
       }
-      node.body.forEach(function (c) { slot.appendChild(renderNode(c)); });
-      el.appendChild(slot);
       var foot = document.createElement('div');
       foot.className = 'blk-foot';
       el.appendChild(foot);
     }
     return el;
+  }
+
+  function renderSlot(node, branch) {
+    var list = branchList(node, branch);
+    var slot = document.createElement('div');
+    slot.className = 'blk-slot';
+    slot.dataset.id = node.id;
+    slot.dataset.branch = branch;
+    if (!list.length) {
+      var ph = document.createElement('div');
+      ph.className = 'slot-empty';
+      ph.textContent = 'pon bloques aquí';
+      slot.appendChild(ph);
+    }
+    list.forEach(function (c) { slot.appendChild(renderNode(c)); });
+    return slot;
   }
 
   function removeNode(id) {
@@ -366,8 +461,13 @@
       if (n.type === 'repeat') {
         return pad + 'for i in range(' + n.n + '):\n' + (toCode(n.body, pad + '    ') || pad + '    pass');
       }
-      if (n.type === 'ifEnemy') {
-        return pad + BLOCKS.ifEnemy.code + '\n' + (toCode(n.body, pad + '    ') || pad + '    pass');
+      if (n.type === 'ifEnemy' || n.type === 'untilGoal') {
+        return pad + BLOCKS[n.type].code + '\n' + (toCode(n.body, pad + '    ') || pad + '    pass');
+      }
+      if (n.type === 'ifPath') {
+        var dn = PATH_DIRS.filter(function (d) { return d[0] === n.dir; })[0][2];
+        return pad + "if heroe.hay_camino('" + dn + "'):\n" + (toCode(n.body, pad + '    ') || pad + '    pass') +
+          '\n' + pad + 'else:\n' + (toCode(n.elseBody, pad + '    ') || pad + '    pass');
       }
       return pad + BLOCKS[n.type].code;
     }).join('\n');
@@ -453,7 +553,7 @@
     var slot = el.closest('.blk-slot');
     if (empty) {
       var c = find(empty.parentNode.dataset.id);
-      return c ? { list: c.node.body, index: 0, ref: empty, pos: 'top', owner: c.node.id } : null;
+      return c ? { list: branchList(c.node, empty.parentNode.dataset.branch), index: 0, ref: empty, pos: 'top', owner: c.node.id } : null;
     }
     if (blk) {
       var loc = find(blk.dataset.id);
@@ -467,7 +567,12 @@
       }
       if (loc.node.body && isSlotItself) {
         var last = slot.lastElementChild;
-        return { list: loc.node.body, index: loc.node.body.length, ref: last, pos: 'bottom', owner: loc.node.id };
+        var bl = branchList(loc.node, slot.dataset.branch);
+        return { list: bl, index: bl.length, ref: last, pos: 'bottom', owner: loc.node.id };
+      }
+      var midEl = el.closest('.blk-mid');
+      if (midEl && midEl.parentNode === blk) {
+        return { list: loc.node.elseBody, index: 0, ref: midEl, pos: 'bottom', owner: loc.node.id };
       }
       if (el.closest('.blk-foot') && el.closest('.blk-foot').parentNode === blk) {
         return target(loc, loc.index + 1, blk, 'bottom');
@@ -542,6 +647,7 @@
     draw();
   }
   function gemsLeft() { return Object.keys(game.gems).length; }
+  function atFlag() { return game.hero.x === game.flag.x && game.hero.y === game.flag.y; }
   function frontKey() {
     var d = DIRS[game.dir];
     return (game.hero.x + d.dx) + ',' + (game.hero.y + d.dy);
@@ -564,6 +670,24 @@
       } else if (n.type === 'ifEnemy') {
         yield { highlight: n.id, wait: true };
         if (game.enemies[frontKey()]) yield* exec(n.body);
+      } else if (n.type === 'untilGoal') {
+        var guard = 0;
+        while (!atFlag()) {
+          var before = game.actions;
+          yield { highlight: n.id, wait: true };
+          yield* exec(n.body);
+          if (game.failed || game.won) return;
+          if (game.actions === before || ++guard > 150) {
+            fail('El héroe no avanza dentro de "repetir hasta llegar a la meta". Revisa los bloques de adentro.');
+            yield { highlight: n.id, wait: true };
+            return;
+          }
+        }
+      } else if (n.type === 'ifPath') {
+        yield { highlight: n.id, wait: true };
+        var d = DIRS[n.dir];
+        if (!blocked(game.hero.x + d.dx, game.hero.y + d.dy)) yield* exec(n.body);
+        else yield* exec(n.elseBody);
       } else {
         yield { highlight: n.id, action: n.type };
       }
@@ -676,7 +800,7 @@
     var last = levelIndex === LEVELS.length - 1;
     overlay.className = 'game-overlay ' + (won ? 'is-win' : 'is-fail');
     var html = '<div class="overlay-card">';
-    html += '<p class="overlay-title">' + (won ? (last ? '¡Completaste todos los niveles!' : '¡Nivel superado!') : 'Casi lo logras') + '</p>';
+    html += '<p class="overlay-title">' + (won ? (last ? '¡Completaste todos los niveles!' : (LEVELS[levelIndex + 1].ch !== LEVELS[levelIndex].ch ? '¡Capítulo ' + (LEVELS[levelIndex].ch + 1) + ' terminado!' : '¡Nivel superado!')) : 'Casi lo logras') + '</p>';
     if (won) {
       html += '<p class="overlay-stars" aria-label="' + stars + ' de 3 estrellas">';
       for (var i = 0; i < 3; i++) html += '<span class="' + (i < stars ? 'on' : '') + '" aria-hidden="true">★</span>';
@@ -704,9 +828,41 @@
   // ---------- Niveles ----------
   var ICON_CHECK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>';
   var ICON_LOCK = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  var chaptersEl = $('game-chapters');
+  function chapterLevels(c) {
+    var out = [];
+    LEVELS.forEach(function (L, i) { if (L.ch === c) out.push(i); });
+    return out;
+  }
   function renderLevels() {
+    var curCh = LEVELS[levelIndex].ch;
+    if (chaptersEl) {
+      chaptersEl.innerHTML = '';
+      CHAPTERS.forEach(function (C, c) {
+        var idx = chapterLevels(c);
+        var done = idx.filter(function (i) { return progress[i]; }).length;
+        var locked = !isUnlocked(idx[0]);
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'gm-ch' + (c === curCh ? ' is-current' : '') + (done === idx.length ? ' is-done' : '');
+        b.disabled = locked;
+        b.innerHTML = '<span class="gm-ch-num">' + (locked ? ICON_LOCK : (done === idx.length ? ICON_CHECK : (c + 1))) + '</span>' +
+          '<span class="gm-ch-text"><strong></strong><small></small></span>';
+        b.querySelector('strong').textContent = C.name;
+        b.querySelector('small').textContent = locked ? 'Bloqueado' : done + ' de ' + idx.length + ' niveles';
+        b.setAttribute('aria-label', 'Capítulo ' + (c + 1) + ': ' + C.name + (locked ? ' (bloqueado)' : ', ' + done + ' de ' + idx.length + ' niveles'));
+        if (c === curCh) b.setAttribute('aria-current', 'true');
+        b.addEventListener('click', function () {
+          if (running || c === curCh) return;
+          var first = idx.filter(function (i) { return isUnlocked(i) && !progress[i]; })[0];
+          setLevel(first !== undefined ? first : idx[0]);
+        });
+        chaptersEl.appendChild(b);
+      });
+    }
     levelsEl.innerHTML = '';
-    LEVELS.forEach(function (L, i) {
+    chapterLevels(curCh).forEach(function (i) {
+      var L = LEVELS[i];
       var li = document.createElement('li');
       var b = document.createElement('button');
       b.type = 'button';
@@ -724,10 +880,6 @@
       li.appendChild(b);
       levelsEl.appendChild(li);
     });
-    var cur = levelsEl.querySelector('.is-current');
-    if (cur && levelsEl.parentNode.scrollWidth > levelsEl.parentNode.clientWidth) {
-      levelsEl.parentNode.scrollLeft = cur.parentNode.offsetLeft - 40;
-    }
   }
 
   // Lista de objetivos de la misión
@@ -768,7 +920,7 @@
 
   function applyTexts() {
     var L = LEVELS[levelIndex];
-    $('level-kicker').textContent = 'Nivel ' + (levelIndex + 1) + ' de ' + LEVELS.length;
+    $('level-kicker').textContent = 'Capítulo ' + (L.ch + 1) + ' · Nivel ' + (levelIndex + 1) + ' de ' + LEVELS.length;
     $('level-title').textContent = tr(L.name);
     $('level-goal').textContent = tr(L.goal);
     $('level-hint').textContent = tr(L.hint);
