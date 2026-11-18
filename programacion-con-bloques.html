@@ -21,7 +21,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=20261118b">
+  <link rel="stylesheet" href="css/bloques.css?v=20261118b">
 </head>
 <body>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -67,53 +68,74 @@
       </div>
     </section>
 
-    <section class="section game-section" id="juego" aria-labelledby="level-title">
+    <section class="gm-section" id="juego" aria-labelledby="level-title">
       <div class="container">
-        <div class="game-levels" id="game-levels" aria-label="Niveles"></div>
-        <div class="game">
-          <div class="game-stage">
-            <div class="game-goal">
-              <h2 id="level-title">Nivel 1</h2>
-              <p id="level-goal"></p>
-              <p class="game-hint"><strong>Pista:</strong> <span id="level-hint"></span></p>
+        <div class="gm-app">
+          <div class="gm-top">
+            <div class="gm-title">
+              <p class="gm-kicker" id="level-kicker">Nivel 1 de 8</p>
+              <h2 id="level-title">Primeros pasos</h2>
             </div>
-            <div class="game-canvas-wrap">
-              <canvas id="game-canvas" role="img" aria-label="Mapa del nivel"></canvas>
-              <div class="game-overlay" id="game-overlay" hidden></div>
-            </div>
-            <div class="game-controls">
-              <button class="btn btn-yellow" type="button" id="btn-run">
-                <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
-                Ejecutar
-              </button>
-              <button class="btn btn-outline" type="button" id="btn-reset">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-                Reiniciar
-              </button>
-            </div>
-            <p class="game-status" id="game-status" role="status" aria-live="polite"></p>
+            <nav class="gm-levels-nav" aria-label="Niveles">
+              <ol class="gm-levels" id="game-levels"></ol>
+            </nav>
           </div>
 
-          <div class="game-editor">
-            <div class="palette">
-              <h3>Bloques</h3>
-              <div class="palette-list" id="palette"></div>
-              <p class="palette-tip">Arrastra un bloque a tu programa o tócalo para agregarlo. Para meter bloques dentro de "repetir" o "si", toca su nombre y luego los bloques.</p>
-              <p class="palette-trash" aria-hidden="true">Suelta aquí para borrar</p>
-            </div>
-            <div class="ws-wrap">
-              <div class="ws-head">
-                <h3>Tu programa</h3>
-                <span class="ws-count" id="block-count">0 bloques</span>
-                <button class="ws-clear" type="button" id="btn-clear">Borrar todo</button>
+          <div class="gm-body">
+            <div class="gm-stage">
+              <div class="gm-canvas-wrap">
+                <canvas id="game-canvas" role="img" aria-label="Mapa del nivel"></canvas>
+                <div class="gm-hud" id="game-hud" aria-hidden="true"></div>
+                <div class="game-overlay" id="game-overlay" hidden></div>
               </div>
-              <div class="workspace" id="workspace"></div>
-              <details class="code-view">
-                <summary>Ver tu programa como código (Python)</summary>
-                <pre><code id="code-out"></code></pre>
-              </details>
+              <div class="gm-mission">
+                <h3>Misión</h3>
+                <p class="gm-goal" id="level-goal"></p>
+                <ul class="gm-goals" id="level-goals"></ul>
+                <details class="gm-hint">
+                  <summary>Ver pista</summary>
+                  <p id="level-hint"></p>
+                </details>
+              </div>
+            </div>
+
+            <div class="gm-editor">
+              <div class="palette">
+                <h3>Bloques</h3>
+                <div class="palette-list" id="palette"></div>
+                <p class="palette-tip">Arrastra o toca un bloque. Para meter bloques dentro de "repetir" o "si", toca su nombre primero.</p>
+                <p class="palette-trash" aria-hidden="true">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+                  Suelta aquí para borrar
+                </p>
+              </div>
+              <div class="gm-code">
+                <div class="ws-head">
+                  <h3>Tu programa</h3>
+                  <span class="ws-count" id="block-count">0 bloques</span>
+                  <button class="ws-clear" type="button" id="btn-clear">Borrar todo</button>
+                </div>
+                <div class="workspace" id="workspace"></div>
+                <div class="gm-run">
+                  <button class="gm-btn-run" type="button" id="btn-run"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span>Ejecutar</span></button>
+                  <button class="gm-btn" type="button" id="btn-reset" aria-label="Reiniciar nivel">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                    <span>Reiniciar</span>
+                  </button>
+                  <button class="gm-btn" type="button" id="btn-speed" aria-pressed="false" aria-label="Velocidad rápida">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6v12l8-6zM12 6v12l8-6z"/></svg>
+                    <span id="speed-label">Normal</span>
+                  </button>
+                </div>
+                <p class="gm-status" id="game-status" role="status" aria-live="polite"></p>
+              </div>
             </div>
           </div>
+
+          <details class="code-view">
+            <summary>Ver tu programa como código (Python)</summary>
+            <pre><code id="code-out"></code></pre>
+          </details>
         </div>
       </div>
     </section>
@@ -171,7 +193,7 @@
   </div>
 
   <script src="js/config.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/bloques.js"></script>
+  <script src="js/main.js?v=20261118b"></script>
+  <script src="js/bloques.js?v=20261118b"></script>
 </body>
 </html>

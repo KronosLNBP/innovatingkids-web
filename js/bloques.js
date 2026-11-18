@@ -109,6 +109,10 @@
   var clearBtn = $('btn-clear');
   var countEl = $('block-count');
   var codeOut = $('code-out');
+  var hudEl = $('game-hud');
+  var goalsEl = $('level-goals');
+  var speedBtn = $('btn-speed');
+  var fast = false;
   var indicator = document.createElement('div');
   indicator.className = 'ws-indicator';
   indicator.hidden = true;
@@ -206,6 +210,7 @@
     workspace.appendChild(indicator);
     var c = countBlocks();
     countEl.textContent = c + (c === 1 ? ' bloque' : ' bloques');
+    renderGoals();
     codeOut.textContent = toCode(program, '') || '# Tu programa está vacío';
   }
 
@@ -450,20 +455,21 @@
   // ---------- Juego ----------
   function loadGame() {
     var L = LEVELS[levelIndex];
-    var g = { rows: L.map.length, cols: L.map[0].length, walls: {}, gems: {}, enemies: {}, gemTotal: 0, hero: null, flag: null, dir: 'right', failed: false, actions: 0 };
+    var g = { rows: L.map.length, cols: L.map[0].length, walls: {}, gems: {}, enemies: {}, gemTotal: 0, hero: null, flag: null, dir: 'right', failed: false, actions: 0, moves: 0, enemyTotal: 0 };
     L.map.forEach(function (row, y) {
       row.split('').forEach(function (ch, x) {
         var k = x + ',' + y;
         if (ch === '#') g.walls[k] = true;
         else if (ch === 'H') g.hero = { x: x, y: y };
         else if (ch === 'G') { g.gems[k] = true; g.gemTotal++; }
-        else if (ch === 'E') g.enemies[k] = true;
+        else if (ch === 'E') { g.enemies[k] = true; g.enemyTotal++; }
         else if (ch === 'F') g.flag = { x: x, y: y };
       });
     });
     game = g;
     anim = null;
     effects = [];
+    updateHud();
     draw();
   }
   function gemsLeft() { return Object.keys(game.gems).length; }
@@ -507,6 +513,7 @@
       if (game.enemies[nx + ',' + ny]) { bump(nx, ny); return fail('¡Un slime bloquea el camino! Usa "atacar" antes de avanzar.'); }
       anim = { fx: h.x, fy: h.y, tx: nx, ty: ny, start: performance.now(), dur: stepMs() * 0.8 };
       h.x = nx; h.y = ny;
+      game.moves++;
       var k = nx + ',' + ny;
       if (game.gems[k]) { delete game.gems[k]; effects.push({ kind: 'gem', x: nx, y: ny, start: performance.now() }); }
       if (game.flag.x === nx && game.flag.y === ny && gemsLeft() === 0) game.won = true;
@@ -520,10 +527,11 @@
       }
     }
   }
+  function afterAction() { updateHud(); }
   function bump(x, y) { effects.push({ kind: 'bump', x: x, y: y, start: performance.now() }); }
   function fail(msg) { game.failed = msg; }
 
-  function stepMs() { return 420; }
+  function stepMs() { return fast ? 190 : 420; }
 
   function run() {
     if (running) return;
@@ -541,8 +549,7 @@
       clearHighlight();
       if (r.done || game.failed || game.won) { finish(); return; }
       highlight(r.value.highlight);
-      if (r.value.action) doAction(r.value.action);
-      loop();
+      if (r.value.action) { doAction(r.value.action); afterAction(); }
       if (game.failed || game.won) { timer = setTimeout(finish, stepMs()); return; }
       timer = setTimeout(tick, r.value.wait ? stepMs() / 3 : stepMs());
     }
@@ -556,6 +563,7 @@
     clearHighlight();
     if (game.failed) { say(game.failed); showOverlay(false, game.failed); return; }
     if (game.won) {
+      renderGoals();
       var used = countBlocks();
       var best = LEVELS[levelIndex].best;
       var stars = used <= best ? 3 : used <= best + 3 ? 2 : 1;
@@ -625,21 +633,68 @@
   });
 
   // ---------- Niveles ----------
+  var ICON_CHECK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>';
+  var ICON_LOCK = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
   function renderLevels() {
     levelsEl.innerHTML = '';
     LEVELS.forEach(function (L, i) {
+      var li = document.createElement('li');
       var b = document.createElement('button');
       b.type = 'button';
-      b.className = 'lvl' + (i === levelIndex ? ' is-current' : '') + (progress[i] ? ' is-done' : '');
       var locked = !isUnlocked(i);
+      b.className = 'lvl' + (i === levelIndex ? ' is-current' : '') + (progress[i] ? ' is-done' : '') + (locked ? ' is-locked' : '');
       b.disabled = locked;
-      var stars = progress[i] ? new Array(progress[i] + 1).join('★') : '';
-      b.innerHTML = '<span class="lvl-num">' + (i + 1) + '</span><span class="lvl-stars" aria-hidden="true">' + (locked ? '🔒' : stars) + '</span>';
-      b.setAttribute('aria-label', 'Nivel ' + (i + 1) + ': ' + L.name + (locked ? ' (bloqueado)' : progress[i] ? ' (' + progress[i] + ' estrellas)' : ''));
+      var stars = '';
+      if (progress[i]) for (var k = 0; k < 3; k++) stars += '<i class="' + (k < progress[i] ? 'on' : '') + '"></i>';
+      b.innerHTML = '<span class="lvl-num">' + (locked ? ICON_LOCK : (progress[i] && i !== levelIndex ? ICON_CHECK : (i + 1))) + '</span>' +
+        '<span class="lvl-stars" aria-hidden="true">' + stars + '</span>';
+      b.setAttribute('aria-label', 'Nivel ' + (i + 1) + ': ' + L.name + (locked ? ' (bloqueado)' : progress[i] ? ' (' + progress[i] + ' de 3 estrellas)' : ''));
+      b.title = 'Nivel ' + (i + 1) + ': ' + L.name;
       if (i === levelIndex) b.setAttribute('aria-current', 'step');
       b.addEventListener('click', function () { if (!running) setLevel(i); });
-      levelsEl.appendChild(b);
+      li.appendChild(b);
+      levelsEl.appendChild(li);
     });
+    var cur = levelsEl.querySelector('.is-current');
+    if (cur && levelsEl.parentNode.scrollWidth > levelsEl.parentNode.clientWidth) {
+      levelsEl.parentNode.scrollLeft = cur.parentNode.offsetLeft - 40;
+    }
+  }
+
+  // Lista de objetivos de la misión
+  function renderGoals() {
+    if (!game || !goalsEl) return;
+    var L = LEVELS[levelIndex];
+    var used = countBlocks();
+    var items = [];
+    if (game.gemTotal) {
+      var got = game.gemTotal - gemsLeft();
+      items.push({ done: got === game.gemTotal, text: 'Recoge las gemas (' + got + '/' + game.gemTotal + ')' });
+    }
+    if (game.enemyTotal) {
+      var beaten = game.enemyTotal - Object.keys(game.enemies).length;
+      items.push({ done: beaten === game.enemyTotal, text: 'Derrota a los slimes (' + beaten + '/' + game.enemyTotal + ')' });
+    }
+    items.push({ done: !!game.won, text: 'Llega a la bandera' });
+    items.push({ done: !!game.won && used <= L.best, star: true, text: 'Reto: ' + L.best + ' bloques o menos (llevas ' + used + ')' });
+    goalsEl.innerHTML = '';
+    items.forEach(function (it) {
+      var li = document.createElement('li');
+      li.className = (it.done ? 'is-done' : '') + (it.star ? ' is-star' : '');
+      li.innerHTML = '<span class="goal-mark" aria-hidden="true">' + (it.done ? ICON_CHECK : '') + '</span><span></span>';
+      li.lastChild.textContent = it.text + (it.done ? ' — listo' : '');
+      goalsEl.appendChild(li);
+    });
+  }
+
+  function updateHud() {
+    if (!hudEl || !game) return;
+    var html = '';
+    if (game.gemTotal) html += '<span class="hud-chip"><i class="hud-gem"></i>' + (game.gemTotal - gemsLeft()) + '/' + game.gemTotal + '</span>';
+    if (game.enemyTotal) html += '<span class="hud-chip"><i class="hud-slime"></i>' + Object.keys(game.enemies).length + '</span>';
+    html += '<span class="hud-chip"><i class="hud-step"></i>' + game.moves + (game.moves === 1 ? ' paso' : ' pasos') + '</span>';
+    hudEl.innerHTML = html;
+    renderGoals();
   }
 
   function setLevel(i) {
@@ -652,7 +707,8 @@
     program = [];
     selectedId = null;
     var L = LEVELS[i];
-    $('level-title').textContent = 'Nivel ' + (i + 1) + ': ' + L.name;
+    $('level-kicker').textContent = 'Nivel ' + (i + 1) + ' de ' + LEVELS.length;
+    $('level-title').textContent = L.name;
     $('level-goal').textContent = L.goal;
     $('level-hint').textContent = L.hint;
     canvas.setAttribute('aria-label', 'Mapa del nivel ' + (i + 1) + '. ' + L.goal);
@@ -678,18 +734,17 @@
     draw();
   }
 
-  var rafId = null;
-  function loop() {
-    if (rafId) return;
-    function frame() {
-      draw();
-      var now = performance.now();
-      effects = effects.filter(function (f) { return now - f.start < 600; });
-      if ((anim && now - anim.start < anim.dur) || effects.length) rafId = requestAnimationFrame(frame);
-      else { rafId = null; anim = null; draw(); }
-    }
-    rafId = requestAnimationFrame(frame);
+  // Animación continua (slimes, gemas y bandera se mueven aunque no se ejecute nada)
+  var lastFrame = 0;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (document.hidden || now - lastFrame < 30) return;
+    lastFrame = now;
+    effects = effects.filter(function (f) { return now - f.start < 600; });
+    if (anim && now - anim.start >= anim.dur) anim = null;
+    draw();
   }
+  requestAnimationFrame(frame);
 
   function draw() {
     if (!game) return;
@@ -699,8 +754,20 @@
     var now = performance.now();
     for (var y = 0; y < game.rows; y++) {
       for (var x = 0; x < game.cols; x++) {
-        ctx.fillStyle = (x + y) % 2 ? '#A6E38A' : '#B4EA98';
+        ctx.fillStyle = (x + y) % 2 ? '#7CC765' : '#86CF6E';
         ctx.fillRect(x * T, y * T, T, T);
+      }
+    }
+    // camino de tierra en las casillas libres
+    for (y = 0; y < game.rows; y++) {
+      for (x = 0; x < game.cols; x++) {
+        if (game.walls[x + ',' + y]) continue;
+        ctx.fillStyle = '#C9A46A';
+        roundRect(x * T + T * 0.04, y * T + T * 0.04 + 2, T * 0.92, T * 0.92, T * 0.16); ctx.fill();
+        ctx.fillStyle = (x + y) % 2 ? '#F1DDB0' : '#EBD5A4';
+        roundRect(x * T + T * 0.04, y * T + T * 0.04, T * 0.92, T * 0.92, T * 0.16); ctx.fill();
+        ctx.fillStyle = 'rgba(160,120,60,.25)';
+        ctx.beginPath(); ctx.arc(x * T + T * 0.28, y * T + T * 0.7, T * 0.03, 0, 7); ctx.arc(x * T + T * 0.72, y * T + T * 0.32, T * 0.025, 0, 7); ctx.fill();
       }
     }
     for (y = 0; y < game.rows; y++) {
@@ -708,7 +775,7 @@
         if (game.walls[x + ',' + y]) drawTree(x * T, y * T, T, x, y);
       }
     }
-    drawFlag(game.flag.x * T, game.flag.y * T, T, gemsLeft() === 0);
+    drawFlag(game.flag.x * T, game.flag.y * T, T, gemsLeft() === 0, now);
     Object.keys(game.gems).forEach(function (k) {
       var p = k.split(',');
       drawGem(+p[0] * T, +p[1] * T, T, now);
@@ -724,7 +791,8 @@
       hx = anim.fx + (anim.tx - anim.fx) * e;
       hy = anim.fy + (anim.ty - anim.fy) * e;
     }
-    drawHero(hx * T, hy * T, T, game.dir, game.failed);
+    var bob = anim ? 0 : Math.sin(now / 280) * T * 0.015;
+    drawHero(hx * T, hy * T + bob, T, game.dir, game.failed);
     effects.forEach(function (f) {
       var k = (now - f.start) / 600;
       var cx = f.x * T + T / 2, cy = f.y * T + T / 2;
@@ -750,8 +818,15 @@
     });
   }
 
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
   function drawTree(x, y, T, gx, gy) {
     var cx = x + T / 2;
+    ctx.fillStyle = 'rgba(20,60,20,.25)';
+    ctx.beginPath(); ctx.ellipse(cx, y + T * 0.86, T * 0.3, T * 0.08, 0, 0, 7); ctx.fill();
     ctx.fillStyle = '#7A4E2D';
     ctx.fillRect(cx - T * 0.07, y + T * 0.55, T * 0.14, T * 0.32);
     ctx.fillStyle = (gx * 7 + gy * 3) % 3 ? '#2D7A1F' : '#3C8F2A';
@@ -784,13 +859,14 @@
     ctx.fillStyle = '#1B1B1B';
     ctx.beginPath(); ctx.arc(cx - w * 0.35, by - h * 0.68, T * 0.035, 0, 7); ctx.arc(cx + w * 0.35, by - h * 0.68, T * 0.035, 0, 7); ctx.fill();
   }
-  function drawFlag(x, y, T, ready) {
+  function drawFlag(x, y, T, ready, now) {
+    var wave = Math.sin((now || 0) / 200) * T * 0.04;
     ctx.fillStyle = 'rgba(11,37,69,.15)';
     ctx.beginPath(); ctx.ellipse(x + T * 0.42, y + T * 0.86, T * 0.22, T * 0.07, 0, 0, 7); ctx.fill();
     ctx.fillStyle = '#0B2545';
     ctx.fillRect(x + T * 0.38, y + T * 0.15, T * 0.07, T * 0.72);
     ctx.fillStyle = ready ? '#FFD23F' : '#FF6B5B';
-    ctx.beginPath(); ctx.moveTo(x + T * 0.45, y + T * 0.16); ctx.lineTo(x + T * 0.82, y + T * 0.3); ctx.lineTo(x + T * 0.45, y + T * 0.44); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x + T * 0.45, y + T * 0.16); ctx.lineTo(x + T * 0.82, y + T * 0.3 + wave); ctx.lineTo(x + T * 0.45, y + T * 0.44); ctx.closePath(); ctx.fill();
   }
   function drawHero(x, y, T, dir, hurt) {
     var cx = x + T / 2, cy = y + T / 2;
@@ -819,6 +895,11 @@
 
   // ---------- Controles ----------
   runBtn.addEventListener('click', run);
+  if (speedBtn) speedBtn.addEventListener('click', function () {
+    fast = !fast;
+    speedBtn.setAttribute('aria-pressed', String(fast));
+    $('speed-label').textContent = fast ? 'Rápido' : 'Normal';
+  });
   resetBtn.addEventListener('click', stop);
   clearBtn.addEventListener('click', function () {
     if (running) return;
@@ -829,6 +910,14 @@
   });
   var resizeTimer;
   window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 100); });
+
+  // Oculta el WhatsApp flotante mientras el juego está en pantalla
+  if ('IntersectionObserver' in window) {
+    var app = document.querySelector('.gm-app');
+    if (app) new IntersectionObserver(function (entries) {
+      document.body.classList.toggle('gm-in-view', entries[0].intersectionRatio > 0.25);
+    }, { threshold: [0, 0.25, 0.5] }).observe(app);
+  }
 
   // Empieza en el primer nivel sin terminar
   var start = 0;
