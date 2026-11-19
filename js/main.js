@@ -39,6 +39,31 @@
     });
   }
 
+  // Si el menú no cabe en una línea, se colapsa en el botón de menú
+  var header = document.querySelector('.site-header');
+  var headerInner = header && header.querySelector('.header-inner');
+  function fitNav() {
+    if (!header || !headerInner || !menu) return;
+    header.classList.remove('nav-collapsed');
+    if (getComputedStyle(menu).position === 'absolute') return;
+    var over = headerInner.scrollWidth > headerInner.clientWidth + 1 ||
+      menu.scrollWidth > menu.clientWidth + 1;
+    if (over) {
+      header.classList.add('nav-collapsed');
+    } else if (menu.classList.contains('is-open')) {
+      menu.classList.remove('is-open');
+      if (toggle) { toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Abrir menú'); }
+    }
+  }
+  var fitTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(fitTimer);
+    fitTimer = setTimeout(fitNav, 100);
+  });
+  window.addEventListener('load', fitNav);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitNav);
+  fitNav();
+
   // Preguntas frecuentes
   document.querySelectorAll('.faq-q').forEach(function (btn) {
     btn.addEventListener('click', function () {

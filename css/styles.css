@@ -346,3 +346,17 @@ button, input, select, textarea { font: inherit; }
 .related-card strong { font-size: 21px; font-weight: 900; }
 .related-text { color: var(--muted); font-size: 16px; flex: 1; }
 .related-go { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 800; color: var(--teal-dark); }
+
+/* Encabezado: el logo y los botones no se encogen (evita que el menú se encime) */
+.header-inner > .brand, .header-actions { flex-shrink: 0; }
+.main-nav { min-width: 0; }
+/* WhatsApp ya está en el botón flotante y en la barra móvil */
+.header-actions .btn-outline { display: none; }
+@media (min-width: 1401px) {
+  .main-nav { gap: 18px; font-size: 15px; }
+}
+/* Si el menú no cabe (según la fuente y el ancho real), main.js lo colapsa */
+.site-header.nav-collapsed .main-nav { position: absolute; top: 72px; left: 0; right: 0; flex-direction: column; gap: 0; background: #fff; border-bottom: 1px solid var(--line); padding: 8px 24px 16px; display: none; font-size: 16px; }
+.site-header.nav-collapsed .main-nav.is-open { display: flex; }
+.site-header.nav-collapsed .main-nav a { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.site-header.nav-collapsed .menu-toggle { display: inline-flex; }
