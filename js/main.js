@@ -126,6 +126,13 @@
     });
   }
 
+  // Video de la portada: si la persona prefiere menos movimiento, no se reproduce solo
+  var introVideo = document.getElementById('intro-video');
+  if (introVideo && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    introVideo.removeAttribute('autoplay');
+    introVideo.pause();
+  }
+
   var year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 })();

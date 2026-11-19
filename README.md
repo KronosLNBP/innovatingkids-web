@@ -18,6 +18,7 @@ js/config.js               Número de WhatsApp (editar aquí)
 js/main.js                 Menú, preguntas frecuentes y formulario
 js/bloques.js              Juego de bloques: niveles, editor arrastrar/soltar y animación (sin librerías)
 img/                       Imágenes (ver abajo)
+video/                     Video de 1 minuto de la portada (MP4 1280x720, sin audio; póster en img/video-poster.jpg)
 robots.txt, sitemap.xml    SEO
 ```
 
