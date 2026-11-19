@@ -313,3 +313,36 @@ button, input, select, textarea { font: inherit; }
   .menu-toggle { display: inline-flex; }
 }
 .course-help .hero-ctas .btn { white-space: normal; text-align: center; }
+
+/* Página de modalidades (modalidades.html) */
+.mode-detail-list { display: flex; flex-direction: column; gap: 28px; }
+.mode-detail { position: relative; border-radius: var(--radius); padding: 36px; display: flex; flex-direction: column; gap: 24px; scroll-margin-top: 96px; }
+.mode-detail-head { display: flex; flex-direction: column; gap: 10px; max-width: 760px; }
+.mode-detail h2 { font-size: clamp(26px, 2.8vw, 34px); font-weight: 900; }
+.mode-detail .lead { font-size: 18px; color: var(--muted); }
+.mode-detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.mode-block { background: #fff; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.mode-block h3 { font-size: 18px; font-weight: 900; }
+.mode-block .learn-list { font-size: 16px; }
+.mode-detail .btn-navy { align-self: flex-start; min-height: 52px; }
+.mode-pick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 720px; }
+.mode-pick-note { margin: 24px 0 0; }
+.mode-pick-note a { color: #fff; font-weight: 800; display: inline-flex; align-items: center; min-height: 44px; }
+@media (max-width: 900px) { .mode-detail-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .mode-detail { padding: 24px 18px; }
+  .mode-detail .mode-badge { position: static; align-self: flex-start; }
+  .mode-detail .btn-navy { align-self: stretch; }
+  .mode-pick { grid-template-columns: 1fr; }
+}
+
+/* Bloque "También te puede interesar" (páginas internas) */
+.related { padding-top: 0; }
+.related h2 { margin-bottom: 28px; }
+.related-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.related-card { height: 100%; display: flex; flex-direction: column; gap: 8px; padding: 26px; border-radius: var(--radius); border: 2px solid var(--line); background: #fff; color: var(--ink); text-decoration: none; transition: border-color .15s ease, transform .15s ease; }
+.related-card:hover, .related-card:focus-visible { border-color: var(--teal); color: var(--ink); transform: translateY(-2px); }
+.related-kicker { font-weight: 900; font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--teal-dark); }
+.related-card strong { font-size: 21px; font-weight: 900; }
+.related-text { color: var(--muted); font-size: 16px; flex: 1; }
+.related-go { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 800; color: var(--teal-dark); }
