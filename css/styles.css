@@ -432,3 +432,36 @@ button, input, select, textarea { font: inherit; }
 /* Tipografía de marca: títulos en negritas (Glacial Indifference / Jost) */
 .display { font-weight: 700; letter-spacing: 0; }
 .brand-name, .course-mark, .step-num { font-weight: 700; letter-spacing: 0; }
+
+/* Mascota de Innovating Kids (portada) */
+.mascot { background: var(--soft); scroll-margin-top: 90px; }
+.mascot-intro { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px; align-items: center; margin-bottom: 44px; }
+.mascot-copy { display: flex; flex-direction: column; gap: 16px; }
+.mascot-copy .eyebrow { margin: 0; }
+.mascot-copy .lead { font-size: 19px; color: var(--muted); max-width: 620px; }
+.mascot-motto { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.mascot-motto li { padding: 10px 20px; border-radius: 999px; font-weight: 800; font-size: 17px; color: var(--ink); }
+.mascot-sign img { width: 100%; max-width: 420px; height: auto; margin: 0 auto; border-radius: var(--radius); mix-blend-mode: multiply; }
+.mascot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 22px; }
+.mascot-card { background: #fff; border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(37, 78, 100, .08); min-width: 0; }
+.mascot-img { aspect-ratio: 4 / 3; background: #fff; overflow: hidden; }
+.mascot-img img { width: 100%; height: 100%; object-fit: cover; }
+.mascot-img.contain img { object-fit: contain; padding: 10px 0 0; }
+.mascot-body { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 8px; }
+.mascot-body h3 { font-size: 21px; font-weight: 800; }
+.mascot-body p { font-size: 16px; color: var(--muted); line-height: 1.55; }
+.mascot-cta { margin-top: 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; padding: 22px 32px; border-radius: var(--radius); background: var(--navy); color: #fff; }
+.mascot-cta img { width: 110px; height: auto; flex: none; background: #fff; border-radius: 50%; padding: 6px; }
+.mascot-cta > div { flex: 1 1 320px; display: flex; flex-direction: column; gap: 6px; }
+.mascot-cta h3 { font-size: clamp(24px, 2.6vw, 32px); }
+.mascot-cta p { color: #E1EAF5; font-size: 17px; }
+.ai-note-mascot { width: 84px; height: auto; flex: none; mix-blend-mode: multiply; }
+@media (max-width: 900px) {
+  .mascot-intro { grid-template-columns: 1fr; gap: 20px; }
+  .mascot-sign img { max-width: 320px; }
+}
+@media (max-width: 640px) {
+  .mascot-cta { padding: 22px; text-align: center; justify-content: center; }
+  .mascot-cta .btn { width: 100%; }
+  .ai-note-mascot { display: none; }
+}
