@@ -8,7 +8,7 @@ Es un sitio estático (HTML, CSS y JavaScript, sin compilación). Se puede publi
 
 ```
 index.html                 Página de inicio
-cursos.html                Detalle de los 6 cursos
+cursos.html                Detalle de los 6 cursos y temarios descargables (PDF en temarios/)
 modalidades.html           Modalidades online, híbrida y presencial a detalle
 programacion-con-bloques.html  Juego de programación con bloques (30 niveles en 4 capítulos; ?profe=1 desbloquea todo)
 aviso-de-privacidad.html   Aviso de privacidad (borrador)

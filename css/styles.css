@@ -360,3 +360,24 @@ button, input, select, textarea { font: inherit; }
 .site-header.nav-collapsed .main-nav.is-open { display: flex; }
 .site-header.nav-collapsed .main-nav a { padding: 12px 0; border-bottom: 1px solid var(--line); }
 .site-header.nav-collapsed .menu-toggle { display: inline-flex; }
+
+/* Temarios descargables (cursos.html) */
+.course-syllabus-link { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; font-weight: 800; color: var(--teal-dark); }
+.syllabi { padding-top: 0; scroll-margin-top: 90px; }
+.syllabi .h2 { margin-bottom: 10px; }
+.syllabi-lead { font-size: 18px; color: var(--muted); margin-bottom: 32px; }
+.syllabus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 22px; }
+.syllabus { display: flex; flex-direction: column; border-radius: var(--radius); border: 2px solid var(--line); overflow: hidden; background: #fff; scroll-margin-top: 96px; min-width: 0; }
+.syllabus .course-top { height: 110px; }
+.syllabus-body { padding: 24px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.syllabus h3 { font-size: 22px; font-weight: 900; }
+.syllabus-meta { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.syllabus-meta li { padding: 4px 12px; border-radius: 999px; background: var(--soft); color: var(--teal-dark); font-size: 14px; font-weight: 800; }
+.syllabus-body > p { font-size: 16px; color: var(--muted); }
+.syllabus-mods { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; color: var(--muted); flex: 1; }
+.syllabus-mods strong { color: var(--ink); }
+.syllabus-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 6px; }
+.syllabus-actions .btn-navy { min-height: 52px; }
+.syllabus-actions .btn small { font-weight: 700; font-size: 12px; opacity: .85; }
+.syllabus-wa { display: inline-flex; align-items: center; min-height: 44px; font-weight: 800; color: var(--teal-dark); }
+@media (max-width: 640px) { .syllabus-actions, .syllabus-actions .btn-navy { align-self: stretch; width: 100%; } }
