@@ -27,7 +27,7 @@ robots.txt, sitemap.xml    SEO
 ### 1. Imágenes
 Copia la carpeta `img/` del hosting actual a este repositorio. El sitio usa los mismos nombres de archivo:
 
-- `img/logo.jpg` (ya incluido en el repositorio)
+- `img/logo.png` y `img/favicon.png` (logo oficial con el astronauta, incluido en el repositorio)
 - `img/student/1.jpg`
 - `img/alumnos/alumno1.jpeg`, `alumno2.jpeg`, `alumno3.jpeg`
 
