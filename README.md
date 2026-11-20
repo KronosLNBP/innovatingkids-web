@@ -8,6 +8,7 @@ Es un sitio estático (HTML, CSS y JavaScript, sin compilación). Se puede publi
 
 ```
 index.html                 Página de inicio
+clase-muestra.html         Página de aterrizaje para anuncios: beneficio, 3 pasos, cursos, modalidades y formulario de clase muestra (encabezado sin menú)
 cursos.html                Detalle de los 6 cursos y temarios descargables (PDF en temarios/)
 modalidades.html           Modalidades online, híbrida y presencial a detalle
 programacion-con-bloques.html  Juego de programación con bloques (30 niveles en 4 capítulos; ?profe=1 desbloquea todo)
@@ -15,12 +16,23 @@ aviso-de-privacidad.html   Aviso de privacidad (borrador)
 404.html                   Página de error
 css/styles.css             Estilos
 js/config.js               Número de WhatsApp (editar aquí)
-js/main.js                 Menú, preguntas frecuentes y formulario
+js/main.js                 Menú, preguntas frecuentes, formulario, animaciones de entrada y botón "Volver arriba"
 js/bloques.js              Juego de bloques: niveles, editor arrastrar/soltar y animación (sin librerías)
 img/                       Imágenes (ver abajo); img/mascota/ tiene las ilustraciones del astronauta (mascota)
 video/                     Video de 1 minuto de la portada (MP4 1280x720, sin audio; póster en img/video-poster.jpg). Colores y tipografía de marca en css/styles.css (:root)
 robots.txt, sitemap.xml    SEO
 ```
+
+## Páginas publicadas
+
+- `/` (index.html) — portada
+- `/clase-muestra.html` — landing de clase muestra para anuncios
+- `/cursos.html` — detalle de cursos y temarios
+- `/modalidades.html` — online, híbrido y presencial
+- `/programacion-con-bloques.html` — juego de programación con bloques
+- `/aviso-de-privacidad.html` — aviso de privacidad (borrador; fuera del sitemap)
+
+Todas las páginas internas tienen el bloque "También te puede interesar". Las animaciones de entrada respetan `prefers-reduced-motion` y, si el JavaScript no carga, el contenido se ve normal.
 
 ## Antes de publicar
 

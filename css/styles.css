@@ -496,3 +496,53 @@ button, input, select, textarea { font: inherit; }
   .ai-banner-media { flex-basis: 100%; max-width: 320px; }
   .ai-chip-1 { left: 0; } .ai-chip-2 { right: 0; } .ai-chip-3 { left: 4px; }
 }
+
+/* ===== Día 3 (20 nov 2026) ===== */
+
+/* Página de aterrizaje: clase-muestra.html */
+.lp-header .header-inner { min-height: 72px; }
+.lp-header-cta { min-height: 48px; }
+@media (max-width: 640px) {
+  .lp-header .lp-header-cta { display: inline-flex; padding: 0 16px; min-height: 44px; font-size: 15px; }
+  .lp-header .brand-name { font-size: 16px; }
+  .lp-header .brand img { width: 44px; height: 44px; }
+}
+@media (max-width: 440px) { .lp-header .brand-name { display: none; } }
+.lp-hl { color: var(--yellow); }
+.lp-hero .hero-inner { padding: 64px 24px 72px; }
+.lp-hero-media { flex: 1 1 320px; min-width: 0; display: flex; justify-content: center; }
+.lp-hero-media img { width: 100%; max-width: 380px; height: auto; border-radius: 32px; background: #fff; }
+@media (max-width: 640px) { .lp-hero-media img { max-width: 240px; } .lp-hero .hero-inner { padding: 44px 24px 52px; gap: 32px; } }
+.lp-steps .steps-band > .btn-yellow { margin-top: 32px; }
+.lp-section { padding-top: 24px; }
+.lp-sub { margin: 12px 0 28px; }
+.lp-courses { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+@media (max-width: 380px) { .lp-courses { grid-template-columns: 1fr; } }
+.lp-course { display: flex; gap: 16px; align-items: flex-start; padding: 18px; border: 2px solid var(--line); border-radius: 20px; background: #fff; }
+.lp-course-mark.course-top { flex: none; width: 64px; height: 64px; padding: 0; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; }
+.lp-course-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.lp-course h3 { font-size: 20px; font-weight: 900; }
+.lp-course p { font-size: 16px; color: var(--muted); }
+.lp-course-go { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 800; color: var(--teal-dark); }
+.lp-modes .btn-navy { align-self: flex-start; margin-top: auto; min-height: 48px; }
+.lp-modes-section { padding-bottom: 48px; }
+.lp-modes-section h2 { margin-bottom: 32px; }
+.lp-footer .footer-bottom { padding-top: 24px; }
+.steps-more { margin-top: 32px; }
+
+/* Animaciones de entrada (solo si main.js agrega html.js-reveal) */
+.js-reveal .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+.js-reveal .reveal.is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
+}
+@media print { .js-reveal .reveal { opacity: 1; transform: none; } }
+
+/* Botón "Volver arriba": arriba del WhatsApp flotante y de la barra móvil */
+.back-to-top { position: fixed; right: 32px; bottom: 100px; z-index: 55; width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--line); background: rgba(255,255,255,.96); color: var(--navy); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.14); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .2s ease, transform .2s ease, visibility .2s; }
+.back-to-top.is-shown { opacity: 1; visibility: visible; transform: none; }
+.back-to-top:hover { border-color: var(--teal); color: var(--teal); }
+@media (max-width: 640px) {
+  .back-to-top { right: 16px; bottom: calc(88px + env(safe-area-inset-bottom)); width: 44px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) { .back-to-top { transition: none; } }

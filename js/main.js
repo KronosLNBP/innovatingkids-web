@@ -82,6 +82,14 @@
     });
   });
 
+  // Botones "Elegir modalidad": preseleccionan la modalidad en el formulario
+  var modeSelect = document.getElementById('modalidad');
+  document.querySelectorAll('[data-mode]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (modeSelect) modeSelect.value = a.getAttribute('data-mode');
+    });
+  });
+
   // Formulario: valida y abre WhatsApp con los datos
   var form = document.getElementById('lead-form');
   if (form) {
@@ -131,6 +139,57 @@
   if (introVideo && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     introVideo.removeAttribute('autoplay');
     introVideo.pause();
+  }
+
+  // Animaciones de entrada al hacer scroll. Solo se activan si el navegador
+  // soporta IntersectionObserver y la persona no pidió menos movimiento;
+  // sin JS el contenido se ve normal.
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var revealSel = '.section-head, .benefit, .course, .mode, .step, .related-card, .mode-detail, .course-detail, .syllabus, .mascot-card, .ai-card, .lp-course, .steps-band, .faq-item, .signup-card';
+    var revealEls = Array.prototype.slice.call(document.querySelectorAll(revealSel));
+    if (revealEls.length) {
+      document.documentElement.classList.add('js-reveal');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            en.target.classList.add('is-visible');
+            io.unobserve(en.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -40px 0px', threshold: 0.05 });
+      revealEls.forEach(function (el) { el.classList.add('reveal'); io.observe(el); });
+      // Red de seguridad: si algo no se marcó (p. ej. al imprimir o saltar con un ancla), se muestra todo
+      setTimeout(function () {
+        revealEls.forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('is-visible');
+        });
+      }, 1200);
+      window.addEventListener('beforeprint', function () {
+        revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+      });
+    }
+  }
+
+  // Botón "Volver arriba" en páginas largas
+  if (document.documentElement.scrollHeight > window.innerHeight * 2.5) {
+    var topBtn = document.createElement('button');
+    topBtn.type = 'button';
+    topBtn.className = 'back-to-top';
+    topBtn.setAttribute('aria-label', 'Volver arriba');
+    topBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>';
+    document.body.appendChild(topBtn);
+    var onScroll = function () {
+      topBtn.classList.toggle('is-shown', window.scrollY > window.innerHeight * 1.2);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    topBtn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      var target = document.querySelector('.site-header a, a');
+      if (target) target.focus({ preventScroll: true });
+    });
   }
 
   var year = document.getElementById('year');
