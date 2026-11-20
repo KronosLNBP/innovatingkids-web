@@ -465,3 +465,34 @@ button, input, select, textarea { font: inherit; }
   .mascot-cta .btn { width: 100%; }
   .ai-note-mascot { display: none; }
 }
+
+/* Banner de inteligencia artificial */
+.ai-banner { padding: 64px 0 8px; }
+.ai-banner-card { position: relative; overflow: hidden; display: flex; flex-wrap: wrap; align-items: center; gap: 32px; border-radius: 32px; background: var(--navy-2); color: #fff; padding: 48px 48px 0; }
+.ai-banner-card::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.14) 1px, transparent 1.5px); background-size: 26px 26px; pointer-events: none; }
+.ai-banner-copy { position: relative; flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 18px; padding-bottom: 48px; }
+.ai-banner-kicker { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.1); font-weight: 800; font-size: 14px; }
+.ai-banner-kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); }
+.ai-banner-copy h2 { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.1; }
+.ai-banner-copy h2 span { color: var(--yellow); }
+.ai-banner-lead { font-size: 18px; line-height: 1.55; color: #D6E4F0; }
+.ai-banner-reasons { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px 20px; }
+.ai-banner-reasons li { display: flex; gap: 10px; align-items: flex-start; font-size: 16px; line-height: 1.5; color: #D6E4F0; }
+.ai-banner-reasons li strong { color: #fff; }
+.ai-banner-reasons svg { color: var(--green); margin-top: 2px; }
+.ai-banner-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+.ai-banner-media { position: relative; flex: 0 1 380px; min-width: 0; align-self: flex-end; margin: 0 auto; }
+.ai-banner-media img { position: relative; z-index: 1; width: 100%; height: auto; border-radius: 28px 28px 0 0; display: block; }
+.ai-banner-glow { position: absolute; left: 50%; top: 45%; width: 90%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(62,191,227,.45), rgba(62,191,227,0) 70%); }
+.ai-chip { position: absolute; z-index: 2; padding: 8px 14px; border-radius: 12px; font-weight: 900; font-size: 14px; color: var(--navy); box-shadow: 0 10px 24px rgba(0,0,0,.3); }
+.ai-chip-1 { top: 10%; left: -14px; background: var(--yellow); transform: rotate(-6deg); }
+.ai-chip-2 { top: 42%; right: -10px; background: var(--blue); transform: rotate(5deg); }
+.ai-chip-3 { bottom: 14%; left: -6px; background: var(--green); transform: rotate(-3deg); }
+@media (max-width: 640px) {
+  .ai-banner { padding-top: 40px; }
+  .ai-banner-card { padding: 32px 22px 0; border-radius: 24px; }
+  .ai-banner-copy { padding-bottom: 8px; }
+  .ai-banner-ctas .btn { width: 100%; }
+  .ai-banner-media { flex-basis: 100%; max-width: 320px; }
+  .ai-chip-1 { left: 0; } .ai-chip-2 { right: 0; } .ai-chip-3 { left: 4px; }
+}
