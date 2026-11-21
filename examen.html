@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Examen de diagnóstico: computación, electrónica y PC gamer | Innovating Kids</title>
+  <meta name="description" content="Examen de diagnóstico de Innovating Kids para alumnos de 12 a 15 años: computación básica, hardware y software, electrónica con LEDs y resistencias, soldadura, PC gamer y consolas.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://www.innovatingkids.com.mx/examen.html">
+  <meta name="theme-color" content="#254E64">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:site_name" content="Innovating Kids">
+  <meta property="og:title" content="Examen de diagnóstico | Innovating Kids">
+  <meta property="og:description" content="Computación básica, electrónica, soldadura, PC gamer y consolas.">
+  <meta property="og:url" content="https://www.innovatingkids.com.mx/examen.html">
+  <meta property="og:image" content="https://www.innovatingkids.com.mx/img/logo.png">
+  <link rel="icon" href="img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20261121a">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <!-- ENCABEZADO -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Innovating Kids, inicio">
+        <img src="img/logo.png" alt="" width="52" height="52">
+        <span class="brand-name">Innovating <span>Kids</span></span>
+      </a>
+      <nav class="main-nav" id="menu" aria-label="Principal">
+        <a href="index.html#cursos">Cursos</a>
+        <a href="cursos.html">Detalle de cursos</a>
+        <a href="programacion-con-bloques.html">Programación con bloques</a>
+        <a href="index.html#como">Cómo funciona</a>
+        <a href="modalidades.html">Modalidades</a>
+        <a href="index.html#alumnos">Alumnos</a>
+        <a href="index.html#preguntas">Preguntas</a>
+        <a href="examen.html" aria-current="page">Examen</a>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-outline js-wa" href="#" data-msg="Hola, quiero información sobre los cursos de Innovating Kids.">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 21l2.3-5.2A8.4 8.4 0 1 1 21 11.5z"/></svg>
+          WhatsApp
+        </a>
+        <a class="btn btn-teal" href="clase-muestra.html">Clase muestra gratis</a>
+        <button class="menu-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+    <main id="contenido">
+    <section class="hero page-hero">
+      <div class="container page-hero-inner">
+        <nav class="breadcrumb" aria-label="Ruta de navegación"><a href="index.html">Inicio</a> <span aria-hidden="true">/</span> <span>Examen</span></nav>
+        <h1 class="display">Examen de diagnóstico</h1>
+        <p class="hero-lead">Computación básica, hardware y software, electrónica digital y analógica, LEDs, resistencias, soldadura, PC gamer y consolas. Son 29 preguntas: elige una respuesta en cada una. Al final verás tu calificación y la explicación de cada respuesta.</p>
+      </div>
+    </section>
+
+    <section class="section exam-wrap" aria-label="Examen">
+      <div class="container exam-container">
+        <noscript><p class="exam-alert">Para calificar el examen necesitas activar JavaScript en tu navegador.</p></noscript>
+        <form class="exam" id="exam-form" novalidate>
+          <div class="exam-student">
+            <div class="field">
+              <label for="alumno">Nombre del alumno</label>
+              <input id="alumno" name="alumno" type="text" autocomplete="name" placeholder="Nombre y apellido" required>
+            </div>
+            <div class="field">
+              <label for="edad">Edad</label>
+              <input id="edad" name="edad" type="number" min="8" max="18" value="14" inputmode="numeric">
+            </div>
+            <p class="exam-progress" aria-live="polite"><span id="exam-count">0</span> de 29 respondidas</p>
+          </div>
+
+          <fieldset class="exam-section" id="sec-computacion" data-section="computacion">
+            <legend><span class="exam-section-tag">Sección</span> Computación básica, hardware y software</legend>
+            <div class="exam-q" id="q1" role="radiogroup" aria-labelledby="q1-t">
+              <p class="exam-q-title" id="q1-t"><span class="exam-q-num">1.</span> ¿Qué es el hardware?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q1" value="0"><span>Los programas que instalas en la computadora</span></label>
+                <label class="exam-option"><input type="radio" name="q1" value="1"><span>Las partes físicas de la computadora que puedes tocar</span></label>
+                <label class="exam-option"><input type="radio" name="q1" value="2"><span>La conexión a internet</span></label>
+                <label class="exam-option"><input type="radio" name="q1" value="3"><span>Los archivos que guardas</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q2" role="radiogroup" aria-labelledby="q2-t">
+              <p class="exam-q-title" id="q2-t"><span class="exam-q-num">2.</span> ¿Cuál de estos es un ejemplo de software?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q2" value="0"><span>La memoria RAM</span></label>
+                <label class="exam-option"><input type="radio" name="q2" value="1"><span>El teclado</span></label>
+                <label class="exam-option"><input type="radio" name="q2" value="2"><span>El sistema operativo Windows</span></label>
+                <label class="exam-option"><input type="radio" name="q2" value="3"><span>La fuente de poder</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q3" role="radiogroup" aria-labelledby="q3-t">
+              <p class="exam-q-title" id="q3-t"><span class="exam-q-num">3.</span> ¿Qué componente ejecuta las instrucciones de los programas, como el “cerebro” de la computadora?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q3" value="0"><span>El procesador (CPU)</span></label>
+                <label class="exam-option"><input type="radio" name="q3" value="1"><span>El monitor</span></label>
+                <label class="exam-option"><input type="radio" name="q3" value="2"><span>El disco duro</span></label>
+                <label class="exam-option"><input type="radio" name="q3" value="3"><span>El gabinete</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q4" role="radiogroup" aria-labelledby="q4-t">
+              <p class="exam-q-title" id="q4-t"><span class="exam-q-num">4.</span> ¿Qué memoria se borra cuando apagas la computadora?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q4" value="0"><span>El disco SSD</span></label>
+                <label class="exam-option"><input type="radio" name="q4" value="1"><span>La memoria RAM</span></label>
+                <label class="exam-option"><input type="radio" name="q4" value="2"><span>Una memoria USB</span></label>
+                <label class="exam-option"><input type="radio" name="q4" value="3"><span>El disco duro HDD</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q5" role="radiogroup" aria-labelledby="q5-t">
+              <p class="exam-q-title" id="q5-t"><span class="exam-q-num">5.</span> ¿Cuántos bits tiene 1 byte?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q5" value="0"><span>2</span></label>
+                <label class="exam-option"><input type="radio" name="q5" value="1"><span>4</span></label>
+                <label class="exam-option"><input type="radio" name="q5" value="2"><span>8</span></label>
+                <label class="exam-option"><input type="radio" name="q5" value="3"><span>16</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q6" role="radiogroup" aria-labelledby="q6-t">
+              <p class="exam-q-title" id="q6-t"><span class="exam-q-num">6.</span> ¿Cuál es un dispositivo de entrada?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q6" value="0"><span>El monitor</span></label>
+                <label class="exam-option"><input type="radio" name="q6" value="1"><span>Las bocinas</span></label>
+                <label class="exam-option"><input type="radio" name="q6" value="2"><span>La impresora</span></label>
+                <label class="exam-option"><input type="radio" name="q6" value="3"><span>El mouse</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+          </fieldset>
+          <fieldset class="exam-section" id="sec-electronica" data-section="electronica">
+            <legend><span class="exam-section-tag">Sección</span> Electrónica básica: LEDs y resistencias</legend>
+            <div class="exam-q" id="q7" role="radiogroup" aria-labelledby="q7-t">
+              <p class="exam-q-title" id="q7-t"><span class="exam-q-num">7.</span> Según la Ley de Ohm, ¿cómo se calcula el voltaje (V)?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q7" value="0"><span>V = I + R</span></label>
+                <label class="exam-option"><input type="radio" name="q7" value="1"><span>V = I × R</span></label>
+                <label class="exam-option"><input type="radio" name="q7" value="2"><span>V = R ÷ I</span></label>
+                <label class="exam-option"><input type="radio" name="q7" value="3"><span>V = I − R</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q8" role="radiogroup" aria-labelledby="q8-t">
+              <p class="exam-q-title" id="q8-t"><span class="exam-q-num">8.</span> ¿Para qué sirve poner una resistencia en serie con un LED?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q8" value="0"><span>Para que el LED brille de otro color</span></label>
+                <label class="exam-option"><input type="radio" name="q8" value="1"><span>Para limitar la corriente y que el LED no se queme</span></label>
+                <label class="exam-option"><input type="radio" name="q8" value="2"><span>Para aumentar el voltaje</span></label>
+                <label class="exam-option"><input type="radio" name="q8" value="3"><span>Para que el LED parpadee</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q9" role="radiogroup" aria-labelledby="q9-t">
+              <p class="exam-q-title" id="q9-t"><span class="exam-q-num">9.</span> ¿Cuál patita del LED es el ánodo (+)?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q9" value="0"><span>La más larga</span></label>
+                <label class="exam-option"><input type="radio" name="q9" value="1"><span>La más corta</span></label>
+                <label class="exam-option"><input type="radio" name="q9" value="2"><span>Las dos son iguales</span></label>
+                <label class="exam-option"><input type="radio" name="q9" value="3"><span>La que está doblada</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q10" role="radiogroup" aria-labelledby="q10-t">
+              <p class="exam-q-title" id="q10-t"><span class="exam-q-num">10.</span> Tienes una fuente de 5 V y un LED de 2 V que necesita 20 mA. ¿Qué resistencia necesitas?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q10" value="0"><span>100 Ω</span></label>
+                <label class="exam-option"><input type="radio" name="q10" value="1"><span>150 Ω</span></label>
+                <label class="exam-option"><input type="radio" name="q10" value="2"><span>250 Ω</span></label>
+                <label class="exam-option"><input type="radio" name="q10" value="3"><span>1 kΩ</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q11" role="radiogroup" aria-labelledby="q11-t">
+              <p class="exam-q-title" id="q11-t"><span class="exam-q-num">11.</span> Una resistencia tiene las bandas café, negro y rojo. ¿Cuál es su valor?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q11" value="0"><span>10 Ω</span></label>
+                <label class="exam-option"><input type="radio" name="q11" value="1"><span>100 Ω</span></label>
+                <label class="exam-option"><input type="radio" name="q11" value="2"><span>1 kΩ (1000 Ω)</span></label>
+                <label class="exam-option"><input type="radio" name="q11" value="3"><span>10 kΩ</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q12" role="radiogroup" aria-labelledby="q12-t">
+              <p class="exam-q-title" id="q12-t"><span class="exam-q-num">12.</span> Si conectas dos resistencias de 100 Ω en serie, ¿cuál es la resistencia total?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q12" value="0"><span>50 Ω</span></label>
+                <label class="exam-option"><input type="radio" name="q12" value="1"><span>100 Ω</span></label>
+                <label class="exam-option"><input type="radio" name="q12" value="2"><span>200 Ω</span></label>
+                <label class="exam-option"><input type="radio" name="q12" value="3"><span>10 000 Ω</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q13" role="radiogroup" aria-labelledby="q13-t">
+              <p class="exam-q-title" id="q13-t"><span class="exam-q-num">13.</span> ¿Qué componente te permite variar la resistencia girando una perilla?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q13" value="0"><span>Un LED</span></label>
+                <label class="exam-option"><input type="radio" name="q13" value="1"><span>Un potenciómetro</span></label>
+                <label class="exam-option"><input type="radio" name="q13" value="2"><span>Un capacitor</span></label>
+                <label class="exam-option"><input type="radio" name="q13" value="3"><span>Un fusible</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+          </fieldset>
+          <fieldset class="exam-section" id="sec-digital" data-section="digital">
+            <legend><span class="exam-section-tag">Sección</span> Señales digitales y analógicas, y mediciones</legend>
+            <div class="exam-q" id="q14" role="radiogroup" aria-labelledby="q14-t">
+              <p class="exam-q-title" id="q14-t"><span class="exam-q-num">14.</span> ¿Qué caracteriza a una señal digital?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q14" value="0"><span>Puede tomar cualquier valor</span></label>
+                <label class="exam-option"><input type="radio" name="q14" value="1"><span>Solo tiene dos estados: 0 y 1 (apagado y encendido)</span></label>
+                <label class="exam-option"><input type="radio" name="q14" value="2"><span>Siempre es de 220 V</span></label>
+                <label class="exam-option"><input type="radio" name="q14" value="3"><span>Solo existe en las consolas</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q15" role="radiogroup" aria-labelledby="q15-t">
+              <p class="exam-q-title" id="q15-t"><span class="exam-q-num">15.</span> ¿Cuál es un ejemplo de señal analógica?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q15" value="0"><span>Un botón que solo está presionado o suelto</span></label>
+                <label class="exam-option"><input type="radio" name="q15" value="1"><span>El voltaje que cambia poco a poco al girar un potenciómetro</span></label>
+                <label class="exam-option"><input type="radio" name="q15" value="2"><span>Un número binario</span></label>
+                <label class="exam-option"><input type="radio" name="q15" value="3"><span>Un LED que solo prende o apaga</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q16" role="radiogroup" aria-labelledby="q16-t">
+              <p class="exam-q-title" id="q16-t"><span class="exam-q-num">16.</span> Para medir el voltaje de una pila con el multímetro, ¿cómo lo conectas?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q16" value="0"><span>En serie, abriendo el circuito</span></label>
+                <label class="exam-option"><input type="radio" name="q16" value="1"><span>En paralelo, con las puntas en los extremos de la pila</span></label>
+                <label class="exam-option"><input type="radio" name="q16" value="2"><span>Con una sola punta</span></label>
+                <label class="exam-option"><input type="radio" name="q16" value="3"><span>No se puede medir</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q17" role="radiogroup" aria-labelledby="q17-t">
+              <p class="exam-q-title" id="q17-t"><span class="exam-q-num">17.</span> En una protoboard, ¿cómo están conectados los orificios?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q17" value="0"><span>Ninguno está conectado</span></label>
+                <label class="exam-option"><input type="radio" name="q17" value="1"><span>Todos están conectados entre sí</span></label>
+                <label class="exam-option"><input type="radio" name="q17" value="2"><span>Por filas o columnas, conectados internamente en grupos</span></label>
+                <label class="exam-option"><input type="radio" name="q17" value="3"><span>Solo los de las esquinas</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+          </fieldset>
+          <fieldset class="exam-section" id="sec-soldadura" data-section="soldadura">
+            <legend><span class="exam-section-tag">Sección</span> Soldadura y seguridad</legend>
+            <div class="exam-q" id="q18" role="radiogroup" aria-labelledby="q18-t">
+              <p class="exam-q-title" id="q18-t"><span class="exam-q-num">18.</span> ¿Cuál es la forma correcta de soldar un componente?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q18" value="0"><span>Derretir la soldadura en la punta del cautín y dejarla caer sobre la pieza</span></label>
+                <label class="exam-option"><input type="radio" name="q18" value="1"><span>Calentar la patita y el pad al mismo tiempo y luego acercar la soldadura a la unión</span></label>
+                <label class="exam-option"><input type="radio" name="q18" value="2"><span>Soplarle a la soldadura para enfriarla rápido</span></label>
+                <label class="exam-option"><input type="radio" name="q18" value="3"><span>Aplicar soldadura sin calentar</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q19" role="radiogroup" aria-labelledby="q19-t">
+              <p class="exam-q-title" id="q19-t"><span class="exam-q-num">19.</span> ¿Cómo se ve una buena soldadura?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q19" value="0"><span>Como una bola opaca que no toca el pad</span></label>
+                <label class="exam-option"><input type="radio" name="q19" value="1"><span>Brillante, lisa y en forma de pequeño volcán o cono</span></label>
+                <label class="exam-option"><input type="radio" name="q19" value="2"><span>Con grietas</span></label>
+                <label class="exam-option"><input type="radio" name="q19" value="3"><span>Muy grande y uniendo varios pads</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q20" role="radiogroup" aria-labelledby="q20-t">
+              <p class="exam-q-title" id="q20-t"><span class="exam-q-num">20.</span> ¿Cuál es una regla de seguridad al soldar?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q20" value="0"><span>Dejar el cautín caliente sobre la mesa</span></label>
+                <label class="exam-option"><input type="radio" name="q20" value="1"><span>Tocar la punta para saber si ya está caliente</span></label>
+                <label class="exam-option"><input type="radio" name="q20" value="2"><span>Usar lentes de protección, trabajar con ventilación y regresar el cautín a su base</span></label>
+                <label class="exam-option"><input type="radio" name="q20" value="3"><span>Soldar con el circuito conectado a la corriente</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q21" role="radiogroup" aria-labelledby="q21-t">
+              <p class="exam-q-title" id="q21-t"><span class="exam-q-num">21.</span> ¿Qué pasa si conectas un LED directo a 5 V sin resistencia?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q21" value="0"><span>Brilla mejor y dura más</span></label>
+                <label class="exam-option"><input type="radio" name="q21" value="1"><span>Puede pasar demasiada corriente y quemarse</span></label>
+                <label class="exam-option"><input type="radio" name="q21" value="2"><span>No prende nunca</span></label>
+                <label class="exam-option"><input type="radio" name="q21" value="3"><span>Cambia de color</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+          </fieldset>
+          <fieldset class="exam-section" id="sec-pc" data-section="pc">
+            <legend><span class="exam-section-tag">Sección</span> PC gamer y consolas</legend>
+            <div class="exam-q" id="q22" role="radiogroup" aria-labelledby="q22-t">
+              <p class="exam-q-title" id="q22-t"><span class="exam-q-num">22.</span> ¿Qué componente se encarga de procesar los gráficos de los videojuegos?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q22" value="0"><span>La tarjeta de video (GPU)</span></label>
+                <label class="exam-option"><input type="radio" name="q22" value="1"><span>La fuente de poder</span></label>
+                <label class="exam-option"><input type="radio" name="q22" value="2"><span>La tarjeta de red</span></label>
+                <label class="exam-option"><input type="radio" name="q22" value="3"><span>El ventilador</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q23" role="radiogroup" aria-labelledby="q23-t">
+              <p class="exam-q-title" id="q23-t"><span class="exam-q-num">23.</span> ¿A qué componente se conectan todos los demás?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q23" value="0"><span>Al monitor</span></label>
+                <label class="exam-option"><input type="radio" name="q23" value="1"><span>A la tarjeta madre (motherboard)</span></label>
+                <label class="exam-option"><input type="radio" name="q23" value="2"><span>Al teclado</span></label>
+                <label class="exam-option"><input type="radio" name="q23" value="3"><span>Al disco duro</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q24" role="radiogroup" aria-labelledby="q24-t">
+              <p class="exam-q-title" id="q24-t"><span class="exam-q-num">24.</span> Antes de tocar los componentes al armar una PC, ¿qué debes hacer?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q24" value="0"><span>Mojarte las manos</span></label>
+                <label class="exam-option"><input type="radio" name="q24" value="1"><span>Descargar la electricidad estática (pulsera antiestática o tocar metal sin pintura del gabinete)</span></label>
+                <label class="exam-option"><input type="radio" name="q24" value="2"><span>Conectar la PC a la corriente</span></label>
+                <label class="exam-option"><input type="radio" name="q24" value="3"><span>Usar guantes de lana</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q25" role="radiogroup" aria-labelledby="q25-t">
+              <p class="exam-q-title" id="q25-t"><span class="exam-q-num">25.</span> ¿Qué se coloca entre el procesador y su disipador?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q25" value="0"><span>Pegamento</span></label>
+                <label class="exam-option"><input type="radio" name="q25" value="1"><span>Cinta aislante</span></label>
+                <label class="exam-option"><input type="radio" name="q25" value="2"><span>Pasta térmica</span></label>
+                <label class="exam-option"><input type="radio" name="q25" value="3"><span>Nada</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q26" role="radiogroup" aria-labelledby="q26-t">
+              <p class="exam-q-title" id="q26-t"><span class="exam-q-num">26.</span> ¿Qué debes revisar para que el procesador y la RAM sean compatibles con la tarjeta madre?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q26" value="0"><span>El color de los componentes</span></label>
+                <label class="exam-option"><input type="radio" name="q26" value="1"><span>El socket del procesador y el tipo de memoria (por ejemplo DDR4 o DDR5)</span></label>
+                <label class="exam-option"><input type="radio" name="q26" value="2"><span>La marca del monitor</span></label>
+                <label class="exam-option"><input type="radio" name="q26" value="3"><span>El tamaño del teclado</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q27" role="radiogroup" aria-labelledby="q27-t">
+              <p class="exam-q-title" id="q27-t"><span class="exam-q-num">27.</span> ¿En qué unidad se mide la potencia de la fuente de poder?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q27" value="0"><span>Gigabytes (GB)</span></label>
+                <label class="exam-option"><input type="radio" name="q27" value="1"><span>Hertz (Hz)</span></label>
+                <label class="exam-option"><input type="radio" name="q27" value="2"><span>Watts (W)</span></label>
+                <label class="exam-option"><input type="radio" name="q27" value="3"><span>Píxeles</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q28" role="radiogroup" aria-labelledby="q28-t">
+              <p class="exam-q-title" id="q28-t"><span class="exam-q-num">28.</span> ¿Qué tienen en común una consola moderna y una PC gamer?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q28" value="0"><span>Nada, funcionan completamente distinto</span></label>
+                <label class="exam-option"><input type="radio" name="q28" value="1"><span>Ambas tienen procesador (CPU), tarjeta gráfica (GPU), memoria RAM y almacenamiento</span></label>
+                <label class="exam-option"><input type="radio" name="q28" value="2"><span>Las consolas no usan procesador</span></label>
+                <label class="exam-option"><input type="radio" name="q28" value="3"><span>Las PCs no pueden conectarse a un televisor</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+            <div class="exam-q" id="q29" role="radiogroup" aria-labelledby="q29-t">
+              <p class="exam-q-title" id="q29-t"><span class="exam-q-num">29.</span> ¿Qué significa FPS en los videojuegos?</p>
+              <div class="exam-options">
+                <label class="exam-option"><input type="radio" name="q29" value="0"><span>Fotos por semana</span></label>
+                <label class="exam-option"><input type="radio" name="q29" value="1"><span>Cuadros (imágenes) por segundo</span></label>
+                <label class="exam-option"><input type="radio" name="q29" value="2"><span>Fuerza por segundo</span></label>
+                <label class="exam-option"><input type="radio" name="q29" value="3"><span>Fuente de poder segura</span></label>
+              </div>
+              <p class="exam-feedback" hidden></p>
+            </div>
+          </fieldset>
+
+          <fieldset class="exam-section" data-section="abierta">
+            <legend><span class="exam-section-tag">Opcional</span> Pregunta abierta</legend>
+            <div class="field">
+              <label for="abierta">Describe la PC gamer que armarías (procesador, tarjeta de video, RAM, almacenamiento y fuente) y explica por qué elegiste cada parte.</label>
+              <textarea id="abierta" name="abierta" rows="5" placeholder="Escribe tu respuesta…"></textarea>
+            </div>
+          </fieldset>
+
+          <p class="exam-alert" id="exam-error" role="alert" hidden></p>
+          <div class="exam-actions">
+            <button class="btn btn-yellow" type="submit">Calificar examen</button>
+          </div>
+        </form>
+
+        <section class="exam-result" id="exam-result" hidden aria-labelledby="result-title" tabindex="-1">
+          <h2 class="display h2" id="result-title">Resultado</h2>
+          <div class="exam-score">
+            <p class="exam-score-big"><span id="score-grade">0</span><small>/10</small></p>
+            <div>
+              <p class="exam-score-line"><strong id="score-name"></strong></p>
+              <p class="exam-score-line"><span id="score-correct">0</span> de 29 respuestas correctas (<span id="score-pct">0</span>%)</p>
+              <p class="exam-score-msg" id="score-msg"></p>
+            </div>
+          </div>
+          <ul class="exam-breakdown" id="score-sections"></ul>
+          <p class="lead">Revisa abajo cada pregunta: en verde lo que acertaste y en rojo lo que hay que repasar, con su explicación.</p>
+          <div class="exam-actions">
+            <a class="btn btn-teal" id="send-wa" href="#" target="_blank" rel="noopener">Enviar resultados por WhatsApp</a>
+            <button class="btn btn-outline" type="button" id="print-exam">Imprimir o guardar en PDF</button>
+            <button class="btn btn-outline" type="button" id="retry-exam">Volver a intentarlo</button>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <!-- PIE -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="img/logo.png" alt="Innovating Kids — Arte y Tecnología" width="128" height="128" loading="lazy">
+        <span class="brand-name">Innovating <span>Kids</span></span>
+        <p>Programación, robótica y videojuegos para niños. Parte de <a href="https://grupoempresarialdiaz.com.mx/">Grupo Empresarial Díaz</a>.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Pie de página">
+        <div>
+          <strong>Explora</strong>
+          <a href="index.html#cursos">Cursos</a>
+          <a href="cursos.html">Detalle de cursos</a>
+          <a href="programacion-con-bloques.html">Programación con bloques</a>
+          <a href="modalidades.html">Modalidades</a>
+          <a href="index.html#preguntas">Preguntas</a>
+          <a href="clase-muestra.html">Clase muestra gratis</a>
+          <a href="examen.html">Examen</a>
+        </div>
+        <div>
+          <strong>Contacto</strong>
+          <a class="js-wa" href="#" data-msg="Hola, quiero información sobre Innovating Kids.">WhatsApp</a>
+        </div>
+      </nav>
+    </div>
+    <div class="container footer-bottom">© <span id="year">2026</span> Innovating Kids · <a href="aviso-de-privacidad.html">Aviso de privacidad</a></div>
+  </footer>
+
+  <!-- WhatsApp flotante (escritorio) y barra fija (celular) -->
+  <a class="wa-float js-wa" href="#" data-msg="Hola, quiero información sobre los cursos de Innovating Kids." aria-label="Escríbenos por WhatsApp">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 21l2.3-5.2A8.4 8.4 0 1 1 21 11.5z"/></svg>
+  </a>
+  <div class="mobile-bar">
+    <a class="mb-wa js-wa" href="#" data-msg="Hola, quiero información sobre los cursos de Innovating Kids.">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 21l2.3-5.2A8.4 8.4 0 1 1 21 11.5z"/></svg>WhatsApp
+    </a>
+    <a class="mb-cta" href="clase-muestra.html">Clase gratis</a>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js?v=20261120a"></script>
+  <script>window.IK_EXAM = {"key": {"q1": {"a": 1, "s": "computacion", "e": "El hardware son los componentes físicos: CPU, RAM, disco, teclado, monitor…", "c": "Las partes físicas de la computadora que puedes tocar"}, "q2": {"a": 2, "s": "computacion", "e": "El software son los programas. Windows es un sistema operativo, o sea software.", "c": "El sistema operativo Windows"}, "q3": {"a": 0, "s": "computacion", "e": "La CPU procesa y ejecuta las instrucciones.", "c": "El procesador (CPU)"}, "q4": {"a": 1, "s": "computacion", "e": "La RAM es memoria volátil: guarda datos solo mientras hay energía.", "c": "La memoria RAM"}, "q5": {"a": 2, "s": "computacion", "e": "1 byte = 8 bits.", "c": "8"}, "q6": {"a": 3, "s": "computacion", "e": "El mouse envía información a la computadora (entrada). Monitor, bocinas e impresora son de salida.", "c": "El mouse"}, "q7": {"a": 1, "s": "electronica", "e": "Ley de Ohm: V = I × R (voltaje = corriente × resistencia).", "c": "V = I × R"}, "q8": {"a": 1, "s": "electronica", "e": "La resistencia limita la corriente que pasa por el LED.", "c": "Para limitar la corriente y que el LED no se queme"}, "q9": {"a": 0, "s": "electronica", "e": "La patita larga es el ánodo (+) y la corta es el cátodo (−).", "c": "La más larga"}, "q10": {"a": 1, "s": "electronica", "e": "R = (5 V − 2 V) ÷ 0.020 A = 150 Ω.", "c": "150 Ω"}, "q11": {"a": 2, "s": "electronica", "e": "Café = 1, negro = 0, rojo = multiplicador ×100 → 10 × 100 = 1000 Ω.", "c": "1 kΩ (1000 Ω)"}, "q12": {"a": 2, "s": "electronica", "e": "En serie las resistencias se suman: 100 + 100 = 200 Ω.", "c": "200 Ω"}, "q13": {"a": 1, "s": "electronica", "e": "El potenciómetro es una resistencia variable.", "c": "Un potenciómetro"}, "q14": {"a": 1, "s": "digital", "e": "Una señal digital trabaja con valores discretos, normalmente 0 y 1.", "c": "Solo tiene dos estados: 0 y 1 (apagado y encendido)"}, "q15": {"a": 1, "s": "digital", "e": "Una señal analógica cambia de forma continua, como el voltaje de un potenciómetro.", "c": "El voltaje que cambia poco a poco al girar un potenciómetro"}, "q16": {"a": 1, "s": "digital", "e": "El voltaje se mide en paralelo; la corriente se mide en serie.", "c": "En paralelo, con las puntas en los extremos de la pila"}, "q17": {"a": 2, "s": "digital", "e": "Los orificios están unidos por tiras metálicas internas en grupos; las líneas laterales suelen ser de alimentación (+ y −).", "c": "Por filas o columnas, conectados internamente en grupos"}, "q18": {"a": 1, "s": "soldadura", "e": "Se calienta la unión (patita + pad) y la soldadura se aplica ahí para que fluya bien.", "c": "Calentar la patita y el pad al mismo tiempo y luego acercar la soldadura a la unión"}, "q19": {"a": 1, "s": "soldadura", "e": "Una buena unión es lisa, brillante y con forma de cono; una bola opaca suele ser una “soldadura fría”.", "c": "Brillante, lisa y en forma de pequeño volcán o cono"}, "q20": {"a": 2, "s": "soldadura", "e": "Protege tus ojos, evita respirar el humo y guarda siempre el cautín en su base.", "c": "Usar lentes de protección, trabajar con ventilación y regresar el cautín a su base"}, "q21": {"a": 1, "s": "soldadura", "e": "Sin resistencia la corriente no se limita y el LED se puede dañar.", "c": "Puede pasar demasiada corriente y quemarse"}, "q22": {"a": 0, "s": "pc", "e": "La GPU procesa los gráficos; es clave en una PC gamer.", "c": "La tarjeta de video (GPU)"}, "q23": {"a": 1, "s": "pc", "e": "La tarjeta madre interconecta CPU, RAM, GPU, almacenamiento y fuente.", "c": "A la tarjeta madre (motherboard)"}, "q24": {"a": 1, "s": "pc", "e": "La estática puede dañar los componentes; hay que descargarla primero.", "c": "Descargar la electricidad estática (pulsera antiestática o tocar metal sin pintura del gabinete)"}, "q25": {"a": 2, "s": "pc", "e": "La pasta térmica mejora la transferencia de calor del CPU al disipador.", "c": "Pasta térmica"}, "q26": {"a": 1, "s": "pc", "e": "El CPU debe coincidir con el socket y la RAM con el tipo de memoria que soporta la tarjeta madre.", "c": "El socket del procesador y el tipo de memoria (por ejemplo DDR4 o DDR5)"}, "q27": {"a": 2, "s": "pc", "e": "La potencia de la fuente se mide en watts (W).", "c": "Watts (W)"}, "q28": {"a": 1, "s": "pc", "e": "Por dentro, una consola es una computadora especializada para jugar.", "c": "Ambas tienen procesador (CPU), tarjeta gráfica (GPU), memoria RAM y almacenamiento"}, "q29": {"a": 1, "s": "pc", "e": "FPS = frames per second: cuántas imágenes por segundo muestra el juego.", "c": "Cuadros (imágenes) por segundo"}}, "sections": {"computacion": "Computación básica, hardware y software", "electronica": "Electrónica básica: LEDs y resistencias", "digital": "Señales digitales y analógicas, y mediciones", "soldadura": "Soldadura y seguridad", "pc": "PC gamer y consolas"}, "total": 29};</script>
+  <script src="js/examen.js?v=20261121a"></script>
+</body>
+</html>
