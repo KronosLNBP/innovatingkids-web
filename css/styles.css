@@ -726,3 +726,16 @@ button, input, select, textarea { font: inherit; }
 .portal-star { color: #E0A800; }
 .portal-nivel-btn { align-self: flex-start; min-height: 48px; font-size: 16px; }
 .admin-juegos { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+/* Enlace "Alumnos: entrar" del menú (lleva al portal de alumnos) */
+.main-nav a.nav-login { display: inline-flex; align-items: center; gap: 6px; color: var(--teal); font-weight: 900; }
+.main-nav a.nav-login .icon { width: 18px; height: 18px; }
+/* Botón "Entrar" del encabezado: solo cuando el menú está colapsado (el enlace del menú queda oculto) */
+.btn-login-m { display: none; border: 2px solid var(--teal); color: var(--teal); background: #fff; min-height: 46px; padding: 0 16px; border-radius: 12px; }
+.btn-login-m:hover { color: #fff; background: var(--teal); }
+@media (max-width: 1400px) { .btn-login-m { display: inline-flex; } }
+.site-header.nav-collapsed .btn-login-m { display: inline-flex; }
+@media (max-width: 400px) {
+  .btn-login-m { width: 46px; padding: 0; }
+  .btn-login-m span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+@media (max-width: 360px) { .site-header .brand-name { font-size: 15px; } .site-header .brand img { width: 40px; height: 40px; } }
