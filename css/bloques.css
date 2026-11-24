@@ -447,3 +447,49 @@ button.hw-card:hover:not(:disabled) { transform: translateY(-3px); border-color:
   .hw-learn-icon svg { width: 84px; height: 84px; }
 }
 @media (prefers-reduced-motion: reduce) { .hw-learn-card, .hw-order-done li { animation: none; } .hw-meter span { transition: none; } }
+
+/* ===== Tutorial Astro Salto (tutorial-astro-salto.html) ===== */
+.tu-app { position: relative; }
+.tu-body { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr) minmax(0, 300px); gap: 16px; align-items: start; }
+.tu-lesson, .tu-editor, .tu-preview { background: var(--gm-panel); border: 1px solid var(--gm-line); border-radius: 20px; padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.tu-lesson h3, .tu-editor h3, .tu-preview h3 { font-size: 13px; font-weight: 900; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gm-muted); margin: 0; }
+.tu-learn { margin: 0; font-size: 13px; font-weight: 900; letter-spacing: .5px; color: var(--yellow); text-transform: uppercase; }
+.tu-learn span { color: var(--gm-text); text-transform: none; letter-spacing: 0; font-size: 15px; }
+.tu-texto p { margin: 0 0 10px; font-size: 16px; line-height: 1.55; color: var(--gm-text); }
+.tu-texto code, .tu-mision code { background: rgba(255, 255, 255, .12); padding: 1px 6px; border-radius: 6px; font-size: .92em; color: #FFE082; overflow-wrap: anywhere; }
+.tu-mision { background: rgba(255, 210, 63, .12); border-left: 4px solid var(--yellow); border-radius: 10px; padding: 12px 14px; }
+.tu-mision h3 { color: var(--yellow); margin-bottom: 6px; }
+.tu-mision p { margin: 0; font-weight: 700; line-height: 1.5; }
+.tu-results { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.tu-results li { font-weight: 700; font-size: 15px; padding: 8px 10px; border-radius: 10px; background: rgba(255, 255, 255, .06); }
+.tu-results li.is-ok { color: #C5E1A5; }
+.tu-results li.is-bad { color: #FFAB91; background: rgba(239, 83, 80, .14); }
+.tu-results li.tu-wait { color: var(--gm-muted); }
+.tu-ed-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tu-ed-head h3 { margin-right: auto; }
+.tu-ed { position: relative; display: flex; height: 520px; background: #0E2230; border-radius: 14px; border: 1px solid rgba(255, 255, 255, .12); overflow: hidden; }
+.tu-ed:focus-within { border-color: var(--yellow); box-shadow: 0 0 0 3px rgba(255, 210, 63, .25); }
+.tu-lines, .tu-ed textarea { font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 14px; line-height: 21px; padding: 12px 0; margin: 0; }
+.tu-lines { flex: none; width: 44px; text-align: right; padding-right: 8px; color: #5F7F95; background: #0A1B27; overflow: hidden; user-select: none; white-space: pre; }
+.tu-ed textarea { flex: 1; min-width: 0; border: 0; outline: none; resize: none; background: transparent; color: #E6F1F8; padding-left: 12px; padding-right: 12px; tab-size: 2; white-space: pre; overflow: auto; caret-color: var(--yellow); }
+.tu-mark { position: absolute; left: 0; right: 0; background: rgba(239, 83, 80, .25); border-left: 4px solid #EF5350; pointer-events: none; }
+.tu-error { margin: 0; padding: 10px 12px; border-radius: 10px; background: rgba(239, 83, 80, .18); color: #FFCCBC; font-weight: 700; font-size: 15px; line-height: 1.45; }
+.tu-error strong { color: #FFAB91; }
+.tu-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.tu-frame-wrap { width: 100%; aspect-ratio: 400 / 560; background: #061226; border-radius: 12px; overflow: hidden; }
+.tu-frame-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+.tu-tip { margin: 0; font-size: 14px; color: var(--gm-muted); }
+.tu-audio { align-self: flex-start; }
+.tu-sol pre { max-height: 420px; overflow: auto; }
+.tu-sol .btn { margin: 0 0 16px; min-height: 48px; border-radius: 14px; }
+.tu-test-frame { position: absolute; left: -9999px; top: 0; width: 400px; height: 560px; border: 0; visibility: hidden; }
+@media (max-width: 1180px) {
+  .tu-body { grid-template-columns: minmax(0, 1fr) minmax(0, 300px); }
+  .tu-lesson { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .tu-body { grid-template-columns: minmax(0, 1fr); }
+  .tu-ed { height: 420px; }
+  .tu-preview { max-width: 360px; width: 100%; justify-self: center; }
+  .tu-lines, .tu-ed textarea { font-size: 13px; line-height: 20px; }
+}

@@ -38,7 +38,7 @@ service cloud.firestore {
       match /juegos/{juegoId} {
         allow read: if esAdmin() || esElAlumno(uid);
         allow write: if esAdmin() || (esElAlumno(uid)
-          && juegoId in ['hardware', 'bloques']
+          && juegoId in ['hardware', 'bloques', 'aleteo']
           && request.resource.data.keys().hasOnly(['niveles', 'total', 'actualizado'])
           && request.resource.data.niveles is map
           && request.resource.data.niveles.size() <= 60);
