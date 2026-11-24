@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portal de alumnos | Innovating Kids</title>
+  <meta name="description" content="Entra al portal de alumnos de Innovating Kids para ver tus cursos, tu avance, tus materiales, tus calificaciones y tus constancias.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://www.innovatingkids.com.mx/alumnos.html">
+  <meta name="theme-color" content="#254E64">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:site_name" content="Innovating Kids">
+  <meta property="og:title" content="Portal de alumnos | Innovating Kids">
+  <meta property="og:description" content="Tus cursos, tu avance, tus materiales y tus constancias en un solo lugar.">
+  <meta property="og:url" content="https://www.innovatingkids.com.mx/alumnos.html">
+  <meta property="og:image" content="https://www.innovatingkids.com.mx/img/student/1.jpg">
+
+  <link rel="icon" href="img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20261124a">
+</head>
+<body class="lp portal">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header lp-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Innovating Kids, ir a la portada">
+        <img src="img/logo.png" alt="" width="52" height="52">
+        <span class="brand-name">Innovating <span>Kids</span></span>
+      </a>
+      <div class="portal-head-actions">
+        <a class="btn btn-outline" href="index.html" id="btn-sitio">Volver al sitio</a>
+        <button class="btn btn-teal" type="button" id="btn-salir" hidden>Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido" class="portal-main">
+    <h1 class="sr-only" id="titulo-pagina">Portal de alumnos</h1>
+
+    <!-- Cargando -->
+    <section class="portal-state" id="v-cargando" aria-live="polite">
+      <div class="portal-card portal-center">
+        <div class="portal-spinner" aria-hidden="true"></div>
+        <p>Cargando el portal…</p>
+        <noscript><p>Para entrar al portal necesitas activar JavaScript en tu navegador.</p></noscript>
+      </div>
+    </section>
+
+    <!-- Portal sin configurar o sin conexión -->
+    <section class="portal-state" id="v-inactivo" hidden>
+      <div class="portal-card portal-center">
+        <h2 class="display">El portal todavía no está activo</h2>
+        <p id="inactivo-msg">Estamos preparando el portal de alumnos. Si necesitas tus materiales, escríbenos por WhatsApp.</p>
+        <a class="btn btn-teal js-wa" href="#" data-msg="Hola, soy alumno de Innovating Kids y necesito ayuda con el portal de alumnos.">Escribir por WhatsApp</a>
+      </div>
+    </section>
+
+    <!-- Inicio de sesión -->
+    <section class="portal-state" id="v-login" hidden aria-labelledby="login-t">
+      <div class="portal-login">
+        <div class="portal-login-intro">
+          <img src="img/mascota/heroe.webp" alt="" width="720" height="900" class="portal-mascot">
+          <h2 class="display" id="login-t">¡Hola de nuevo!</h2>
+          <p>Entra con el usuario y la contraseña que te dio tu maestro para ver tus cursos, tu avance, tus materiales y tus constancias.</p>
+        </div>
+        <form class="form portal-form" id="f-login" novalidate>
+          <div class="field">
+            <label for="l-usuario">Usuario o correo</label>
+            <input id="l-usuario" name="usuario" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+          </div>
+          <div class="field">
+            <label for="l-pass">Contraseña</label>
+            <div class="pass-wrap">
+              <input id="l-pass" name="password" type="password" autocomplete="current-password" required>
+              <button class="pass-toggle" type="button" aria-controls="l-pass" aria-pressed="false">Mostrar</button>
+            </div>
+          </div>
+          <p class="form-error" id="l-error" role="alert" hidden></p>
+          <button class="btn btn-yellow" type="submit" id="l-btn">Entrar</button>
+          <button class="link-btn" type="button" id="l-olvide">¿Olvidaste tu contraseña?</button>
+          <p class="form-note" id="l-olvide-msg" role="status" hidden></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- Sesión iniciada sin acceso -->
+    <section class="portal-state" id="v-sin-acceso" hidden>
+      <div class="portal-card portal-center">
+        <h2 class="display">Tu cuenta no tiene acceso</h2>
+        <p>Tu cuenta no está activa o todavía no tiene cursos asignados. Pide ayuda a tu maestro por WhatsApp.</p>
+        <a class="btn btn-teal js-wa" href="#" data-msg="Hola, mi cuenta del portal de alumnos de Innovating Kids no tiene acceso.">Escribir por WhatsApp</a>
+      </div>
+    </section>
+
+    <!-- Portal -->
+    <div id="v-portal" hidden>
+      <section class="hero page-hero portal-hero">
+        <div class="container page-hero-inner">
+          <p class="portal-kicker">Portal de alumnos</p>
+          <h2 class="display portal-hola" id="p-hola">¡Hola!</h2>
+          <p class="hero-lead" id="p-resumen"></p>
+          <nav class="course-toc portal-toc" aria-label="Secciones del portal">
+            <ul>
+              <li><a href="#mis-cursos">Mis cursos</a></li>
+              <li><a href="#materiales">Materiales</a></li>
+              <li><a href="#calificaciones">Calificaciones y constancias</a></li>
+            </ul>
+          </nav>
+        </div>
+      </section>
+
+      <section class="section portal-section" id="mis-cursos" aria-labelledby="mc-t">
+        <div class="container">
+          <h2 class="display h2" id="mc-t">Mis cursos y avance</h2>
+          <div class="portal-grid" id="p-cursos"></div>
+        </div>
+      </section>
+
+      <section class="section portal-section portal-alt" id="materiales" aria-labelledby="mat-t">
+        <div class="container">
+          <h2 class="display h2" id="mat-t">Materiales y temarios</h2>
+          <div class="portal-grid" id="p-materiales"></div>
+        </div>
+      </section>
+
+      <section class="section portal-section" id="calificaciones" aria-labelledby="cal-t">
+        <div class="container">
+          <h2 class="display h2" id="cal-t">Calificaciones y constancias</h2>
+          <div class="portal-stack" id="p-calificaciones"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer portal-footer">
+    <div class="container footer-bottom">© <span id="year">2026</span> Innovating Kids · <a href="aviso-de-privacidad.html">Aviso de privacidad</a> · <a class="js-wa" href="#" data-msg="Hola, necesito ayuda con el portal de alumnos de Innovating Kids.">Ayuda por WhatsApp</a></div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js?v=20261124a"></script>
+  <script>
+    // Si Firebase no carga (sin internet o bloqueado), no dejar la página en "Cargando".
+    setTimeout(function () {
+      if (window.IK_PORTAL_OK) return;
+      document.getElementById('v-cargando').hidden = true;
+      document.getElementById('inactivo-msg').textContent = 'No pudimos conectar con el portal. Revisa tu conexión y vuelve a cargar la página. Si el problema sigue, escríbenos por WhatsApp.';
+      document.getElementById('v-inactivo').hidden = false;
+    }, 12000);
+  </script>
+  <script type="module" src="js/alumnos.js?v=20261124a"></script>
+</body>
+</html>

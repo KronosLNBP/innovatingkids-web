@@ -31,8 +31,53 @@ robots.txt, sitemap.xml    SEO
 - `/modalidades.html` — online, híbrido y presencial
 - `/programacion-con-bloques.html` — juego de programación con bloques
 - `/aviso-de-privacidad.html` — aviso de privacidad (borrador; fuera del sitemap)
+- `/alumnos.html` — portal de alumnos con Firebase (noindex; fuera del sitemap)
+- `/admin.html` — administración del portal (noindex; fuera del sitemap)
 
 Todas las páginas internas tienen el bloque "También te puede interesar". Las animaciones de entrada respetan `prefers-reduced-motion` y, si el JavaScript no carga, el contenido se ve normal.
+
+## Portal de alumnos (Firebase)
+
+Login de alumnos en `alumnos.html` y panel de administración en `admin.html`. No requiere servidor: usa Firebase Authentication (correo y contraseña) y Cloud Firestore desde el navegador. Funciona en el plan gratuito (Spark).
+
+**Archivos:** `js/firebase-config.js` (configuración), `js/portal-fb.js` (conexión compartida), `js/alumnos.js`, `js/admin.js`, `firestore.rules` (reglas de seguridad).
+
+### Qué ve el alumno
+- **Mis cursos y avance:** cursos inscritos, barra de avance y módulos completados.
+- **Materiales y temarios:** enlaces que solo ven los alumnos inscritos en ese curso.
+- **Calificaciones y constancias:** calificación por módulo (0–10), promedio y botón para descargar la constancia.
+
+### Cómo se crean las cuentas
+Solo el administrador da de alta alumnos en `admin.html`; no hay registro libre. Cada alumno entra con:
+- un **usuario** (ej. `ana.lopez`; por dentro es `ana.lopez@alumnos.innovatingkids.com.mx`, un correo que no recibe mensajes), o
+- un **correo real** (el suyo o el de su mamá/papá). Con correo puede recuperar su contraseña solo.
+
+Si un alumno con usuario olvida su contraseña: Editar → «Contraseña olvidada» → «Crear acceso nuevo». Se crea otra cuenta con sus cursos, avance y calificaciones, y la anterior queda desactivada (desde la página no se puede cambiar la contraseña de otra cuenta).
+
+### Activarlo (una sola vez, ~15 minutos)
+1. Entra a https://console.firebase.google.com con la cuenta de Google del negocio → **Agregar proyecto** (ej. `innovating-kids`). Google Analytics es opcional.
+2. **Authentication → Comenzar → Método de acceso → Correo electrónico/contraseña → Habilitar** (solo la primera opción). En **Configuración → Dominios autorizados** agrega `innovatingkids.com.mx` y `www.innovatingkids.com.mx`.
+3. **Firestore Database → Crear base de datos →** ubicación `nam5 (United States)` o la más cercana → modo **producción**.
+4. En **Firestore → Reglas**, borra lo que hay, pega el contenido de `firestore.rules` y **Publicar**.
+5. **Configuración del proyecto (engrane) → Tus apps → Web (`</>`)** → nombre `Sitio web` (sin Hosting) → copia el objeto `firebaseConfig` y pégalo en `js/firebase-config.js` en lugar de `null`. Esos datos no son secretos; la seguridad la dan las reglas.
+6. **Primer administrador:** en **Authentication → Usuarios → Agregar usuario**, crea tu correo y contraseña. Copia su **UID**. En **Firestore → Iniciar colección** → ID `admins` → ID del documento = ese UID → campo `nombre` (texto) con tu nombre → Guardar.
+7. Publica (push a `main`), entra a `/admin.html`, pestaña **Cursos → «Cargar los 6 cursos del sitio»** y agrega los módulos de cada curso. Luego da de alta alumnos.
+8. Cuando ya funcione, agrega el enlace «Acceso alumnos» al menú o al pie del sitio.
+
+### Datos en Firestore
+| Ruta | Contenido | Quién lee / escribe |
+|---|---|---|
+| `admins/{uid}` | administradores | se crea a mano en la consola |
+| `alumnos/{uid}` | nombre, usuario/correo, tutor, WhatsApp, `cursos[]`, `activo` | el alumno lee lo suyo; admin escribe |
+| `alumnos/{uid}/avance/{curso}` | `completados[]`, `calificaciones{}`, `constanciaUrl` | el alumno lee lo suyo; admin escribe |
+| `cursos/{curso}` | nombre, orden, `modulos[{id, titulo}]` | cualquiera con sesión lee; admin escribe |
+| `cursos/{curso}/privado/materiales` | `items[{titulo, url}]` | alumnos activos inscritos; admin escribe |
+
+### Notas
+- **Materiales y constancias son enlaces** (Google Drive, YouTube, etc.). Firebase Storage ya no está en el plan gratuito. En Drive, «Cualquier persona con el enlace» puede abrir el archivo si alguien comparte el enlace; para constancias usa un enlace por alumno.
+- Si cambias el nombre de un módulo, se reinicia su avance y calificación (el módulo se identifica por su nombre al guardar).
+- Datos personales de menores: guarda solo lo necesario (nombre y, si quieres, tutor y WhatsApp) y actualiza el aviso de privacidad para mencionar el portal y Firebase (Google) como encargado.
+- Para borrar por completo una cuenta: Authentication → Usuarios → eliminar, y en Firestore borra `alumnos/{uid}`.
 
 ## Antes de publicar
 

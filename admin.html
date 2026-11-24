@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administración del portal de alumnos | Innovating Kids</title>
+  <meta name="description" content="Panel interno para dar de alta alumnos, asignar cursos y registrar avance, calificaciones y constancias.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://www.innovatingkids.com.mx/admin.html">
+  <meta name="theme-color" content="#254E64">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:site_name" content="Innovating Kids">
+  <meta property="og:title" content="Administración del portal de alumnos | Innovating Kids">
+  <meta property="og:description" content="Panel interno del portal de alumnos.">
+  <meta property="og:url" content="https://www.innovatingkids.com.mx/admin.html">
+  <meta property="og:image" content="https://www.innovatingkids.com.mx/img/student/1.jpg">
+
+  <link rel="icon" href="img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20261124a">
+</head>
+<body class="lp portal portal-admin">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header lp-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Innovating Kids, ir a la portada">
+        <img src="img/logo.png" alt="" width="52" height="52">
+        <span class="brand-name">Innovating <span>Kids</span></span>
+      </a>
+      <div class="portal-head-actions">
+        <a class="btn btn-outline" href="alumnos.html" id="btn-sitio">Portal de alumnos</a>
+        <button class="btn btn-teal" type="button" id="btn-salir" hidden>Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido" class="portal-main">
+    <h1 class="sr-only">Administración del portal de alumnos</h1>
+
+    <section class="portal-state" id="v-cargando" aria-live="polite">
+      <div class="portal-card portal-center">
+        <div class="portal-spinner" aria-hidden="true"></div>
+        <p>Cargando…</p>
+        <noscript><p>Necesitas activar JavaScript.</p></noscript>
+      </div>
+    </section>
+
+    <section class="portal-state" id="v-inactivo" hidden>
+      <div class="portal-card portal-center">
+        <h2 class="display">Firebase no está configurado</h2>
+        <p id="inactivo-msg">Pega la configuración de tu proyecto en <code>js/firebase-config.js</code>. Los pasos están en el README del repositorio.</p>
+      </div>
+    </section>
+
+    <section class="portal-state" id="v-login" hidden aria-labelledby="login-t">
+      <div class="portal-login portal-login-solo">
+        <form class="form portal-form" id="f-login" novalidate>
+          <h2 class="display" id="login-t">Entrar como administrador</h2>
+          <div class="field">
+            <label for="l-usuario">Correo</label>
+            <input id="l-usuario" type="email" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+          </div>
+          <div class="field">
+            <label for="l-pass">Contraseña</label>
+            <div class="pass-wrap">
+              <input id="l-pass" type="password" autocomplete="current-password" required>
+              <button class="pass-toggle" type="button" aria-controls="l-pass" aria-pressed="false">Mostrar</button>
+            </div>
+          </div>
+          <p class="form-error" id="l-error" role="alert" hidden></p>
+          <button class="btn btn-yellow" type="submit" id="l-btn">Entrar</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="portal-state" id="v-sin-acceso" hidden>
+      <div class="portal-card portal-center">
+        <h2 class="display">Esta cuenta no es de administrador</h2>
+        <p>Para dar permiso, crea en Firestore el documento <code>admins/<span id="mi-uid">UID</span></code> (ver README).</p>
+      </div>
+    </section>
+
+    <div id="v-portal" hidden>
+      <div class="container admin-wrap">
+        <div class="admin-tabs" role="tablist" aria-label="Secciones">
+          <button class="admin-tab" role="tab" id="t-alumnos" aria-controls="tab-alumnos" aria-selected="true" type="button">Alumnos</button>
+          <button class="admin-tab" role="tab" id="t-cursos" aria-controls="tab-cursos" aria-selected="false" type="button" tabindex="-1">Cursos</button>
+        </div>
+        <p class="admin-aviso" id="aviso" role="status" hidden></p>
+
+        <!-- ALUMNOS -->
+        <section id="tab-alumnos" role="tabpanel" aria-labelledby="t-alumnos">
+          <div class="admin-bar">
+            <div class="field admin-search">
+              <label for="buscar">Buscar alumno</label>
+              <input id="buscar" type="search" placeholder="Nombre o usuario">
+            </div>
+            <button class="btn btn-teal" type="button" id="btn-nuevo">Nuevo alumno</button>
+          </div>
+
+          <form class="portal-card admin-form" id="f-nuevo" hidden novalidate aria-labelledby="nuevo-t">
+            <h2 class="admin-h" id="nuevo-t">Nuevo alumno</h2>
+            <div class="field-row">
+              <div class="field">
+                <label for="n-nombre">Nombre del alumno</label>
+                <input id="n-nombre" type="text" autocomplete="off" required>
+              </div>
+              <div class="field">
+                <label for="n-acceso">Entra con</label>
+                <select id="n-acceso">
+                  <option value="usuario">Usuario (sin correo)</option>
+                  <option value="correo">Correo electrónico</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="n-usuario" id="n-usuario-l">Usuario</label>
+                <input id="n-usuario" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" required aria-describedby="n-usuario-h">
+                <small class="field-hint" id="n-usuario-h">3 a 30 caracteres: minúsculas, números, punto o guion. Ej. ana.lopez</small>
+              </div>
+              <div class="field">
+                <label for="n-pass">Contraseña inicial</label>
+                <div class="pass-wrap">
+                  <input id="n-pass" type="text" autocomplete="off" required aria-describedby="n-pass-h">
+                  <button class="pass-toggle" type="button" id="n-generar">Generar</button>
+                </div>
+                <small class="field-hint" id="n-pass-h">Mínimo 6 caracteres.</small>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="n-tutor">Mamá, papá o tutor <span class="opt">(opcional)</span></label>
+                <input id="n-tutor" type="text" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="n-wa">WhatsApp del tutor <span class="opt">(opcional, 10 dígitos)</span></label>
+                <input id="n-wa" type="tel" inputmode="numeric" autocomplete="off">
+              </div>
+            </div>
+            <fieldset class="admin-checks">
+              <legend>Cursos</legend>
+              <div class="admin-check-grid" id="n-cursos"></div>
+            </fieldset>
+            <p class="form-error" id="n-error" role="alert" hidden></p>
+            <div class="admin-actions">
+              <button class="btn btn-yellow" type="submit" id="n-btn">Crear alumno</button>
+              <button class="btn btn-outline" type="button" id="n-cancelar">Cancelar</button>
+            </div>
+          </form>
+
+          <div class="portal-card admin-cred" id="credenciales" hidden role="status">
+            <h2 class="admin-h">Alumno creado</h2>
+            <p>Comparte estos datos con la familia. La contraseña no se vuelve a mostrar.</p>
+            <pre id="cred-texto"></pre>
+            <div class="admin-actions">
+              <button class="btn btn-teal" type="button" id="cred-copiar">Copiar</button>
+              <a class="btn btn-outline" id="cred-wa" href="#" target="_blank" rel="noopener" hidden>Enviar por WhatsApp</a>
+              <button class="btn btn-outline" type="button" id="cred-cerrar">Listo</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="portal-table admin-table">
+              <caption class="sr-only">Alumnos</caption>
+              <thead><tr><th scope="col">Alumno</th><th scope="col">Usuario o correo</th><th scope="col">Cursos</th><th scope="col">Estado</th><th scope="col"><span class="sr-only">Acciones</span></th></tr></thead>
+              <tbody id="lista-alumnos"></tbody>
+            </table>
+          </div>
+
+          <!-- Editar alumno -->
+          <section class="portal-card admin-form" id="editar" hidden aria-labelledby="e-titulo" tabindex="-1">
+            <div class="admin-edit-head">
+              <h2 class="admin-h" id="e-titulo">Alumno</h2>
+              <button class="btn btn-outline" type="button" id="e-cerrar">Cerrar</button>
+            </div>
+            <form id="f-datos" novalidate>
+              <div class="field-row">
+                <div class="field"><label for="e-nombre">Nombre</label><input id="e-nombre" type="text" required></div>
+                <div class="field"><label for="e-login">Usuario o correo</label><input id="e-login" type="text" readonly></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label for="e-tutor">Tutor <span class="opt">(opcional)</span></label><input id="e-tutor" type="text"></div>
+                <div class="field"><label for="e-wa">WhatsApp del tutor <span class="opt">(opcional)</span></label><input id="e-wa" type="tel" inputmode="numeric"></div>
+              </div>
+              <label class="check-line"><input type="checkbox" id="e-activo"> Cuenta activa (puede entrar al portal)</label>
+              <fieldset class="admin-checks">
+                <legend>Cursos inscritos</legend>
+                <div class="admin-check-grid" id="e-cursos"></div>
+              </fieldset>
+              <p class="form-error" id="e-error" role="alert" hidden></p>
+              <div class="admin-actions"><button class="btn btn-teal" type="submit">Guardar datos</button></div>
+            </form>
+
+            <div id="e-avance"></div>
+
+            <details class="admin-details">
+              <summary>Contraseña olvidada</summary>
+              <div id="e-pass-correo" hidden>
+                <p>Este alumno entra con correo. Se le enviará un enlace para crear una contraseña nueva.</p>
+                <button class="btn btn-outline" type="button" id="e-reset">Enviar correo de recuperación</button>
+              </div>
+              <form id="f-reemplazo" novalidate hidden>
+                <p>Desde la página no se puede cambiar la contraseña de otra cuenta. Se crea un <strong>acceso nuevo</strong> con todos sus cursos, avance y calificaciones, y el acceso anterior se desactiva.</p>
+                <div class="field-row">
+                  <div class="field"><label for="r-usuario">Usuario nuevo</label><input id="r-usuario" type="text" autocapitalize="none" spellcheck="false" required></div>
+                  <div class="field"><label for="r-pass">Contraseña nueva</label><input id="r-pass" type="text" required></div>
+                </div>
+                <p class="form-error" id="r-error" role="alert" hidden></p>
+                <button class="btn btn-outline" type="submit" id="r-btn">Crear acceso nuevo</button>
+              </form>
+            </details>
+          </section>
+        </section>
+
+        <!-- CURSOS -->
+        <section id="tab-cursos" role="tabpanel" aria-labelledby="t-cursos" hidden>
+          <div class="admin-bar">
+            <p class="portal-muted">Los módulos se usan para el avance y las calificaciones. Los materiales solo los ven los alumnos inscritos.</p>
+            <div class="admin-actions">
+              <button class="btn btn-outline" type="button" id="btn-semilla" hidden>Cargar los 6 cursos del sitio</button>
+              <button class="btn btn-teal" type="button" id="btn-nuevo-curso">Nuevo curso</button>
+            </div>
+          </div>
+          <div class="portal-stack" id="lista-cursos"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js?v=20261124a"></script>
+  <script>
+    setTimeout(function () {
+      if (window.IK_PORTAL_OK) return;
+      document.getElementById('v-cargando').hidden = true;
+      document.getElementById('inactivo-msg').textContent = 'No se pudo cargar Firebase. Revisa tu conexión y vuelve a cargar la página.';
+      document.getElementById('v-inactivo').hidden = false;
+    }, 12000);
+  </script>
+  <script type="module" src="js/admin.js?v=20261124a"></script>
+</body>
+</html>

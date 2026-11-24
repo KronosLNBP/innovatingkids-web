@@ -1,0 +1,52 @@
+rules_version = '2';
+// Reglas de Firestore del portal de alumnos de Innovating Kids.
+// Pégalas en Firebase → Firestore Database → Reglas → Publicar.
+//  - admins/{uid}: lo crea el dueño a mano en la consola; nadie lo puede escribir desde la página.
+//  - alumnos/{uid}: cada alumno solo lee lo suyo; solo los administradores escriben.
+//  - cursos/{id}: cualquier usuario con sesión lee nombre y módulos.
+//  - cursos/{id}/privado/*: materiales, solo para alumnos activos inscritos en ese curso.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function conSesion() { return request.auth != null; }
+    function esAdmin() {
+      return conSesion() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function esElAlumno(uid) { return conSesion() && request.auth.uid == uid; }
+    function inscrito(cursoId) {
+      let ruta = /databases/$(database)/documents/alumnos/$(request.auth.uid);
+      return conSesion() && exists(ruta)
+        && get(ruta).data.activo == true
+        && cursoId in get(ruta).data.cursos;
+    }
+
+    match /admins/{uid} {
+      allow read: if esElAlumno(uid);
+      allow write: if false;
+    }
+
+    match /alumnos/{uid} {
+      allow read: if esAdmin() || esElAlumno(uid);
+      allow write: if esAdmin();
+
+      match /avance/{cursoId} {
+        allow read: if esAdmin() || esElAlumno(uid);
+        allow write: if esAdmin();
+      }
+    }
+
+    match /cursos/{cursoId} {
+      allow read: if conSesion();
+      allow write: if esAdmin();
+
+      match /privado/{docId} {
+        allow read: if esAdmin() || inscrito(cursoId);
+        allow write: if esAdmin();
+      }
+    }
+
+    // Todo lo demás, cerrado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
