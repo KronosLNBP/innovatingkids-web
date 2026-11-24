@@ -75,6 +75,9 @@ export function mensajeError(e) {
     'auth/email-already-in-use': 'Ese usuario o correo ya tiene una cuenta.',
     'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
     'auth/user-disabled': 'Esta cuenta está desactivada.',
+    'auth/operation-not-allowed': 'El inicio de sesión con correo no está activado en Firebase (Authentication → Método de acceso).',
+    'auth/unauthorized-domain': 'Este dominio no está autorizado en Firebase (Authentication → Configuración → Dominios autorizados).',
+    'auth/api-key-not-valid.-please-pass-a-valid-api-key.': 'La configuración de Firebase no es válida.',
     'permission-denied': 'No tienes permiso para ver esta información.',
     'unavailable': 'No hay conexión con el servidor. Inténtalo de nuevo.'
   };

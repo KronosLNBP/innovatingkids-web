@@ -62,7 +62,7 @@ Si un alumno con usuario olvida su contraseña: Editar → «Contraseña olvidad
 5. **Configuración del proyecto (engrane) → Tus apps → Web (`</>`)** → nombre `Sitio web` (sin Hosting) → copia el objeto `firebaseConfig` y pégalo en `js/firebase-config.js` en lugar de `null`. Esos datos no son secretos; la seguridad la dan las reglas.
 6. **Primer administrador:** en **Authentication → Usuarios → Agregar usuario**, crea tu correo y contraseña. Copia su **UID**. En **Firestore → Iniciar colección** → ID `admins` → ID del documento = ese UID → campo `nombre` (texto) con tu nombre → Guardar.
 7. Publica (push a `main`), entra a `/admin.html`, pestaña **Cursos → «Cargar los 6 cursos del sitio»** y agrega los módulos de cada curso. Luego da de alta alumnos.
-8. Cuando ya funcione, agrega el enlace «Acceso alumnos» al menú o al pie del sitio.
+8. Proyecto actual: `kids-cd56a` (configurado el 24 nov 2026). El enlace «Acceso alumnos» está en el pie de las páginas principales.
 
 ### Datos en Firestore
 | Ruta | Contenido | Quién lee / escribe |
