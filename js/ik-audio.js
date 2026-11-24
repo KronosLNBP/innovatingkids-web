@@ -69,6 +69,7 @@
     parque: { bpm: 132, wave: 'square', notes: [0, 2, 4, 7, 4, 2, 0, 7, 9, 7, 4, 2, 4, 2, 0, -5], base: 440 },
     pirata: { bpm: 140, wave: 'square', notes: [0, 3, 7, 3, 0, 3, 7, 10, 8, 7, 3, 7, 5, 3, 2, -5], base: 294 },
     castillo: { bpm: 104, wave: 'sawtooth', notes: [0, 3, 7, 12, 10, 7, 3, 5, 7, 3, 0, -2, 0, 3, 2, -5], base: 262 },
+    navidad: { bpm: 150, wave: 'triangle', notes: [4, 4, 4, -99, 4, 4, 4, -99, 4, 7, 0, 2, 4, -99, -99, -99, 5, 5, 5, 5, 5, 4, 4, 4, 4, 2, 2, 4, 2, -99, 7, -99], base: 523 },
     hardware: { bpm: 124, wave: 'square', notes: [0, 4, 7, 11, 12, 11, 7, 4, 2, 5, 9, 12, 9, 5, 2, 7], base: 392 }
   };
   var theme = 'bosque', timer = null, stepI = 0, nextT = 0;
@@ -76,8 +77,9 @@
     var th = THEMES[theme] || THEMES.bosque, beat = 60 / th.bpm / 2;
     while (nextT < ctx.currentTime + 0.3) {
       var n = th.notes[stepI % th.notes.length];
-      tone(th.base * Math.pow(2, n / 12), nextT, beat * 0.9, th.wave, 0.5, musicGain);
-      if (stepI % 4 === 0) tone(th.base / 2 * Math.pow(2, th.notes[(stepI / 4 | 0) % 4 * 4] / 12), nextT, beat * 3.6, 'triangle', 0.6, musicGain);
+      if (n > -99) tone(th.base * Math.pow(2, n / 12), nextT, beat * 0.9, th.wave, 0.5, musicGain);
+      var bn = th.notes[(stepI / 4 | 0) % 4 * 4];
+      if (stepI % 4 === 0 && bn > -99) tone(th.base / 2 * Math.pow(2, bn / 12), nextT, beat * 3.6, 'triangle', 0.6, musicGain);
       stepI++; nextT += beat;
     }
   }

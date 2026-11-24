@@ -10,6 +10,7 @@ import {
 // Rutas de aprendizaje (juegos). total = número de niveles de cada juego.
 const NIVELES = [
   { id: 'hardware', titulo: 'Computación básica: hardware', texto: 'Partes de la computadora, arma una PC y 3 sesiones de 45 min: puertos, seguridad y archivos.', url: 'juego-hardware.html', total: 9, sprite: 'perro' },
+  { id: 'navidad', titulo: 'Aventura de Navidad', texto: 'Guía al elfo con bloques: recoge regalos y llega al trineo. Para 6 a 10 años.', url: 'navidad.html', total: 8, sprite: 'elfo' },
   { id: 'cubos', titulo: 'Mundo de Cubos (3D)', texto: 'Da instrucciones a Cubi para construir puentes y escaleras de cubos. Para 6 a 12 años, unos 20 minutos.', url: 'juego-cubos.html', total: 8, sprite: 'gato' },
   { id: 'aleteo', titulo: 'Crea tu videojuego: Astro Salto', texto: 'Programa en JavaScript, paso a paso, un juego de aleteo con gravedad, saltos, choques y puntos.', url: 'tutorial-astro-salto.html', total: 11, sprite: 'ninja' },
   { id: 'bloques', titulo: 'Programación con bloques', texto: '7 capítulos, con 3 sesiones de 45 min: trucos (funciones), patrullas y expedición final.', url: 'programacion-con-bloques.html', total: 51, sprite: 'pirata' }

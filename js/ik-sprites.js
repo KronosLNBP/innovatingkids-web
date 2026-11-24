@@ -46,6 +46,30 @@
       rows: ['P...pppp...P', 'PP.pppppp.PP', 'PPPpyppyPPPP', 'PPPpppppppPP', '.PPppkkppPP.', '..P.pppp.P..',
         '.....pp.....']
     },
+    // ---------- Navidad ----------
+    elfo: {
+      pal: { g: '#2E9D3E', G: '#1B6E2A', r: '#E53935', s: '#F2C29B', k: '#1B1B1B', y: '#FFD23F', w: '#FFFFFF', b: '#6D4C41', p: '#E57373' },
+      rows: ['.........rr.', '.......ggr..', '.....gggg...', '...ggggggg..', '..wwwwwwww..', 's.ssssssss.s',
+        '..skssssks..', '..sssppsss..', '...gggggg...', '..ggyyyygg..', '..gGggggGg..', '..bb....bb..']
+    },
+    reno: {
+      pal: { b: '#8D5524', B: '#5D3A1A', a: '#C8A27A', k: '#1B1B1B', r: '#E53935', c: '#F7E3C0' },
+      rows: ['a..a....a..a', '.aa......aa.', '..abbbbbba..', '..bbbbbbbb..', '..bkbbbbkb..', '..bbbccbbb..',
+        '...bcrrcb...', '....bbbb....', '..bbbbbbbb..', '..bBbbbbBb..', '..bb....bb..', '..BB....BB..']
+    },
+    regalo: {
+      pal: { r: '#E53935', R: '#B71C1C', y: '#FFD23F' },
+      rows: ['...y..y...', '....yy....', 'rrrryyrrrr', 'rrrryyrrrr', 'yyyyyyyyyy', 'rrrryyrrrr', 'RrrryyrrrR', 'RRRRyyRRRR']
+    },
+    munieco: {
+      pal: { w: '#FFFFFF', W: '#B0BEC5', k: '#1B1B1B', o: '#FF8F00', r: '#E53935', b: '#6D4C41' },
+      rows: ['....kkkk....', '....kkkk....', '...kkkkkk...', '....wwww....', '...wkwwkw...', '...wwwoow...',
+        '...rrrrrr...', '.b.wwwwww.b.', '..bwwkwwwb..', '..wwwwwwww..', '...WwwkwW...', '....WWWW....']
+    },
+    trineo: {
+      pal: { r: '#D32F2F', R: '#8E1B1B', y: '#FFD23F', g: '#2E9D3E', G: '#1B6E2A' },
+      rows: ['..gg......r.', '..gG..rrrrr.', '.yy..rrrrrr.', '.yyrrrrrrrr.', '.rrrrrrrrrr.', '.rrrrrrrrr..', '..RRRRRRR...', '.y.y...y.y..', 'yyyyyyyyyyy.']
+    },
     // ---------- Objetos ----------
     hueso: {
       pal: { w: '#FFFFFF', g: '#CFD8DC' },

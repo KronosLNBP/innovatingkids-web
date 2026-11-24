@@ -549,3 +549,24 @@ button.hw-card:hover:not(:disabled) { transform: translateY(-3px); border-color:
   .cu-body { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .cu-cmd { transition: none; } }
+
+/* ===== Aventura de Navidad (navidad.html) ===== */
+.is-navidad .game-hero { background-color: #9E1B1B; background-image: radial-gradient(rgba(255, 255, 255, .55) 1.5px, transparent 1.6px), radial-gradient(rgba(255, 255, 255, .35) 1px, transparent 1.1px), linear-gradient(160deg, #B71C1C, #7A1212); background-size: 46px 46px, 28px 28px, auto; background-position: 0 0, 13px 17px, 0 0; }
+.is-navidad .game-hero .hero-lead { color: #FFF3E0; }
+.is-navidad .gm-app { box-shadow: 0 0 0 4px #1F7A3A, 0 24px 60px rgba(11, 37, 69, .28); }
+.gm-canvas-wrap[data-world="navidad"] { background: #EEF5FB; }
+/* En celular, la barra de WhatsApp se esconde mientras se juega para no tapar los botones */
+@media (max-width: 640px) {
+  .mobile-bar { transition: transform .25s ease; }
+  .gm-in-view .mobile-bar { transform: translateY(110%); pointer-events: none; }
+}
+/* Celular: el resultado cabe aunque el mapa sea bajito */
+@media (max-width: 640px) {
+  .gm-canvas-wrap .game-overlay { min-height: 100%; }
+  .game-overlay { overflow: auto; padding: 10px; }
+  .overlay-card { gap: 6px; }
+  .overlay-title { font-size: 20px; }
+  .overlay-stars { font-size: 30px; letter-spacing: 4px; }
+  .overlay-msg { font-size: 15px; }
+  .overlay-actions .btn { min-height: 46px; font-size: 15px; padding: 0 16px; }
+}

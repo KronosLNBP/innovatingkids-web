@@ -5,6 +5,8 @@
   'use strict';
 
   // Capítulos: cada uno introduce una idea nueva de programación
+  // Otras páginas pueden usar este mismo juego con sus propios niveles: window.IK_BLOQUES_CONFIG
+  var CFG = window.IK_BLOQUES_CONFIG || null;
   var CHAPTERS = [
     { name: 'Secuencias', desc: 'Dar instrucciones en orden' },
     { name: 'Ciclos', desc: 'Repetir sin escribir de más' },
@@ -194,6 +196,8 @@
       map: ['##G##G##G###', '##.##.##.###', 'H..........#', '##########.#', '#F.E.E.E...#', '############'], blocks: B_ALLFN, best: 27 }
   ];
 
+  if (CFG) { CHAPTERS = CFG.chapters; LEVELS = CFG.levels; }
+
   var DIRS = {
     right: { dx: 1, dy: 0 },
     left: { dx: -1, dy: 0 },
@@ -218,7 +222,7 @@
 
   var MAX_BLOCKS = 40;
   var MAX_ACTIONS = 300;
-  var STORE_KEY = 'ik-bloques-v2';
+  var STORE_KEY = (CFG && CFG.storeKey) || 'ik-bloques-v2';
   var TEACHER = /[?&]profe=1\b/.test(location.search);
 
   // ---------- Elementos ----------
@@ -250,7 +254,7 @@
   function saveProgress() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch (e) { /* sin almacenamiento */ }
     // Si el alumno entró al portal, js/progreso.js guarda esto en su cuenta
-    document.dispatchEvent(new CustomEvent('ik:progreso', { detail: { juego: 'bloques', niveles: progress, total: LEVELS.length } }));
+    document.dispatchEvent(new CustomEvent('ik:progreso', { detail: { juego: (CFG && CFG.juego) || 'bloques', niveles: progress, total: LEVELS.length } }));
   }
   // Avance guardado en el portal: se combina con el de este navegador (gana la mejor puntuación)
   document.addEventListener('ik:progreso-remoto', function (e) {
@@ -307,6 +311,8 @@
     { id: 'pirata', name: 'Pirata' },
     { id: 'ninja', name: 'Ninja' },
     { id: 'vikinga', name: 'Guerrera vikinga' },
+    { id: 'elfo', name: 'Elfo' },
+    { id: 'reno', name: 'Reno' },
     { id: 'piloto', name: 'Piloto espacial' },
     { id: 'astronauta', name: 'Astronauta' },
     { id: 'robot', name: 'Robot explorador' },
@@ -317,12 +323,15 @@
     { id: 'espacio', name: 'Espacio' },
     { id: 'parque', name: 'Parque' },
     { id: 'pirata', name: 'Isla pirata' },
-    { id: 'castillo', name: 'Castillo' }
+    { id: 'castillo', name: 'Castillo' },
+    { id: 'navidad', name: 'Navidad' }
   ];
   // Héroe que se elige solo al cambiar de mundo (si el niño no había elegido otro)
-  var WORLD_HERO = { parque: 'perro', pirata: 'pirata', castillo: 'vikinga', espacio: 'astronauta', bosque: 'ik' };
-  var PREFS_KEY = 'ik-bloques-prefs';
-  var prefs = { world: 'bosque', hero: 'ik' };
+  var WORLD_HERO = { parque: 'perro', pirata: 'pirata', castillo: 'vikinga', espacio: 'astronauta', bosque: 'ik', navidad: 'elfo' };
+  if (CFG && CFG.heroes) HEROES = HEROES.filter(function (h) { return CFG.heroes.indexOf(h.id) > -1; });
+  if (CFG && CFG.world) WORLDS = WORLDS.filter(function (w) { return w.id === CFG.world; });
+  var PREFS_KEY = (CFG && CFG.prefsKey) || 'ik-bloques-prefs';
+  var prefs = { world: WORLDS[0].id === 'bosque' ? 'bosque' : WORLDS[0].id, hero: WORLD_HERO[WORLDS[0].id] || HEROES[0].id };
   try {
     var savedPrefs = JSON.parse(localStorage.getItem(PREFS_KEY) || '{}') || {};
     if (WORLDS.some(function (w) { return w.id === savedPrefs.world; })) prefs.world = savedPrefs.world;
@@ -364,6 +373,15 @@
       [/Slimes/g, 'Murciélagos'], [/Slime/g, 'Murciélago'], [/slimes/g, 'murciélagos'], [/slime/g, 'murciélago'],
       [/a la bandera/g, 'a la puerta'], [/la bandera/g, 'la puerta'], [/La bandera/g, 'La puerta'], [/bandera/g, 'puerta'],
       [/los árboles/g, 'los muros'], [/árboles/g, 'muros']
+    ],
+    navidad: [
+      [/todas las gemas/g, 'todos los regalos'], [/las gemas/g, 'los regalos'], [/Las gemas/g, 'Los regalos'], [/una gema/g, 'un regalo'],
+      [/las (\d+) gemas/g, 'los $1 regalos'], [/gemas/g, 'regalos'], [/gema/g, 'regalo'], [/encima de ella/g, 'encima de él'], [/Gemas/g, 'Regalos'], [/Gema/g, 'Regalo'],
+      [/Derrota a los slimes/g, 'Detén a los muñecos de nieve'], [/Derrótalo/g, 'Lánzale una bola de nieve'], [/derrota/g, 'detén'],
+      [/Slimes/g, 'Muñecos de nieve'], [/Slime/g, 'Muñeco de nieve'], [/slimes/g, 'muñecos de nieve'], [/slime/g, 'muñeco de nieve'],
+      [/hasta la bandera/g, 'hasta el trineo'], [/a la bandera/g, 'al trineo'], [/la bandera/g, 'el trineo'], [/La bandera/g, 'El trineo'], [/bandera/g, 'trineo'],
+      [/si hay enemigo enfrente/g, 'si hay muñeco enfrente'], [/atacar/g, 'lanzar bola de nieve'],
+      [/los árboles/g, 'los pinos'], [/árboles/g, 'pinos']
     ]
   };
   function tr(text) {
@@ -490,7 +508,7 @@
     head.className = 'blk-head';
     var grip = document.createElement('span');
     grip.className = 'blk-label';
-    grip.innerHTML = '<span class="blk-icon" aria-hidden="true">' + def.icon + '</span><span>' + (node.type === 'ifPath' ? 'si hay camino hacia' : def.label) + '</span>';
+    grip.innerHTML = '<span class="blk-icon" aria-hidden="true">' + def.icon + '</span><span>' + (node.type === 'ifPath' ? 'si hay camino hacia' : tr(def.label)) + '</span>';
     head.appendChild(grip);
 
     if (node.type === 'ifPath') {
@@ -895,6 +913,10 @@
     document.body.classList.add('game-running');
     runBtn.disabled = true;
     say('Ejecutando tu programa…');
+    if (window.innerWidth <= 640) {
+      var wrapEl = canvas.parentNode, rct = wrapEl.getBoundingClientRect();
+      if (rct.top < 0 || rct.bottom > window.innerHeight) wrapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     var gen = exec(program);
     function tick() {
       if (!running) return;
@@ -1398,7 +1420,8 @@
   var THEME_MAP = {
     parque: { ground: ['#9BDB7A', '#90D36F'], path: ['#ECE6D6', '#E4DCC8'], edge: '#B9AE96', item: 'hueso', itemScale: 0.5, enemy: 'abeja', goal: 'casita' },
     pirata: { ground: ['#2E9BD6', '#2A93CC'], path: ['#F6DDA4', '#F0D394'], edge: '#C9A45E', item: 'moneda', itemScale: 0.42, enemy: 'cangrejo', goal: 'cofre', goalReady: 'cofreAbierto' },
-    castillo: { ground: ['#3B3F5C', '#363A55'], path: ['#C3C3D1', '#B9B9C8'], edge: '#7E7E92', item: 'llave', itemScale: 0.55, enemy: 'murcielago', goal: 'puerta' }
+    castillo: { ground: ['#3B3F5C', '#363A55'], path: ['#C3C3D1', '#B9B9C8'], edge: '#7E7E92', item: 'llave', itemScale: 0.55, enemy: 'murcielago', goal: 'puerta' },
+    navidad: { ground: ['#EEF5FB', '#E3EEF7'], path: ['#BFE3F5', '#B2DBEF'], edge: '#7FB3CF', item: 'regalo', itemScale: 0.5, enemy: 'munieco', goal: 'trineo' }
   };
   function drawThemeMap(T, now, w) {
     var th = THEME_MAP[w], x, y;
@@ -1440,8 +1463,45 @@
         var hv = hash(x, y);
         if (w === 'parque') drawBush(x * T, y * T, T, hv);
         else if (w === 'pirata') { if (hv > 0.55) drawRock(x * T, y * T, T, hv); else if (hv < 0.18) drawPalm(x * T, y * T, T, now, hv); }
+        else if (w === 'navidad') drawPine(x * T, y * T, T, hv, now);
         else drawWall(x * T, y * T, T, hv, now);
       }
+    }
+    if (w === 'navidad') { // nieve que cae
+      ctx.fillStyle = 'rgba(255,255,255,.9)';
+      var Wd = game.cols * T, Hd = game.rows * T;
+      for (var k = 0; k < 40; k++) {
+        var sxp = (hash(k, 1) * Wd + Math.sin(now / 900 + k) * T * 0.3 + Wd) % Wd;
+        var syp = (hash(1, k) * Hd + now / (18 + hash(k, k) * 20)) % Hd;
+        ctx.beginPath(); ctx.arc(sxp, syp, Math.max(1.5, T * (0.025 + hash(k, 3) * 0.025)), 0, 7); ctx.fill();
+      }
+    }
+  }
+  function drawPine(x, y, T, hv, now) {
+    var cx = x + T / 2;
+    ctx.fillStyle = 'rgba(60,90,120,.18)';
+    ctx.beginPath(); ctx.ellipse(cx, y + T * 0.88, T * 0.3, T * 0.07, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#6D4C41'; ctx.fillRect(cx - T * 0.06, y + T * 0.72, T * 0.12, T * 0.16);
+    var lay = [[0.74, 0.36], [0.54, 0.28], [0.34, 0.2]];
+    lay.forEach(function (l) {
+      ctx.fillStyle = '#1F7A3A';
+      ctx.beginPath(); ctx.moveTo(cx, y + T * (l[0] - 0.26)); ctx.lineTo(cx + T * l[1], y + T * l[0]); ctx.lineTo(cx - T * l[1], y + T * l[0]); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#FFFFFF'; // nieve en las ramas
+      ctx.fillRect(cx - T * l[1] * 0.8, y + T * l[0] - T * 0.04, T * l[1] * 1.6, T * 0.04);
+    });
+    if (hv > 0.35) { // luces que parpadean
+      var cols = ['#FF5252', '#FFD23F', '#40C4FF', '#FF80AB'];
+      [[-0.14, 0.62], [0.12, 0.5], [-0.06, 0.4], [0.16, 0.66], [0.02, 0.28]].forEach(function (q, i) {
+        var on = Math.sin(now / 300 + i + hv * 10) > -0.3;
+        ctx.fillStyle = on ? cols[(i + Math.floor(hv * 4)) % 4] : 'rgba(255,255,255,.4)';
+        ctx.beginPath(); ctx.arc(cx + T * q[0], y + T * q[1], T * 0.035, 0, 7); ctx.fill();
+      });
+    }
+    if (hv > 0.8) { // estrella
+      ctx.fillStyle = '#FFD23F';
+      ctx.beginPath();
+      for (var i = 0; i < 10; i++) { var r = i % 2 ? T * 0.04 : T * 0.09, a = -Math.PI / 2 + i * Math.PI / 5; ctx[i ? 'lineTo' : 'moveTo'](cx + Math.cos(a) * r, y + T * 0.08 + Math.sin(a) * r); }
+      ctx.closePath(); ctx.fill();
     }
   }
   function drawBush(x, y, T, hv) {

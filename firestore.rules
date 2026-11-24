@@ -3,7 +3,7 @@ rules_version = '2';
 // Pégalas en Firebase → Firestore Database → Reglas → Publicar.
 //  - admins/{uid}: lo crea el dueño a mano en la consola; nadie lo puede escribir desde la página.
 //  - alumnos/{uid}: cada alumno solo lee lo suyo; solo los administradores escriben.
-//  - alumnos/{uid}/juegos/{juego}: el alumno guarda sus estrellas de los juegos.
+//  - alumnos/{uid}/juegos/{juego}: el alumno guarda sus estrellas de los juegos (cualquier juego nuevo, sin cambiar estas reglas).
 //  - cursos/{id}: cualquier usuario con sesión lee nombre y módulos.
 //  - cursos/{id}/privado/*: materiales, solo para alumnos activos inscritos en ese curso.
 service cloud.firestore {
@@ -38,7 +38,7 @@ service cloud.firestore {
       match /juegos/{juegoId} {
         allow read: if esAdmin() || esElAlumno(uid);
         allow write: if esAdmin() || (esElAlumno(uid)
-          && juegoId in ['hardware', 'bloques', 'aleteo', 'cubos']
+          && juegoId.matches('^[a-z0-9-]{2,30}$')
           && request.resource.data.keys().hasOnly(['niveles', 'total', 'actualizado'])
           && request.resource.data.niveles is map
           && request.resource.data.niveles.size() <= 60);
