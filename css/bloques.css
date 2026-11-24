@@ -493,3 +493,59 @@ button.hw-card:hover:not(:disabled) { transform: translateY(-3px); border-color:
   .tu-preview { max-width: 360px; width: 100%; justify-self: center; }
   .tu-lines, .tu-ed textarea { font-size: 13px; line-height: 20px; }
 }
+
+/* ===== Mundo de Cubos (juego-cubos.html) ===== */
+.cu-app { position: relative; }
+.cu-body { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.cu-stage { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.cu-canvas-wrap { position: relative; border-radius: 20px; overflow: hidden; background: #BDE7FF; }
+.cu-canvas-wrap canvas { display: block; width: 100%; touch-action: manipulation; }
+.cu-view { position: absolute; right: 10px; top: 10px; display: flex; gap: 6px; }
+.cu-view .gm-btn { min-width: 48px; min-height: 48px; font-size: 22px; background: rgba(11, 37, 69, .75); color: #fff; border: 0; border-radius: 12px; }
+.cu-mission-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cu-listen { min-height: 44px; padding: 0 14px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, .3); background: rgba(255, 255, 255, .08); color: var(--gm-text); font: inherit; font-weight: 800; cursor: pointer; }
+.cu-listen:hover { border-color: var(--yellow); }
+.cu-app .gm-goal { font-size: 19px; }
+.cu-legend { margin: 0; font-size: 14px; color: var(--gm-muted); display: flex; align-items: center; gap: 8px; }
+.cu-key-front { width: 26px; height: 14px; border: 2.5px dashed #FFD23F; border-radius: 3px; transform: skewX(-30deg); flex: none; }
+.cu-side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.cu-panel { background: var(--gm-panel); border: 1px solid var(--gm-line); border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.cu-panel h3 { font-size: 13px; font-weight: 900; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gm-muted); margin: 0; }
+.cu-palette { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr)); gap: 8px; }
+.cu-cmd { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 8px 12px; border: 0; border-radius: 14px; color: #fff; font: inherit; font-size: 17px; font-weight: 900; cursor: pointer; text-align: left; box-shadow: 0 4px 0 rgba(0, 0, 0, .25); transition: transform .1s ease; }
+.cu-cmd:hover { transform: translateY(-2px); }
+.cu-cmd:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, .25); }
+.cu-ico { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 10px; background: rgba(255, 255, 255, .22); font-size: 20px; flex: none; }
+.c-move { background: #1E6FD9; }
+.c-turn { background: #7B3FB5; }
+.c-put { background: #B4651E; }
+.c-dig { background: #5D6B78; }
+.c-loop { background: #C1660B; }
+.cu-program { list-style: none; margin: 0; padding: 10px; display: flex; flex-direction: column; gap: 6px; min-height: 160px; max-height: 420px; overflow: auto; background: var(--gm-ws); border-radius: 14px; }
+.cu-chip { border-radius: 12px; color: #fff; }
+.cu-chip-head { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 4px 6px 4px 8px; font-weight: 800; border-radius: 12px; }
+.cu-chip-head.is-running { box-shadow: 0 0 0 3px #FFD23F; }
+.cu-chip-head > span:nth-child(2) { margin-right: auto; }
+.cu-chip.is-loop { padding-bottom: 8px; }
+.cu-chip.is-open { box-shadow: 0 0 0 3px #FFD23F; }
+.cu-chip select { min-height: 40px; border-radius: 10px; border: 0; font: inherit; font-weight: 800; padding: 0 6px; }
+.cu-open { min-height: 40px; padding: 0 10px; border-radius: 10px; border: 2px solid rgba(255, 255, 255, .6); background: transparent; color: #fff; font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; }
+.cu-open[aria-pressed="true"] { background: #FFD23F; color: #1D3F51; border-color: #FFD23F; }
+.cu-del { width: 40px; height: 40px; border-radius: 10px; border: 0; background: rgba(0, 0, 0, .25); color: #fff; font-size: 22px; line-height: 1; cursor: pointer; flex: none; }
+.cu-inner { list-style: none; margin: 4px 8px 0 18px; padding: 6px; display: flex; flex-direction: column; gap: 6px; border-left: 4px solid rgba(255, 255, 255, .5); background: rgba(0, 0, 0, .15); border-radius: 0 10px 10px 0; }
+.cu-empty { color: var(--gm-muted); font-weight: 700; font-size: 15px; padding: 14px 8px; text-align: center; }
+.cu-inner .cu-empty { padding: 8px; font-size: 14px; color: #F2F8FB; }
+.cu-audio { align-self: flex-start; }
+.cu-free-tools { display: none; flex-direction: column; gap: 10px; align-items: flex-start; }
+.cu-app.is-free .cu-free-tools { display: flex; }
+.cu-app.is-free .cu-prog-panel, .cu-app.is-free .cu-palette, .cu-app.is-free #cu-hint-box, .cu-app.is-free .cu-legend { display: none; }
+.cu-mat-label { margin: 0; font-weight: 800; color: var(--gm-muted); font-size: 14px; }
+.cu-materials { display: flex; gap: 8px; flex-wrap: wrap; }
+.cu-mat { width: 48px; height: 48px; border-radius: 10px; border: 3px solid transparent; cursor: pointer; background: linear-gradient(var(--m-top) 0 45%, var(--m-side) 45% 100%); }
+.cu-mat[aria-pressed="true"] { border-color: #FFD23F; box-shadow: 0 0 0 3px rgba(255, 210, 63, .35); }
+.lvl.cu-free:not(.is-locked) { background: #6A3FB5; }
+.cu-running .cu-cmd { opacity: .6; pointer-events: none; }
+@media (max-width: 900px) {
+  .cu-body { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .cu-cmd { transition: none; } }

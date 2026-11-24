@@ -13,6 +13,7 @@ cursos.html                Detalle de los 6 cursos y temarios descargables (PDF 
 modalidades.html           Modalidades online, híbrida y presencial a detalle
 programacion-con-bloques.html  Juego de programación con bloques (51 niveles en 7 capítulos; los capítulos 5–7 son sesiones de 45 min con el bloque «truco» (funciones); mundos bosque, espacio, parque, isla pirata y castillo; ?profe=1 desbloquea todo)
 juego-hardware.html        Juego de computación básica: hardware (9 niveles: 6 cortos + 3 sesiones de 45 min con misiones — puertos y conexiones, cuidado y seguridad, archivos y almacenamiento; la sesión se puede retomar donde se quedó; ?profe=1 desbloquea todo)
+juego-cubos.html           Mundo de Cubos: juego en 3D isométrico (6–12 años, 8 niveles ~20 min + modo libre): instrucciones avanzar/girar/poner/quitar/repetir; botón para escuchar la misión en voz alta (?profe=1 desbloquea todo)
 tutorial-astro-salto.html  Tutorial de JavaScript (12–15 años): crear un juego de aleteo en 11 pasos con editor, vista previa y comprobaciones automáticas (?profe=1 desbloquea todo)
 alumnos.html / admin.html  Portal de alumnos y panel del maestro (Firebase)
 aviso-de-privacidad.html   Aviso de privacidad (borrador)
@@ -24,6 +25,7 @@ js/bloques.js              Juego de bloques: niveles, editor arrastrar/soltar y 
 js/hardware.js             Juego de hardware: niveles (arreglo LEVELS) y dibujos SVG de las piezas
 js/ik-sprites.js           Personajes y objetos en pixel art (perrito, gatito, pirata, ninja, vikinga, abeja, cangrejo…)
 js/ik-audio.js             Sonidos y música generados con Web Audio (sin archivos); botones Sonido/Música
+js/cubos.js                Mundo de Cubos: niveles (LEVELS), reglas, programa y dibujo isométrico en canvas (sin librerías)
 js/aleteo-pasos.js         Pasos del tutorial Astro Salto (texto, código inicial, solución y comprobaciones)
 js/aleteo.js               Editor y ejecución del tutorial: el código del alumno corre en un iframe aislado (sandbox)
 js/progreso.js             Guarda las estrellas de los juegos en la cuenta del alumno si entró al portal
@@ -40,6 +42,7 @@ robots.txt, sitemap.xml    SEO
 - `/modalidades.html` — online, híbrido y presencial
 - `/programacion-con-bloques.html` — juego de programación con bloques
 - `/juego-hardware.html` — juego de computación básica (hardware)
+- `/juego-cubos.html` — Mundo de Cubos (3D)
 - `/tutorial-astro-salto.html` — tutorial: crea tu videojuego de aleteo con JavaScript
 - `/aviso-de-privacidad.html` — aviso de privacidad (borrador; fuera del sitemap)
 - `/alumnos.html` — portal de alumnos con Firebase (noindex; fuera del sitemap)
@@ -82,7 +85,7 @@ Si un alumno con usuario olvida su contraseña: Editar → «Contraseña olvidad
 | `admins/{uid}` | administradores | se crea a mano en la consola |
 | `alumnos/{uid}` | nombre, usuario/correo, tutor, WhatsApp, `cursos[]`, `activo` | el alumno lee lo suyo; admin escribe |
 | `alumnos/{uid}/avance/{curso}` | `completados[]`, `calificaciones{}`, `constanciaUrl` | el alumno lee lo suyo; admin escribe |
-| `alumnos/{uid}/juegos/{juego}` (hardware, bloques, aleteo) | `niveles{}` (estrellas por nivel), `total` | el alumno lee y guarda lo suyo; admin lee |
+| `alumnos/{uid}/juegos/{juego}` (hardware, bloques, aleteo, cubos) | `niveles{}` (estrellas por nivel), `total` | el alumno lee y guarda lo suyo; admin lee |
 | `cursos/{curso}` | nombre, orden, `modulos[{id, titulo}]` | cualquiera con sesión lee; admin escribe |
 | `cursos/{curso}/privado/materiales` | `items[{titulo, url}]` | alumnos activos inscritos; admin escribe |
 
