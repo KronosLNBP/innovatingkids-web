@@ -11,13 +11,19 @@ index.html                 Página de inicio
 clase-muestra.html         Página de aterrizaje para anuncios: beneficio, 3 pasos, cursos, modalidades y formulario de clase muestra (encabezado sin menú)
 cursos.html                Detalle de los 6 cursos y temarios descargables (PDF en temarios/)
 modalidades.html           Modalidades online, híbrida y presencial a detalle
-programacion-con-bloques.html  Juego de programación con bloques (30 niveles en 4 capítulos; ?profe=1 desbloquea todo)
+programacion-con-bloques.html  Juego de programación con bloques (30 niveles en 4 capítulos; mundos bosque, espacio, parque, isla pirata y castillo; ?profe=1 desbloquea todo)
+juego-hardware.html        Juego de computación básica: hardware (6 niveles; ?profe=1 desbloquea todo)
+alumnos.html / admin.html  Portal de alumnos y panel del maestro (Firebase)
 aviso-de-privacidad.html   Aviso de privacidad (borrador)
 404.html                   Página de error
 css/styles.css             Estilos
 js/config.js               Número de WhatsApp (editar aquí)
 js/main.js                 Menú, preguntas frecuentes, formulario, animaciones de entrada y botón "Volver arriba"
 js/bloques.js              Juego de bloques: niveles, editor arrastrar/soltar y animación (sin librerías)
+js/hardware.js             Juego de hardware: niveles (arreglo LEVELS) y dibujos SVG de las piezas
+js/ik-sprites.js           Personajes y objetos en pixel art (perrito, gatito, pirata, ninja, vikinga, abeja, cangrejo…)
+js/ik-audio.js             Sonidos y música generados con Web Audio (sin archivos); botones Sonido/Música
+js/progreso.js             Guarda las estrellas de los juegos en la cuenta del alumno si entró al portal
 img/                       Imágenes (ver abajo); img/mascota/ tiene las ilustraciones del astronauta (mascota)
 video/                     Video de 1 minuto de la portada (MP4 1280x720, sin audio; póster en img/video-poster.jpg). Colores y tipografía de marca en css/styles.css (:root)
 robots.txt, sitemap.xml    SEO
@@ -30,6 +36,7 @@ robots.txt, sitemap.xml    SEO
 - `/cursos.html` — detalle de cursos y temarios
 - `/modalidades.html` — online, híbrido y presencial
 - `/programacion-con-bloques.html` — juego de programación con bloques
+- `/juego-hardware.html` — juego de computación básica (hardware)
 - `/aviso-de-privacidad.html` — aviso de privacidad (borrador; fuera del sitemap)
 - `/alumnos.html` — portal de alumnos con Firebase (noindex; fuera del sitemap)
 - `/admin.html` — administración del portal (noindex; fuera del sitemap)
@@ -43,6 +50,7 @@ Login de alumnos en `alumnos.html` y panel de administración en `admin.html`. N
 **Archivos:** `js/firebase-config.js` (configuración), `js/portal-fb.js` (conexión compartida), `js/alumnos.js`, `js/admin.js`, `firestore.rules` (reglas de seguridad).
 
 ### Qué ve el alumno
+- **Mis niveles:** los juegos de Computación básica (hardware) y Programación con bloques, con niveles terminados y estrellas. Al jugar con sesión iniciada, las estrellas se guardan en `alumnos/{uid}/juegos/{juego}`.
 - **Mis cursos y avance:** cursos inscritos, barra de avance y módulos completados.
 - **Materiales y temarios:** enlaces que solo ven los alumnos inscritos en ese curso.
 - **Calificaciones y constancias:** calificación por módulo (0–10), promedio y botón para descargar la constancia.
@@ -70,6 +78,7 @@ Si un alumno con usuario olvida su contraseña: Editar → «Contraseña olvidad
 | `admins/{uid}` | administradores | se crea a mano en la consola |
 | `alumnos/{uid}` | nombre, usuario/correo, tutor, WhatsApp, `cursos[]`, `activo` | el alumno lee lo suyo; admin escribe |
 | `alumnos/{uid}/avance/{curso}` | `completados[]`, `calificaciones{}`, `constanciaUrl` | el alumno lee lo suyo; admin escribe |
+| `alumnos/{uid}/juegos/{juego}` | `niveles{}` (estrellas por nivel), `total` | el alumno lee y guarda lo suyo; admin lee |
 | `cursos/{curso}` | nombre, orden, `modulos[{id, titulo}]` | cualquiera con sesión lee; admin escribe |
 | `cursos/{curso}/privado/materiales` | `items[{titulo, url}]` | alumnos activos inscritos; admin escribe |
 

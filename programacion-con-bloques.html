@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="css/styles.css?v=20261120a">
   <link rel="stylesheet" href="css/bloques.css?v=20261120a">
 </head>
-<body>
+<body data-juego="bloques">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
   <!-- ENCABEZADO -->
@@ -62,7 +62,7 @@
       <div class="container page-hero-inner">
         <nav class="breadcrumb" aria-label="Ruta de navegación"><a href="index.html">Inicio</a> <span aria-hidden="true">/</span> <span>Programación con bloques</span></nav>
         <h1 class="display">Programación con bloques</h1>
-        <p class="hero-lead">Arma un programa con bloques y guía a tu héroe hasta la meta: recoge tesoros, esquiva obstáculos y derrota enemigos en el bosque o en el espacio. Así se aprende a programar: dividiendo un problema en pasos sencillos.</p>
+        <p class="hero-lead">Arma un programa con bloques y guía a tu héroe hasta la meta: recoge tesoros, esquiva obstáculos y derrota enemigos en el bosque, el espacio, el parque con perritos y gatitos, la isla pirata o el castillo de los guerreros. Así se aprende a programar: dividiendo un problema en pasos sencillos.</p>
         <div class="hero-ctas">
           <a class="btn btn-yellow" href="#juego">¡A jugar!</a>
         </div>
@@ -92,7 +92,15 @@
               <span class="gm-opt-label" id="hero-label">Elige tu héroe</span>
               <div class="gm-heroes" role="group" aria-labelledby="hero-label" id="hero-picker"></div>
             </div>
+            <div class="gm-opt gm-audio">
+              <span class="gm-opt-label">Audio</span>
+              <div class="gm-seg">
+                <button class="gm-seg-btn" type="button" data-ik-audio="sfx" aria-pressed="true"><span class="ik-audio-label">Sonido: sí</span></button>
+                <button class="gm-seg-btn" type="button" data-ik-audio="music" aria-pressed="false"><span class="ik-audio-label">Música: no</span></button>
+              </div>
+            </div>
           </div>
+          <p class="ik-sesion" id="ik-sesion" role="status" hidden></p>
 
           <div class="gm-body">
             <div class="gm-stage">
@@ -222,6 +230,7 @@
           <a href="index.html#cursos">Cursos</a>
           <a href="cursos.html">Detalle de cursos</a>
           <a href="programacion-con-bloques.html">Programación con bloques</a>
+          <a href="juego-hardware.html">Computación básica (juego)</a>
           <a href="modalidades.html">Modalidades</a>
           <a href="index.html#preguntas">Preguntas</a>
           <a href="clase-muestra.html">Clase muestra gratis</a>
@@ -250,6 +259,9 @@
 
   <script src="js/config.js"></script>
   <script src="js/main.js?v=20261120a"></script>
-  <script src="js/bloques.js?v=20261120a"></script>
+  <script src="js/ik-sprites.js?v=20261124a"></script>
+  <script src="js/ik-audio.js?v=20261124a"></script>
+  <script src="js/bloques.js?v=20261124a"></script>
+  <script type="module" src="js/progreso.js?v=20261124a"></script>
 </body>
 </html>

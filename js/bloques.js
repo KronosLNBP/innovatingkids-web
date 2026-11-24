@@ -173,7 +173,22 @@
   try { progress = JSON.parse(localStorage.getItem(STORE_KEY) || '{}') || {}; } catch (e) { progress = {}; }
   function saveProgress() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch (e) { /* sin almacenamiento */ }
+    // Si el alumno entró al portal, js/progreso.js guarda esto en su cuenta
+    document.dispatchEvent(new CustomEvent('ik:progreso', { detail: { juego: 'bloques', niveles: progress, total: LEVELS.length } }));
   }
+  // Avance guardado en el portal: se combina con el de este navegador (gana la mejor puntuación)
+  document.addEventListener('ik:progreso-remoto', function (e) {
+    var remoto = (e.detail && e.detail.niveles) || {}, cambio = false, subir = false;
+    Object.keys(remoto).forEach(function (k) {
+      var v = +remoto[k] || 0;
+      if (v > (progress[k] || 0)) { progress[k] = v; cambio = true; }
+    });
+    Object.keys(progress).forEach(function (k) { if ((progress[k] || 0) > (+remoto[k] || 0)) subir = true; });
+    if (cambio) { try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch (er) { /* sin almacenamiento */ } }
+    if (subir) saveProgress();
+    if (cambio && levelsEl) renderLevels();
+  });
+  var sfx = function (n) { if (window.IKAudio) window.IKAudio.play(n); };
   function isUnlocked(i) { return TEACHER || i === 0 || !!progress[i - 1]; }
 
   // ---------- Mundos, héroes y sprites (pixel art original) ----------
@@ -208,8 +223,14 @@
       rows: ['.....cc.....', '....cmmc....', '...cmwmmc...', '..cmwmmmmc..', '..cmmmmmdc..', '...cmmmdc...', '....cmdc....', '.....cc.....']
     }
   };
+  if (window.IK_SPRITES) Object.keys(window.IK_SPRITES).forEach(function (k) { if (!SPRITES[k]) SPRITES[k] = window.IK_SPRITES[k]; });
   var HEROES = [
     { id: 'ik', name: 'Héroe Innovating Kids' },
+    { id: 'perro', name: 'Perrito' },
+    { id: 'gato', name: 'Gatito' },
+    { id: 'pirata', name: 'Pirata' },
+    { id: 'ninja', name: 'Ninja' },
+    { id: 'vikinga', name: 'Guerrera vikinga' },
     { id: 'piloto', name: 'Piloto espacial' },
     { id: 'astronauta', name: 'Astronauta' },
     { id: 'robot', name: 'Robot explorador' },
@@ -217,8 +238,13 @@
   ];
   var WORLDS = [
     { id: 'bosque', name: 'Bosque' },
-    { id: 'espacio', name: 'Espacio' }
+    { id: 'espacio', name: 'Espacio' },
+    { id: 'parque', name: 'Parque' },
+    { id: 'pirata', name: 'Isla pirata' },
+    { id: 'castillo', name: 'Castillo' }
   ];
+  // Héroe que se elige solo al cambiar de mundo (si el niño no había elegido otro)
+  var WORLD_HERO = { parque: 'perro', pirata: 'pirata', castillo: 'vikinga', espacio: 'astronauta', bosque: 'ik' };
   var PREFS_KEY = 'ik-bloques-prefs';
   var prefs = { world: 'bosque', hero: 'ik' };
   try {
@@ -240,9 +266,34 @@
     [/a la bandera/g, 'al portal'], [/la bandera/g, 'el portal'], [/bandera/g, 'portal'],
     [/los árboles/g, 'los asteroides'], [/árboles/g, 'asteroides']
   ];
+  var WORDS = {
+    espacio: SPACE_WORDS,
+    parque: [
+      [/todas las gemas/g, 'todos los huesos'], [/las gemas/g, 'los huesos'], [/Las gemas/g, 'Los huesos'], [/una gema/g, 'un hueso'],
+      [/las (\d+) gemas/g, 'los $1 huesos'], [/gemas/g, 'huesos'], [/gema/g, 'hueso'], [/encima de ella/g, 'encima de él'],
+      [/Gemas/g, 'Huesos'], [/Gema/g, 'Hueso'], [/Slimes/g, 'Abejorros'], [/Slime/g, 'Abejorro'], [/slimes/g, 'abejorros'], [/slime/g, 'abejorro'],
+      [/a la bandera/g, 'a la casita'], [/la bandera/g, 'la casita'], [/La bandera/g, 'La casita'], [/bandera/g, 'casita'],
+      [/Derrótalo/g, 'Espántalo'], [/derrótalo/g, 'espántalo'], [/Derrota/g, 'Espanta'], [/derrota/g, 'espanta'],
+      [/Derrotados/g, 'Espantados'], [/atacar/g, 'espantar'],
+      [/los árboles/g, 'los arbustos'], [/árboles/g, 'arbustos']
+    ],
+    pirata: [
+      [/gemas/g, 'monedas'], [/gema/g, 'moneda'], [/Gemas/g, 'Monedas'], [/Gema/g, 'Moneda'],
+      [/Slimes/g, 'Cangrejos'], [/Slime/g, 'Cangrejo'], [/slimes/g, 'cangrejos'], [/slime/g, 'cangrejo'],
+      [/hasta la bandera/g, 'hasta el cofre del tesoro'], [/a la bandera/g, 'al cofre del tesoro'], [/la bandera/g, 'el cofre'], [/La bandera/g, 'El cofre'], [/bandera/g, 'cofre'],
+      [/los árboles/g, 'las rocas'], [/árboles/g, 'rocas']
+    ],
+    castillo: [
+      [/gemas/g, 'llaves'], [/gema/g, 'llave'], [/Gemas/g, 'Llaves'], [/Gema/g, 'Llave'],
+      [/Slimes/g, 'Murciélagos'], [/Slime/g, 'Murciélago'], [/slimes/g, 'murciélagos'], [/slime/g, 'murciélago'],
+      [/a la bandera/g, 'a la puerta'], [/la bandera/g, 'la puerta'], [/La bandera/g, 'La puerta'], [/bandera/g, 'puerta'],
+      [/los árboles/g, 'los muros'], [/árboles/g, 'muros']
+    ]
+  };
   function tr(text) {
-    if (!space()) return text;
-    SPACE_WORDS.forEach(function (r) { text = text.replace(r[0], r[1]); });
+    var list = WORDS[prefs.world];
+    if (!list) return text;
+    list.forEach(function (r) { text = text.replace(r[0], r[1]); });
     return text;
   }
 
@@ -299,11 +350,12 @@
       b.type = 'button';
       b.className = 'pblk ' + def.cls + (def.container ? ' is-container' : '');
       b.dataset.type = type;
-      b.innerHTML = '<span class="blk-icon" aria-hidden="true">' + def.icon + '</span><span>' + def.label + (type === 'repeat' ? ' … veces' : '') + '</span>';
-      b.setAttribute('aria-label', 'Agregar bloque ' + def.label);
+      b.innerHTML = '<span class="blk-icon" aria-hidden="true">' + def.icon + '</span><span>' + tr(def.label) + (type === 'repeat' ? ' … veces' : '') + '</span>';
+      b.setAttribute('aria-label', 'Agregar bloque ' + tr(def.label));
       b.addEventListener('pointerdown', function (e) { pointerDown(e, { type: type }, b); });
       b.addEventListener('click', function () {
         if (justDragged) return;
+        sfx('click');
         addBlock(type);
       });
       paletteEl.appendChild(b);
@@ -702,18 +754,20 @@
     if (DIRS[type]) {
       game.dir = type;
       var nx = h.x + DIRS[type].dx, ny = h.y + DIRS[type].dy;
-      if (blocked(nx, ny)) { bump(nx, ny); return fail('¡Ups! El héroe chocó. Revisa hacia dónde se mueve.'); }
-      if (game.enemies[nx + ',' + ny]) { bump(nx, ny); return fail('¡Un slime bloquea el camino! Usa "atacar" antes de avanzar.'); }
+      if (blocked(nx, ny)) { bump(nx, ny); sfx('bump'); return fail('¡Ups! El héroe chocó. Revisa hacia dónde se mueve.'); }
+      if (game.enemies[nx + ',' + ny]) { bump(nx, ny); sfx('bump'); return fail('¡Un slime bloquea el camino! Usa "atacar" antes de avanzar.'); }
+      sfx('step');
       anim = { fx: h.x, fy: h.y, tx: nx, ty: ny, start: performance.now(), dur: stepMs() * 0.8 };
       h.x = nx; h.y = ny;
       game.moves++;
       var k = nx + ',' + ny;
-      if (game.gems[k]) { delete game.gems[k]; effects.push({ kind: 'gem', x: nx, y: ny, start: performance.now() }); }
+      if (game.gems[k]) { delete game.gems[k]; effects.push({ kind: 'gem', x: nx, y: ny, start: performance.now() }); sfx('item'); }
       if (game.flag.x === nx && game.flag.y === ny && gemsLeft() === 0) game.won = true;
     } else if (type === 'attack') {
       var fk = frontKey();
       var p = fk.split(',');
       effects.push({ kind: 'slash', x: +p[0], y: +p[1], start: performance.now() });
+      sfx(prefs.hero === 'perro' ? 'woof' : prefs.hero === 'gato' ? 'meow' : 'hit');
       if (game.enemies[fk]) {
         delete game.enemies[fk];
         effects.push({ kind: 'poof', x: +p[0], y: +p[1], start: performance.now() });
@@ -754,8 +808,9 @@
     document.body.classList.remove('game-running');
     runBtn.disabled = false;
     clearHighlight();
-    if (game.failed) { say(game.failed); showOverlay(false, game.failed); return; }
+    if (game.failed) { say(game.failed); showOverlay(false, game.failed); sfx('lose'); return; }
     if (game.won) {
+      sfx(prefs.world === 'pirata' ? 'treasure' : 'win');
       renderGoals();
       var used = countBlocks();
       var best = LEVELS[levelIndex].best;
@@ -773,6 +828,7 @@
       'El programa terminó y el héroe no llegó a la bandera. ¡Agrega más bloques!';
     say(m);
     showOverlay(false, m);
+    sfx('lose');
   }
 
   function stop() {
@@ -941,7 +997,10 @@
         b.setAttribute('aria-pressed', String(prefs.world === w.id));
         b.addEventListener('click', function () {
           if (running || prefs.world === w.id) return;
-          prefs.world = w.id; savePrefs(); applyWorld();
+          var prevAuto = WORLD_HERO[prefs.world];
+          prefs.world = w.id;
+          if (!prefs.hero || prefs.hero === prevAuto) prefs.hero = WORLD_HERO[w.id] || prefs.hero;
+          savePrefs(); applyWorld(); sfx('click');
         });
         worldPicker.appendChild(b);
       });
@@ -978,6 +1037,9 @@
     var wrap = canvas.parentNode;
     wrap.classList.toggle('is-space', space());
     document.querySelector('.gm-app').classList.toggle('is-space', space());
+    wrap.setAttribute('data-world', prefs.world);
+    renderPalette();
+    if (window.IKAudio) window.IKAudio.setTheme(prefs.world);
     renderPickers();
     applyTexts();
     renderLevels();
@@ -1036,7 +1098,7 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, T * game.cols, T * game.rows);
     var now = performance.now();
-    if (space()) { drawSpaceMap(T, now); } else {
+    if (space()) { drawSpaceMap(T, now); } else if (THEME_MAP[prefs.world]) { drawThemeMap(T, now, prefs.world); } else {
     for (var y = 0; y < game.rows; y++) {
       for (var x = 0; x < game.cols; x++) {
         ctx.fillStyle = (x + y) % 2 ? '#7CC765' : '#86CF6E';
@@ -1061,13 +1123,18 @@
       }
     }
     }
+    var TH = THEME_MAP[prefs.world];
     if (space()) drawPortal(game.flag.x * T, game.flag.y * T, T, gemsLeft() === 0, now);
+    else if (TH) drawGoal(TH, game.flag.x * T, game.flag.y * T, T, gemsLeft() === 0, now);
     else drawFlag(game.flag.x * T, game.flag.y * T, T, gemsLeft() === 0, now);
     Object.keys(game.gems).forEach(function (k) {
       var p = k.split(',');
       if (space()) {
         var fy = Math.sin(now / 300 + +p[0]) * T * 0.03;
         drawSprite(SPRITES.cristal, +p[0] * T, +p[1] * T - T * 0.12 + fy, T, false, 0.6);
+      } else if (TH) {
+        var iy = Math.sin(now / 300 + +p[0]) * T * 0.04;
+        drawSprite(SPRITES[TH.item], +p[0] * T, +p[1] * T - T * 0.14 + iy, T, false, TH.itemScale);
       } else drawGem(+p[0] * T, +p[1] * T, T, now);
     });
     Object.keys(game.enemies).forEach(function (k) {
@@ -1076,6 +1143,11 @@
         var hop = Math.abs(Math.sin(now / 260 + +p[0])) * T * 0.05;
         shadow(+p[0] * T, +p[1] * T, T);
         drawSprite(SPRITES.droide, +p[0] * T, +p[1] * T - hop, T, false, 0.72);
+      } else if (TH) {
+        var ex = TH.enemy === 'cangrejo' ? Math.sin(now / 200 + +p[1]) * T * 0.06 : 0;
+        var ey = TH.enemy !== 'cangrejo' ? Math.sin(now / 160 + +p[0]) * T * 0.08 + T * 0.1 : 0;
+        shadow(+p[0] * T, +p[1] * T, T);
+        drawSprite(SPRITES[TH.enemy], +p[0] * T + ex, +p[1] * T - ey, T, Math.sin(now / 400 + +p[0]) > 0, 0.7);
       } else drawSlime(+p[0] * T, +p[1] * T, T, now);
     });
     var hx = game.hero.x, hy = game.hero.y;
@@ -1214,6 +1286,144 @@
       ctx.beginPath(); ctx.ellipse(cx, cy, r, r * 1.1, 0, a, a + Math.PI / 4); ctx.stroke();
     }
     ctx.restore();
+  }
+
+  // ---------- Mundos con tema: parque, isla pirata y castillo ----------
+  var THEME_MAP = {
+    parque: { ground: ['#9BDB7A', '#90D36F'], path: ['#ECE6D6', '#E4DCC8'], edge: '#B9AE96', item: 'hueso', itemScale: 0.5, enemy: 'abeja', goal: 'casita' },
+    pirata: { ground: ['#2E9BD6', '#2A93CC'], path: ['#F6DDA4', '#F0D394'], edge: '#C9A45E', item: 'moneda', itemScale: 0.42, enemy: 'cangrejo', goal: 'cofre', goalReady: 'cofreAbierto' },
+    castillo: { ground: ['#3B3F5C', '#363A55'], path: ['#C3C3D1', '#B9B9C8'], edge: '#7E7E92', item: 'llave', itemScale: 0.55, enemy: 'murcielago', goal: 'puerta' }
+  };
+  function drawThemeMap(T, now, w) {
+    var th = THEME_MAP[w], x, y;
+    for (y = 0; y < game.rows; y++) {
+      for (x = 0; x < game.cols; x++) {
+        ctx.fillStyle = th.ground[(x + y) % 2];
+        ctx.fillRect(x * T, y * T, T, T);
+        if (w === 'pirata') { // olas
+          ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = Math.max(1, T * 0.03);
+          var off = Math.sin(now / 700 + x + y * 2) * T * 0.08;
+          ctx.beginPath(); ctx.arc(x * T + T * 0.3 + off, y * T + T * 0.35, T * 0.1, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+          ctx.beginPath(); ctx.arc(x * T + T * 0.7 - off, y * T + T * 0.72, T * 0.1, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+        }
+      }
+    }
+    for (y = 0; y < game.rows; y++) {
+      for (x = 0; x < game.cols; x++) {
+        if (game.walls[x + ',' + y]) continue;
+        ctx.fillStyle = th.edge;
+        roundRect(x * T + T * 0.03, y * T + T * 0.03 + 3, T * 0.94, T * 0.94, T * 0.14); ctx.fill();
+        ctx.fillStyle = th.path[(x + y) % 2];
+        roundRect(x * T + T * 0.03, y * T + T * 0.03, T * 0.94, T * 0.94, T * 0.14); ctx.fill();
+        if (w === 'castillo') {
+          ctx.strokeStyle = 'rgba(80,80,100,.35)'; ctx.lineWidth = Math.max(1, T * 0.025);
+          ctx.beginPath(); ctx.moveTo(x * T + T * 0.05, y * T + T / 2); ctx.lineTo(x * T + T * 0.95, y * T + T / 2);
+          ctx.moveTo(x * T + T / 2, y * T + T * 0.05); ctx.lineTo(x * T + T / 2, y * T + T / 2); ctx.stroke();
+        } else if (w === 'pirata') {
+          ctx.fillStyle = 'rgba(180,140,70,.35)';
+          ctx.beginPath(); ctx.arc(x * T + T * 0.25, y * T + T * 0.7, T * 0.025, 0, 7); ctx.arc(x * T + T * 0.7, y * T + T * 0.3, T * 0.02, 0, 7); ctx.arc(x * T + T * 0.55, y * T + T * 0.8, T * 0.02, 0, 7); ctx.fill();
+        } else {
+          ctx.strokeStyle = 'rgba(150,140,120,.4)'; ctx.lineWidth = Math.max(1, T * 0.02);
+          roundRect(x * T + T * 0.14, y * T + T * 0.14, T * 0.72, T * 0.72, T * 0.12); ctx.stroke();
+        }
+      }
+    }
+    for (y = 0; y < game.rows; y++) {
+      for (x = 0; x < game.cols; x++) {
+        if (!game.walls[x + ',' + y]) continue;
+        var hv = hash(x, y);
+        if (w === 'parque') drawBush(x * T, y * T, T, hv);
+        else if (w === 'pirata') { if (hv > 0.55) drawRock(x * T, y * T, T, hv); else if (hv < 0.18) drawPalm(x * T, y * T, T, now, hv); }
+        else drawWall(x * T, y * T, T, hv, now);
+      }
+    }
+  }
+  function drawBush(x, y, T, hv) {
+    var cx = x + T / 2;
+    if (hv < 0.3) { // cerca de madera
+      ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = '#C9B79C'; ctx.lineWidth = Math.max(1, T * 0.02);
+      [0.2, 0.45, 0.7].forEach(function (k) {
+        ctx.beginPath(); ctx.moveTo(x + T * k, y + T * 0.85); ctx.lineTo(x + T * k, y + T * 0.32); ctx.lineTo(x + T * (k + 0.06), y + T * 0.24);
+        ctx.lineTo(x + T * (k + 0.12), y + T * 0.32); ctx.lineTo(x + T * (k + 0.12), y + T * 0.85); ctx.closePath(); ctx.fill(); ctx.stroke();
+      });
+      ctx.fillRect(x + T * 0.12, y + T * 0.48, T * 0.76, T * 0.08);
+      return;
+    }
+    ctx.fillStyle = 'rgba(20,60,20,.22)';
+    ctx.beginPath(); ctx.ellipse(cx, y + T * 0.84, T * 0.34, T * 0.08, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#3E9B3A';
+    ctx.beginPath(); ctx.arc(cx - T * 0.15, y + T * 0.58, T * 0.2, 0, 7); ctx.arc(cx + T * 0.15, y + T * 0.58, T * 0.2, 0, 7); ctx.arc(cx, y + T * 0.42, T * 0.22, 0, 7); ctx.fill();
+    var col = hv > 0.65 ? '#FF6FA8' : '#FFD23F';
+    [[-0.18, 0.5], [0.12, 0.36], [0.2, 0.62], [-0.05, 0.62]].forEach(function (q) {
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx + T * q[0], y + T * q[1], T * 0.05, 0, 7); ctx.fill();
+      ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(cx + T * q[0], y + T * q[1], T * 0.018, 0, 7); ctx.fill();
+    });
+  }
+  function drawRock(x, y, T, hv) {
+    var cx = x + T / 2, cy = y + T * 0.58;
+    ctx.fillStyle = 'rgba(255,255,255,.4)';
+    ctx.beginPath(); ctx.ellipse(cx, y + T * 0.8, T * 0.38, T * 0.09, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#6D7B86';
+    ctx.beginPath(); ctx.moveTo(cx - T * 0.32, y + T * 0.8); ctx.lineTo(cx - T * 0.2, cy - T * 0.18); ctx.lineTo(cx + T * 0.05, cy - T * 0.3);
+    ctx.lineTo(cx + T * 0.28, cy - T * 0.08); ctx.lineTo(cx + T * 0.34, y + T * 0.8); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#93A3AE';
+    ctx.beginPath(); ctx.moveTo(cx - T * 0.18, cy - T * 0.12); ctx.lineTo(cx + T * 0.04, cy - T * 0.26); ctx.lineTo(cx + T * 0.02, cy); ctx.closePath(); ctx.fill();
+  }
+  function drawPalm(x, y, T, now, hv) {
+    var cx = x + T / 2;
+    ctx.fillStyle = '#F6DDA4';
+    ctx.beginPath(); ctx.ellipse(cx, y + T * 0.8, T * 0.36, T * 0.12, 0, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#8D5524'; ctx.lineWidth = Math.max(2, T * 0.08); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(cx, y + T * 0.8); ctx.quadraticCurveTo(cx + T * 0.12, y + T * 0.5, cx + T * 0.04, y + T * 0.26); ctx.stroke();
+    var sway = Math.sin(now / 800 + hv * 9) * 0.12;
+    ctx.strokeStyle = '#2E9D3E'; ctx.lineWidth = Math.max(2, T * 0.07);
+    [-2.6, -1.9, -1.2, -0.5].forEach(function (a) {
+      a += sway;
+      ctx.beginPath(); ctx.moveTo(cx + T * 0.04, y + T * 0.26);
+      ctx.quadraticCurveTo(cx + T * 0.04 + Math.cos(a) * T * 0.22, y + T * 0.26 + Math.sin(a) * T * 0.22 - T * 0.05, cx + T * 0.04 + Math.cos(a) * T * 0.36, y + T * 0.26 + Math.sin(a) * T * 0.2 + T * 0.08);
+      ctx.stroke();
+    });
+    ctx.fillStyle = '#6D4C41';
+    ctx.beginPath(); ctx.arc(cx, y + T * 0.3, T * 0.04, 0, 7); ctx.arc(cx + T * 0.08, y + T * 0.31, T * 0.04, 0, 7); ctx.fill();
+  }
+  function drawWall(x, y, T, hv, now) {
+    ctx.fillStyle = '#6B5B53';
+    ctx.fillRect(x, y, T, T);
+    ctx.fillStyle = '#857266';
+    var h = T / 4;
+    for (var r = 0; r < 4; r++) {
+      var off = r % 2 ? T / 4 : 0;
+      for (var c = -1; c < 2; c++) {
+        var bx = x + off + c * T / 2;
+        var x0 = Math.max(x, bx + 1), x1 = Math.min(x + T, bx + T / 2 - 1);
+        if (x1 > x0) ctx.fillRect(x0, y + r * h + 1, x1 - x0, h - 2);
+      }
+    }
+    if (hv > 0.7) { // antorcha
+      var cx = x + T / 2, fl = Math.sin(now / 90 + hv * 20) * T * 0.02;
+      ctx.fillStyle = '#5D4037'; ctx.fillRect(cx - T * 0.04, y + T * 0.45, T * 0.08, T * 0.25);
+      ctx.fillStyle = '#FF9800'; ctx.beginPath(); ctx.ellipse(cx, y + T * 0.36 + fl, T * 0.09, T * 0.14, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = '#FFEB3B'; ctx.beginPath(); ctx.ellipse(cx, y + T * 0.39 + fl, T * 0.045, T * 0.07, 0, 0, 7); ctx.fill();
+    }
+  }
+  function drawGoal(th, x, y, T, ready, now) {
+    var name = ready && th.goalReady ? th.goalReady : th.goal;
+    shadow(x, y, T);
+    drawSprite(SPRITES[name], x, y, T, false, 0.82);
+    if (ready) { // destellos cuando ya se puede llegar
+      ctx.fillStyle = '#FFF59D';
+      for (var i = 0; i < 4; i++) {
+        var a = now / 500 + i * Math.PI / 2, r = T * 0.42;
+        var sx = x + T / 2 + Math.cos(a) * r, sy = y + T * 0.45 + Math.sin(a) * r * 0.6;
+        ctx.beginPath(); ctx.arc(sx, sy, T * 0.04 + Math.sin(now / 150 + i) * T * 0.015, 0, 7); ctx.fill();
+      }
+      if (th.goal === 'casita') {
+        var hy = y + T * 0.05 + Math.sin(now / 300) * T * 0.04;
+        ctx.fillStyle = '#FF5C8A';
+        ctx.beginPath(); ctx.arc(x + T * 0.46, hy, T * 0.06, 0, 7); ctx.arc(x + T * 0.56, hy, T * 0.06, 0, 7);
+        ctx.moveTo(x + T * 0.4, hy + T * 0.02); ctx.lineTo(x + T * 0.51, hy + T * 0.14); ctx.lineTo(x + T * 0.62, hy + T * 0.02); ctx.fill();
+      }
+    }
   }
   function roundRect(x, y, w, h, r) {
     ctx.beginPath();

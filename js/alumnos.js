@@ -7,6 +7,12 @@ import {
   listo, entrar, salir, alCambiarSesion, recuperar, leer, mensajeError, esc, urlSegura, esCorreoReal
 } from './portal-fb.js';
 
+// Rutas de aprendizaje (juegos). total = número de niveles de cada juego.
+const NIVELES = [
+  { id: 'hardware', titulo: 'Computación básica: hardware', texto: 'Partes de la computadora, entrada y salida, arma una PC y busca el tesoro pirata.', url: 'juego-hardware.html', total: 6, sprite: 'perro' },
+  { id: 'bloques', titulo: 'Programación con bloques', texto: 'Guía a tu héroe por el bosque, el parque, la isla pirata, el castillo o el espacio.', url: 'programacion-con-bloques.html', total: 30, sprite: 'pirata' }
+];
+
 window.IK_PORTAL_OK = true;
 const $ = (id) => document.getElementById(id);
 const vistas = ['v-cargando', 'v-inactivo', 'v-login', 'v-sin-acceso', 'v-portal'];
@@ -28,14 +34,38 @@ if (!listo) {
     if (!user) { mostrar('v-login'); return; }
     try {
       const alumno = await leer('alumnos/' + user.uid);
-      if (!alumno || alumno.activo === false) { mostrar('v-sin-acceso'); return; }
+      if (!alumno || alumno.activo === false) { await sinAcceso(user, alumno); return; }
       await pintarPortal(user.uid, alumno);
       mostrar('v-portal');
     } catch (e) {
       console.error(e);
-      mostrar('v-sin-acceso');
+      await sinAcceso(user, null, e);
     }
   });
+}
+
+// Explica por qué no entra: maestro en la página de alumnos, cuenta sin alta, desactivada o error.
+async function sinAcceso(user, alumno, error) {
+  $('sa-admin').hidden = true; $('sa-wa').hidden = false; $('sa-detalle').hidden = true;
+  let admin = null;
+  try { admin = await leer('admins/' + user.uid); } catch (e) { /* sin permiso */ }
+  if (admin) {
+    $('sa-titulo').textContent = 'Esta es tu cuenta de maestro';
+    $('sa-msg').textContent = 'Los alumnos entran aquí. Para dar de alta alumnos, asignar cursos y ver su avance, entra al panel del maestro.';
+    $('sa-admin').hidden = false; $('sa-wa').hidden = true;
+  } else if (alumno && alumno.activo === false) {
+    $('sa-titulo').textContent = 'Tu cuenta está desactivada';
+    $('sa-msg').textContent = alumno.reemplazadaPor ? 'Tu maestro te dio un usuario nuevo. Entra con ese usuario.' : 'Pide a tu maestro que la active.';
+  } else if (error) {
+    $('sa-titulo').textContent = 'No pudimos abrir tu portal';
+    $('sa-msg').textContent = mensajeError(error);
+    $('sa-detalle').textContent = 'Código: ' + (error.code || 'desconocido');
+    $('sa-detalle').hidden = false;
+  } else {
+    $('sa-titulo').textContent = 'Tu cuenta no tiene acceso';
+    $('sa-msg').textContent = 'Esta cuenta (' + (user.email || '') + ') no está dada de alta como alumno. Las cuentas de alumno se crean desde el panel del maestro.';
+  }
+  mostrar('v-sin-acceso');
 }
 
 // ---------- Inicio de sesión ----------
@@ -94,6 +124,7 @@ $('btn-salir').addEventListener('click', async () => {
 
 // ---------- Portal ----------
 async function pintarPortal(uid, alumno) {
+  pintarNiveles(uid);
   const nombre = (alumno.nombre || '').trim().split(/\s+/)[0] || '';
   $('p-hola').textContent = nombre ? '¡Hola, ' + nombre + '!' : '¡Hola!';
   const ids = Array.isArray(alumno.cursos) ? alumno.cursos : [];
@@ -114,6 +145,28 @@ async function pintarPortal(uid, alumno) {
   $('p-cursos').innerHTML = datos.length ? datos.map(tarjetaCurso).join('') : vacio('Aún no tienes cursos asignados.');
   $('p-materiales').innerHTML = datos.length ? datos.map(tarjetaMateriales).join('') : vacio('Los materiales aparecerán cuando tengas un curso.');
   $('p-calificaciones').innerHTML = datos.length ? datos.map(bloqueCalificaciones).join('') : vacio('Tus calificaciones aparecerán aquí.');
+}
+
+async function pintarNiveles(uid) {
+  const box = $('p-niveles');
+  const datos = await Promise.all(NIVELES.map((n) => leer('alumnos/' + uid + '/juegos/' + n.id).catch(() => null)));
+  box.innerHTML = '';
+  NIVELES.forEach((n, i) => {
+    const niv = (datos[i] && datos[i].niveles) || {};
+    const total = (datos[i] && datos[i].total) || n.total;
+    const hechos = Object.keys(niv).filter((k) => +niv[k] > 0).length;
+    const estrellas = Object.keys(niv).reduce((a, k) => a + (+niv[k] || 0), 0);
+    const pct = Math.min(100, Math.round((hechos / total) * 100));
+    const a = document.createElement('a');
+    a.className = 'portal-card portal-nivel';
+    a.href = n.url;
+    a.innerHTML = '<div class="portal-nivel-head"><span class="portal-nivel-sprite"></span><div><h3>' + esc(n.titulo) + '</h3><p class="portal-muted">' + esc(n.texto) + '</p></div></div>' +
+      '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="Avance en ' + esc(n.titulo) + '"><span style="width:' + pct + '%"></span></div>' +
+      '<p class="progress-label"><strong>' + hechos + ' de ' + total + '</strong> niveles · <span class="portal-star" aria-hidden="true">★</span> ' + estrellas + ' estrellas</p>' +
+      '<span class="btn btn-yellow portal-nivel-btn">' + (hechos ? (hechos >= total ? 'Jugar otra vez' : 'Continuar') : 'Empezar') + '</span>';
+    if (window.IKSprites) a.querySelector('.portal-nivel-sprite').appendChild(window.IKSprites.canvasOf(n.sprite, 64));
+    box.appendChild(a);
+  });
 }
 
 function vacio(t) { return '<p class="portal-empty">' + esc(t) + '</p>'; }

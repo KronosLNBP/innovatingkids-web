@@ -261,6 +261,7 @@ $('f-datos').addEventListener('submit', async (ev) => {
 async function pintarAvance() {
   const cont = $('e-avance');
   const ids = (actual && actual.cursos) || [];
+  pintarJuegos(actual.id);
   if (!ids.length) { cont.innerHTML = '<p class="portal-muted">Inscríbelo en un curso para registrar avance y calificaciones.</p>'; return; }
   cont.innerHTML = '<p class="portal-muted">Cargando avance…</p>';
   const uid = actual.id;
@@ -286,6 +287,22 @@ async function pintarAvance() {
       '<p class="form-error" role="alert" hidden></p>' +
       '<div class="admin-actions"><button class="btn btn-teal" type="submit">Guardar avance de ' + esc(curso.nombre) + '</button></div></form>';
   }).join('');
+}
+
+// Estrellas de los juegos (las guarda el alumno al jugar)
+const JUEGOS = [['hardware', 'Computación básica: hardware', 6], ['bloques', 'Programación con bloques', 30]];
+async function pintarJuegos(uid) {
+  const box = $('e-juegos');
+  box.innerHTML = '<p class="portal-muted">Cargando niveles…</p>';
+  const datos = await Promise.all(JUEGOS.map((j) => leer('alumnos/' + uid + '/juegos/' + j[0]).catch(() => null)));
+  if (!actual || actual.id !== uid) return;
+  box.innerHTML = '<h3>Niveles de los juegos</h3><ul class="admin-juegos">' + JUEGOS.map((j, i) => {
+    const niv = (datos[i] && datos[i].niveles) || {};
+    const total = (datos[i] && datos[i].total) || j[2];
+    const hechos = Object.keys(niv).filter((k) => +niv[k] > 0).length;
+    const est = Object.keys(niv).reduce((a, k) => a + (+niv[k] || 0), 0);
+    return '<li><strong>' + esc(j[1]) + ':</strong> ' + hechos + ' de ' + total + ' niveles · ' + est + ' de ' + (total * 3) + ' estrellas</li>';
+  }).join('') + '</ul>';
 }
 
 $('e-avance').addEventListener('submit', async (ev) => {

@@ -714,3 +714,15 @@ button, input, select, textarea { font: inherit; }
   .portal-mascot { width: 110px; }
   .portal .field-row { grid-template-columns: minmax(0, 1fr); }
 }
+/* Portal: mis niveles */
+.portal-intro { margin: -12px 0 20px; }
+.portal-nivel { display: flex; flex-direction: column; gap: 12px; text-decoration: none; color: inherit; transition: transform .15s ease, box-shadow .15s ease; }
+.portal-nivel:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(37,78,100,.14); color: inherit; }
+.portal-nivel-head { display: flex; gap: 14px; align-items: center; }
+.portal-nivel-head h3 { margin: 0 0 4px; }
+.portal-nivel-head p { margin: 0; font-size: 15px; }
+.portal-nivel-sprite { flex: 0 0 64px; height: 64px; border-radius: 16px; background: var(--soft); display: flex; align-items: center; justify-content: center; }
+.portal-nivel .progress-label { margin: 0; }
+.portal-star { color: #E0A800; }
+.portal-nivel-btn { align-self: flex-start; min-height: 48px; font-size: 16px; }
+.admin-juegos { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }

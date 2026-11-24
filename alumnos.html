@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20261124a">
+  <link rel="stylesheet" href="css/styles.css?v=20261124b">
 </head>
 <body class="lp portal">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -91,9 +91,11 @@
     <!-- Sesión iniciada sin acceso -->
     <section class="portal-state" id="v-sin-acceso" hidden>
       <div class="portal-card portal-center">
-        <h2 class="display">Tu cuenta no tiene acceso</h2>
-        <p>Tu cuenta no está activa o todavía no tiene cursos asignados. Pide ayuda a tu maestro por WhatsApp.</p>
-        <a class="btn btn-teal js-wa" href="#" data-msg="Hola, mi cuenta del portal de alumnos de Innovating Kids no tiene acceso.">Escribir por WhatsApp</a>
+        <h2 class="display" id="sa-titulo">Tu cuenta no tiene acceso</h2>
+        <p id="sa-msg">Esta cuenta no está dada de alta como alumno o está desactivada. Pide ayuda a tu maestro por WhatsApp.</p>
+        <a class="btn btn-yellow" href="admin.html" id="sa-admin" hidden>Ir al panel del maestro</a>
+        <a class="btn btn-teal js-wa" href="#" id="sa-wa" data-msg="Hola, mi cuenta del portal de alumnos de Innovating Kids no tiene acceso.">Escribir por WhatsApp</a>
+        <p class="portal-muted" id="sa-detalle" hidden></p>
       </div>
     </section>
 
@@ -106,6 +108,7 @@
           <p class="hero-lead" id="p-resumen"></p>
           <nav class="course-toc portal-toc" aria-label="Secciones del portal">
             <ul>
+              <li><a href="#mis-niveles">Mis niveles</a></li>
               <li><a href="#mis-cursos">Mis cursos</a></li>
               <li><a href="#materiales">Materiales</a></li>
               <li><a href="#calificaciones">Calificaciones y constancias</a></li>
@@ -114,21 +117,29 @@
         </div>
       </section>
 
-      <section class="section portal-section" id="mis-cursos" aria-labelledby="mc-t">
+      <section class="section portal-section" id="mis-niveles" aria-labelledby="mn-t">
+        <div class="container">
+          <h2 class="display h2" id="mn-t">Mis niveles</h2>
+          <p class="portal-muted portal-intro">Juega, aprende y gana estrellas. Tu avance se guarda en tu cuenta.</p>
+          <div class="portal-grid portal-niveles" id="p-niveles"></div>
+        </div>
+      </section>
+
+      <section class="section portal-section portal-alt" id="mis-cursos" aria-labelledby="mc-t">
         <div class="container">
           <h2 class="display h2" id="mc-t">Mis cursos y avance</h2>
           <div class="portal-grid" id="p-cursos"></div>
         </div>
       </section>
 
-      <section class="section portal-section portal-alt" id="materiales" aria-labelledby="mat-t">
+      <section class="section portal-section" id="materiales" aria-labelledby="mat-t">
         <div class="container">
           <h2 class="display h2" id="mat-t">Materiales y temarios</h2>
           <div class="portal-grid" id="p-materiales"></div>
         </div>
       </section>
 
-      <section class="section portal-section" id="calificaciones" aria-labelledby="cal-t">
+      <section class="section portal-section portal-alt" id="calificaciones" aria-labelledby="cal-t">
         <div class="container">
           <h2 class="display h2" id="cal-t">Calificaciones y constancias</h2>
           <div class="portal-stack" id="p-calificaciones"></div>
@@ -143,6 +154,7 @@
 
   <script src="js/config.js"></script>
   <script src="js/main.js?v=20261124a"></script>
+  <script src="js/ik-sprites.js?v=20261124a"></script>
   <script>
     // Si Firebase no carga (sin internet o bloqueado), no dejar la página en "Cargando".
     setTimeout(function () {
@@ -152,6 +164,6 @@
       document.getElementById('v-inactivo').hidden = false;
     }, 12000);
   </script>
-  <script type="module" src="js/alumnos.js?v=20261124a"></script>
+  <script type="module" src="js/alumnos.js?v=20261124b"></script>
 </body>
 </html>

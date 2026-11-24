@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juego de computación básica: partes de la computadora | Innovating Kids</title>
+  <meta name="description" content="Juego para niños con 6 niveles: conoce las partes de la computadora, entrada y salida, hardware y software, arma una PC y busca el tesoro pirata. Con sonidos y compañeros animales.">
+  <link rel="canonical" href="https://www.innovatingkids.com.mx/juego-hardware.html">
+  <meta name="theme-color" content="#254E64">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:site_name" content="Innovating Kids">
+  <meta property="og:title" content="Computación básica: el juego del hardware | Innovating Kids">
+  <meta property="og:description" content="Aprende las partes de la computadora jugando con un perrito, un gatito, una pirata, un ninja o una vikinga.">
+  <meta property="og:url" content="https://www.innovatingkids.com.mx/juego-hardware.html">
+  <meta property="og:image" content="https://www.innovatingkids.com.mx/img/student/1.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20261124b">
+  <link rel="stylesheet" href="css/bloques.css?v=20261124a">
+</head>
+<body data-juego="hardware">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <!-- ENCABEZADO -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Innovating Kids, inicio">
+        <img src="img/logo.png" alt="" width="52" height="52">
+        <span class="brand-name">Innovating <span>Kids</span></span>
+      </a>
+      <nav class="main-nav" id="menu" aria-label="Principal">
+        <a href="index.html#cursos">Cursos</a>
+        <a href="cursos.html">Detalle de cursos</a>
+        <a href="programacion-con-bloques.html">Programación con bloques</a>
+        <a href="index.html#como">Cómo funciona</a>
+        <a href="modalidades.html">Modalidades</a>
+        <a href="index.html#alumnos">Alumnos</a>
+        <a href="index.html#preguntas">Preguntas</a>
+        <a href="examen.html">Examen</a>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-outline js-wa" href="#" data-msg="Hola, quiero información sobre los cursos de Innovating Kids.">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 21l2.3-5.2A8.4 8.4 0 1 1 21 11.5z"/></svg>
+          WhatsApp
+        </a>
+        <a class="btn btn-teal" href="clase-muestra.html">Clase muestra gratis</a>
+        <button class="menu-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+    <main id="contenido">
+    <section class="hero page-hero">
+      <div class="container page-hero-inner">
+        <nav class="breadcrumb" aria-label="Ruta de navegación"><a href="index.html">Inicio</a> <span aria-hidden="true">/</span> <span>Computación básica</span></nav>
+        <h1 class="display">Computación básica: el juego del hardware</h1>
+        <p class="hero-lead">Elige a tu compañero y descubre cómo es una computadora por fuera y por dentro: sus partes, qué es entrada y salida, qué es hardware y software, arma tu propia PC y termina buscando el tesoro pirata.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-yellow" href="#juego">¡A jugar!</a>
+          <a class="btn btn-ghost-light" href="programacion-con-bloques.html">Programación con bloques</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="gm-section" id="juego" aria-labelledby="hw-title">
+      <div class="container">
+        <div class="gm-app hw-app" id="hw-app">
+          <div class="gm-top">
+            <div class="gm-title">
+              <p class="gm-kicker" id="hw-kicker">Nivel 1 de 6</p>
+              <h2 id="hw-title">Conoce la computadora</h2>
+            </div>
+            <nav class="gm-levels-nav" aria-label="Niveles">
+              <ol class="gm-levels" id="hw-levels"></ol>
+            </nav>
+          </div>
+
+          <div class="gm-custom">
+            <div class="gm-opt">
+              <span class="gm-opt-label" id="buddy-label">Tu compañero</span>
+              <div class="gm-heroes" role="group" aria-labelledby="buddy-label" id="hw-buddies"></div>
+            </div>
+            <div class="gm-opt gm-audio">
+              <span class="gm-opt-label">Audio</span>
+              <div class="gm-seg">
+                <button class="gm-seg-btn" type="button" data-ik-audio="sfx" aria-pressed="true"><span class="ik-audio-label">Sonido: sí</span></button>
+                <button class="gm-seg-btn" type="button" data-ik-audio="music" aria-pressed="false"><span class="ik-audio-label">Música: no</span></button>
+              </div>
+            </div>
+          </div>
+          <p class="ik-sesion" id="ik-sesion" role="status" hidden></p>
+
+          <div class="hw-stage">
+            <div class="hw-guide">
+              <div class="hw-buddy" id="hw-buddy"></div>
+              <p class="hw-bubble" id="hw-bubble" aria-live="polite"></p>
+            </div>
+            <div class="hw-play" id="hw-play"></div>
+            <div class="game-overlay" id="hw-overlay" hidden></div>
+          </div>
+          <noscript><p>Para jugar necesitas activar JavaScript.</p></noscript>
+        </div>
+      </div>
+    </section>
+
+    <section class="section related" aria-labelledby="related-title">
+      <div class="container">
+        <h2 class="display h2" id="related-title">También te puede interesar</h2>
+        <ul class="related-grid">
+          <li>
+            <a class="related-card" href="programacion-con-bloques.html">
+              <span class="related-kicker">Juego gratis</span>
+              <strong>Programación con bloques</strong>
+              <span class="related-text">Guía a tu héroe por el parque, la isla pirata o el castillo armando programas.</span>
+              <span class="related-go">Jugar ahora <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+            </a>
+          </li>
+          <li>
+            <a class="related-card" href="alumnos.html">
+              <span class="related-kicker">Alumnos</span>
+              <strong>Portal de alumnos</strong>
+              <span class="related-text">Entra con tu usuario para guardar tus estrellas y ver tu avance.</span>
+              <span class="related-go">Entrar al portal <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+            </a>
+          </li>
+          <li>
+            <a class="related-card" href="cursos.html">
+              <span class="related-kicker">Cursos</span>
+              <strong>Detalle de nuestros cursos</strong>
+              <span class="related-text">Python, Robótica, Minecraft y Roblox Studio: qué aprenden y qué proyecto crean.</span>
+              <span class="related-go">Ver cursos <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+            </a>
+          </li>
+          <li>
+            <a class="related-card" href="clase-muestra.html">
+              <span class="related-kicker">Gratis</span>
+              <strong>Clase muestra gratis</strong>
+              <span class="related-text">Tu hijo construye su primer proyecto y te recomendamos la ruta ideal. Sin compromiso.</span>
+              <span class="related-go">Agendar clase muestra <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- PIE -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="img/logo.png" alt="Innovating Kids — Arte y Tecnología" width="128" height="128" loading="lazy">
+        <span class="brand-name">Innovating <span>Kids</span></span>
+        <p>Programación, robótica y videojuegos para niños. Parte de <a href="https://grupoempresarialdiaz.com.mx/">Grupo Empresarial Díaz</a>.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Pie de página">
+        <div>
+          <strong>Explora</strong>
+          <a href="index.html#cursos">Cursos</a>
+          <a href="cursos.html">Detalle de cursos</a>
+          <a href="programacion-con-bloques.html">Programación con bloques</a>
+          <a href="juego-hardware.html">Computación básica (juego)</a>
+          <a href="modalidades.html">Modalidades</a>
+          <a href="index.html#preguntas">Preguntas</a>
+          <a href="clase-muestra.html">Clase muestra gratis</a>
+          <a href="examen.html">Examen</a>
+          <a href="alumnos.html">Acceso alumnos</a>
+        </div>
+        <div>
+          <strong>Contacto</strong>
+          <a class="js-wa" href="#" data-msg="Hola, quiero información sobre Innovating Kids.">WhatsApp</a>
+        </div>
+      </nav>
+    </div>
+    <div class="container footer-bottom">© <span id="year">2026</span> Innovating Kids · <a href="aviso-de-privacidad.html">Aviso de privacidad</a></div>
+  </footer>
+
+  <!-- WhatsApp flotante (escritorio) y barra fija (celular) -->
+  <a class="wa-float js-wa" href="#" data-msg="Hola, quiero información sobre los cursos de Innovating Kids." aria-label="Escríbenos por WhatsApp">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 21l2.3-5.2A8.4 8.4 0 1 1 21 11.5z"/></svg>
+  </a>
+  <div class="mobile-bar">
+    <a class="mb-wa js-wa" href="#" data-msg="Hola, quiero información sobre los cursos de Innovating Kids.">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 21l2.3-5.2A8.4 8.4 0 1 1 21 11.5z"/></svg>WhatsApp
+    </a>
+    <a class="mb-cta" href="clase-muestra.html">Clase gratis</a>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js?v=20261124a"></script>
+  <script src="js/ik-sprites.js?v=20261124a"></script>
+  <script src="js/ik-audio.js?v=20261124a"></script>
+  <script src="js/hardware.js?v=20261124a"></script>
+  <script type="module" src="js/progreso.js?v=20261124a"></script>
+</body>
+</html>
