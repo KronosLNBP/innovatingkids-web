@@ -9,8 +9,8 @@ import {
 
 // Rutas de aprendizaje (juegos). total = número de niveles de cada juego.
 const NIVELES = [
-  { id: 'hardware', titulo: 'Computación básica: hardware', texto: 'Partes de la computadora, entrada y salida, arma una PC y busca el tesoro pirata.', url: 'juego-hardware.html', total: 6, sprite: 'perro' },
-  { id: 'bloques', titulo: 'Programación con bloques', texto: 'Guía a tu héroe por el bosque, el parque, la isla pirata, el castillo o el espacio.', url: 'programacion-con-bloques.html', total: 30, sprite: 'pirata' }
+  { id: 'hardware', titulo: 'Computación básica: hardware', texto: 'Partes de la computadora, arma una PC y 3 sesiones de 45 min: puertos, seguridad y archivos.', url: 'juego-hardware.html', total: 9, sprite: 'perro' },
+  { id: 'bloques', titulo: 'Programación con bloques', texto: '7 capítulos, con 3 sesiones de 45 min: trucos (funciones), patrullas y expedición final.', url: 'programacion-con-bloques.html', total: 51, sprite: 'pirata' }
 ];
 
 window.IK_PORTAL_OK = true;

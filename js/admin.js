@@ -290,7 +290,7 @@ async function pintarAvance() {
 }
 
 // Estrellas de los juegos (las guarda el alumno al jugar)
-const JUEGOS = [['hardware', 'Computación básica: hardware', 6], ['bloques', 'Programación con bloques', 30]];
+const JUEGOS = [['hardware', 'Computación básica: hardware', 9], ['bloques', 'Programación con bloques', 51]];
 async function pintarJuegos(uid) {
   const box = $('e-juegos');
   box.innerHTML = '<p class="portal-muted">Cargando niveles…</p>';

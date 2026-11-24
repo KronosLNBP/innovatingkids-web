@@ -8,6 +8,7 @@
   var app = $('hw-app');
   if (!app) return;
   var sfx = function (n) { if (window.IKAudio) window.IKAudio.play(n); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   if (window.IKAudio) window.IKAudio.setTheme('hardware');
 
   // ---------- Dibujos de las piezas (SVG originales) ----------
@@ -32,14 +33,46 @@
     sistema: '<rect x="6" y="10" width="52" height="40" rx="4" fill="#ECEFF1" stroke="#455A64" stroke-width="2"/><rect x="6" y="10" width="52" height="8" rx="4" fill="#455A64"/><rect x="12" y="24" width="18" height="10" rx="1" fill="#4FC3F7"/><rect x="34" y="24" width="18" height="10" rx="1" fill="#66BB6A"/><rect x="12" y="37" width="18" height="8" rx="1" fill="#FFD23F"/><rect x="34" y="37" width="18" height="8" rx="1" fill="#EF5350"/><rect x="6" y="50" width="52" height="5" fill="#263238"/>',
     dibujo: '<path d="M32 8C18 8 8 18 8 30c0 10 8 14 14 12 4-1 6 2 5 6-1 5 2 8 7 8 14 0 22-12 22-26S46 8 32 8z" fill="#FFE0B2" stroke="#8D6E63" stroke-width="2"/><circle cx="20" cy="26" r="4" fill="#E53935"/><circle cx="30" cy="18" r="4" fill="#FFD23F"/><circle cx="42" cy="20" r="4" fill="#43A047"/><circle cx="46" cy="32" r="4" fill="#1E88E5"/>'
   };
-  function icon(name, label) {
-    return '<svg viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="' + (label || name) + '">' + (SVG[name] || '') + '</svg>';
+  var SVG2 = {
+    usb: '<rect x="8" y="18" width="48" height="28" rx="4" fill="#90A4AE"/><rect x="14" y="24" width="36" height="16" rx="2" fill="#263238"/><rect x="18" y="27" width="28" height="6" fill="#1E88E5"/><path d="M26 54V44M32 56V44M38 54V44" stroke="#455A64" stroke-width="3"/><circle cx="32" cy="10" r="4" fill="#455A64"/><path d="M32 14v4M26 8l6-4 6 4" stroke="#455A64" stroke-width="2.5" fill="none"/>',
+    hdmi: '<path d="M8 20h48v14l-8 10H16L8 34z" fill="#90A4AE"/><path d="M14 25h36v8l-5 6H19l-5-6z" fill="#263238"/><g fill="#FFD23F"><rect x="20" y="28" width="2" height="5"/><rect x="25" y="28" width="2" height="5"/><rect x="30" y="28" width="2" height="5"/><rect x="35" y="28" width="2" height="5"/><rect x="40" y="28" width="2" height="5"/></g><text x="32" y="58" font-size="10" font-weight="700" text-anchor="middle" fill="#ECEFF1" font-family="sans-serif">HDMI</text>',
+    jack: '<circle cx="32" cy="28" r="18" fill="#90A4AE"/><circle cx="32" cy="28" r="9" fill="#263238"/><circle cx="32" cy="28" r="4" fill="#4CAF50"/><path d="M20 52c4-4 8-4 12 0s8 4 12 0" stroke="#4CAF50" stroke-width="3" fill="none" stroke-linecap="round"/>',
+    ethernet: '<rect x="12" y="12" width="40" height="36" rx="3" fill="#90A4AE"/><path d="M18 18h28v20h-8v5H26v-5h-8z" fill="#263238"/><g fill="#FFD23F"><rect x="21" y="20" width="2" height="6"/><rect x="25" y="20" width="2" height="6"/><rect x="29" y="20" width="2" height="6"/><rect x="33" y="20" width="2" height="6"/><rect x="37" y="20" width="2" height="6"/><rect x="41" y="20" width="2" height="6"/></g><path d="M32 48v10" stroke="#1E88E5" stroke-width="5"/>',
+    corriente: '<rect x="18" y="6" width="28" height="30" rx="6" fill="#455A64"/><path d="M26 36v10M38 36v10" stroke="#B0BEC5" stroke-width="5" stroke-linecap="round"/><path d="M34 12l-8 12h7l-4 9 10-13h-7l4-8z" fill="#FFD23F"/><path d="M32 46c0 8 4 12 10 12" stroke="#263238" stroke-width="4" fill="none"/>',
+    wifi: '<path d="M8 26a34 34 0 0 1 48 0M16 34a22 22 0 0 1 32 0M24 42a10 10 0 0 1 16 0" stroke="#1E88E5" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="32" cy="50" r="4" fill="#1E88E5"/>',
+    bluetooth: '<rect x="14" y="6" width="36" height="52" rx="18" fill="#1E88E5"/><path d="M24 22l16 16-8 8V18l8 8-16 16" stroke="#fff" stroke-width="3.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>',
+    candado: '<path d="M20 28v-8a12 12 0 0 1 24 0v8" stroke="#546E7A" stroke-width="5" fill="none"/><rect x="12" y="28" width="40" height="28" rx="5" fill="#FFB300"/><circle cx="32" cy="40" r="4" fill="#5D4037"/><rect x="30" y="42" width="4" height="8" fill="#5D4037"/>',
+    escudo: '<path d="M32 6l20 8v14c0 14-9 24-20 30C21 52 12 42 12 28V14z" fill="#43A047"/><path d="M23 32l6 6 12-13" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+    chat: '<path d="M8 12h40a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H24l-12 10v-10H8a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6z" fill="#7E57C2"/><text x="28" y="36" font-size="22" font-weight="900" text-anchor="middle" fill="#fff" font-family="sans-serif">!</text>',
+    carpeta: '<path d="M6 16h20l6 6h26v30a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" fill="#FFB300"/><path d="M6 26h52v26a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" fill="#FFCA28"/>',
+    usbmem: '<rect x="22" y="4" width="20" height="14" fill="#B0BEC5"/><rect x="27" y="8" width="4" height="4" fill="#455A64"/><rect x="33" y="8" width="4" height="4" fill="#455A64"/><rect x="16" y="18" width="32" height="40" rx="6" fill="#E53935"/><rect x="24" y="28" width="16" height="4" rx="2" fill="#fff"/>',
+    sd: '<path d="M16 6h24l10 10v40a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" fill="#1E88E5"/><g fill="#FFD23F"><rect x="20" y="10" width="3" height="8"/><rect x="26" y="10" width="3" height="8"/><rect x="32" y="10" width="3" height="8"/><rect x="38" y="12" width="3" height="6"/></g><text x="32" y="44" font-size="14" font-weight="900" text-anchor="middle" fill="#fff" font-family="sans-serif">SD</text>',
+    nube: '<path d="M18 46a12 12 0 0 1 0-24 16 16 0 0 1 30 2 11 11 0 0 1-2 22z" fill="#90CAF9"/><path d="M32 30v14M26 38l6 6 6-6" stroke="#0D47A1" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+  };
+  Object.keys(SVG2).forEach(function (k) { SVG[k] = SVG2[k]; });
+  var FILE_COLORS = { jpg: '#43A047', png: '#43A047', mp3: '#8E24AA', mp4: '#E53935', docx: '#1E88E5', pdf: '#D32F2F' };
+  function fileSvg(ext) {
+    var c = FILE_COLORS[ext] || '#546E7A';
+    return '<path d="M14 4h26l12 12v42a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="#ECEFF1" stroke="#90A4AE" stroke-width="2"/><path d="M40 4v12h12" fill="#CFD8DC"/>' +
+      '<rect x="8" y="34" width="40" height="16" rx="3" fill="' + c + '"/><text x="28" y="46" font-size="11" font-weight="900" text-anchor="middle" fill="#fff" font-family="sans-serif">.' + ext.toUpperCase() + '</text>';
   }
+  function icon(name, label) {
+    var body = name && name.indexOf('file:') === 0 ? fileSvg(name.slice(5)) : (SVG[name] || '');
+    return '<svg viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="' + esc(label || name) + '">' + body + '</svg>';
+  }
+  function hasIcon(name) { return !!name && (name.indexOf('file:') === 0 || !!SVG[name]); }
+  // Tarjeta grande: dibujo (si hay) y nombre
+  function bigCard(key, label) {
+    return '<div class="hw-card is-big' + (hasIcon(key) ? '' : ' is-text') + '">' + (hasIcon(key) ? icon(key, label) : '') + '<span class="hw-card-label">' + esc(label) + '</span></div>';
+  }
+  function labelOf(it) { return it[2] || NOMBRES[it[0]] || it[0]; }
   var NOMBRES = {
     monitor: 'Monitor', teclado: 'Teclado', mouse: 'Mouse', gabinete: 'Gabinete', bocinas: 'Bocinas', impresora: 'Impresora',
     microfono: 'Micrófono', camara: 'Cámara web', audifonos: 'Audífonos', ram: 'Memoria RAM', disco: 'Disco duro (SSD)',
     madre: 'Tarjeta madre', cpu: 'Procesador (CPU)', fuente: 'Fuente de poder', gpu: 'Tarjeta de video',
-    navegador: 'Navegador de internet', videojuego: 'Videojuego', sistema: 'Sistema operativo', dibujo: 'Programa de dibujo'
+    navegador: 'Navegador de internet', videojuego: 'Videojuego', sistema: 'Sistema operativo', dibujo: 'Programa de dibujo',
+    usb: 'Puerto USB', hdmi: 'Puerto HDMI', jack: 'Entrada de audio', ethernet: 'Puerto de red (Ethernet)', corriente: 'Conector de corriente',
+    wifi: 'Wi-Fi', bluetooth: 'Bluetooth', usbmem: 'Memoria USB', sd: 'Tarjeta SD', nube: 'La nube', carpeta: 'Carpeta'
   };
 
   // ---------- Niveles ----------
@@ -91,6 +124,151 @@
       ] }
   ];
 
+
+  // ---------- Sesiones de 45 minutos (niveles 7, 8 y 9) ----------
+  LEVELS.push(
+    { type: 'session', name: 'Sesión: puertos y conexiones', intro: 'Hoy aprenderás a conectar aparatos a la computadora. Son 6 misiones: ¡vamos paso a paso!',
+      missions: [
+        { type: 'learn', name: 'Los puertos de la computadora', min: 8, intro: 'Los puertos son las entradas donde se conectan los cables. Lee cada tarjeta con tu maestro.',
+          cards: [
+            ['usb', 'Puerto USB', 'Es el más común. Ahí conectas el mouse, el teclado, una memoria USB o un control. Hay USB normal (tipo A) y USB-C, que es pequeño y ovalado.'],
+            ['hdmi', 'Puerto HDMI', 'Lleva imagen y sonido de la computadora a un monitor o a una televisión.'],
+            ['jack', 'Entrada de audio', 'Un hoyito redondo de 3.5 mm para conectar audífonos o bocinas con cable.'],
+            ['ethernet', 'Puerto de red (Ethernet)', 'Conecta la computadora a internet con un cable que va al módem.'],
+            ['corriente', 'Conector de corriente', 'Por aquí llega la energía para que la computadora funcione o cargue su batería.'],
+            ['wifi', 'Wi-Fi', 'Conexión a internet sin cables, por ondas de radio.'],
+            ['bluetooth', 'Bluetooth', 'Conecta aparatos que están cerca sin cables, como audífonos, bocinas o controles.']
+          ] },
+        { type: 'tap', name: 'Encuentra el puerto', min: 6, intro: 'Toca el puerto que te pida. ¡Fíjate bien en su forma!',
+          items: [
+            ['usb', 'El USB es rectangular y sirve para muchísimos aparatos.'],
+            ['hdmi', 'El HDMI tiene las esquinas de abajo cortadas. Lleva imagen y sonido.'],
+            ['jack', 'La entrada de audio es redonda y pequeñita.'],
+            ['ethernet', 'El puerto de red parece un USB más alto, con una pestañita.'],
+            ['corriente', 'Por el conector de corriente entra la energía.']
+          ] },
+        { type: 'match', name: '¿Dónde se conecta?', min: 8, intro: '¿En qué puerto conectas cada aparato?',
+          items: [
+            ['mouse', 'Puerto USB'],
+            ['monitor', 'Puerto HDMI'],
+            ['audifonos', 'Entrada de audio (3.5 mm)'],
+            ['ethernet', 'Puerto de red (Ethernet)', 'Cable de internet'],
+            ['corriente', 'Conector de corriente', 'Cargador de la laptop']
+          ] },
+        { type: 'sort', name: '¿Con cable o inalámbrico?', min: 6, intro: 'Algunas conexiones usan cable y otras van por el aire. ¡Clasifícalas!',
+          bins: [['cable', 'Con cable', 'se conecta a un puerto'], ['inalambrico', 'Inalámbrico', 'sin cables']],
+          hintBad: '¿Necesita un cable conectado a un puerto o funciona por el aire?',
+          items: [['hdmi', 'cable', 'Cable HDMI al monitor'], ['wifi', 'inalambrico', 'Internet por Wi-Fi'], ['ethernet', 'cable', 'Cable de red'], ['bluetooth', 'inalambrico', 'Audífonos Bluetooth'],
+            ['mouse', 'cable', 'Mouse con cable USB'], ['mouse', 'inalambrico', 'Mouse inalámbrico'], ['impresora', 'cable', 'Impresora conectada por USB'], ['videojuego', 'inalambrico', 'Control de consola por Bluetooth']] },
+        { type: 'checklist', name: 'Reto con una computadora de verdad', min: 10, intro: 'Ahora, con un adulto, revisa una computadora real. Marca cada reto cuando lo logres.',
+          note: 'Hazlo siempre con un adulto. Nunca conectes ni desconectes cables de corriente tú solo.',
+          tasks: ['Busca los puertos USB de la computadora y cuéntalos.', 'Encuentra el puerto HDMI (o el de video) y la entrada de audio.',
+            'Conecta y desconecta con cuidado un mouse o una memoria USB.', 'Pregunta si esa computadora se conecta a internet por Wi-Fi o por cable.',
+            'Dibuja en tu cuaderno los puertos que encontraste.'] },
+        { type: 'quiz', name: 'Quiz de conexiones', min: 7, intro: '¡Último reto! Cada respuesta correcta te acerca al tesoro.',
+          items: [
+            ['¿Qué puerto usas para conectar un monitor o una televisión?', ['HDMI', 'Entrada de audio', 'Ethernet']],
+            ['¿Dónde conectas unos audífonos con cable?', ['En la entrada de audio', 'En el puerto de red', 'En el conector de corriente']],
+            ['¿Cuál de estas conexiones es sin cables?', ['Bluetooth', 'HDMI', 'Ethernet']],
+            ['¿Para qué sirve el puerto Ethernet?', ['Para conectarse a internet con cable', 'Para escuchar música', 'Para cargar la batería']],
+            ['¿Cuál es el puerto más común para mouse, teclado y memorias?', ['USB', 'HDMI', 'Entrada de audio']],
+            ['¿Cómo se llama el USB pequeño y ovalado?', ['USB-C', 'USB-Z', 'Mini HDMI']],
+            ['¿Qué viaja por un cable HDMI?', ['Imagen y sonido', 'Solo electricidad', 'Solo internet']],
+            ['Antes de quitar una memoria USB, ¿qué conviene hacer?', ['Expulsarla en la computadora', 'Jalarla muy fuerte', 'Apagar la luz del cuarto']]
+          ] }
+      ] },
+    { type: 'session', name: 'Sesión: cuida tu computadora y tus datos', intro: 'Hoy aprenderás a cuidar la computadora y a protegerte en internet. Son 6 misiones.',
+      missions: [
+        { type: 'learn', name: 'Reglas de oro', min: 9, intro: 'Estas reglas cuidan tu computadora y te cuidan a ti. Platícalas con tu maestro.',
+          cards: [
+            ['monitor', 'Limpia con cuidado', 'Apaga la computadora y limpia la pantalla con un paño seco y suave. Nunca le eches agua directo.'],
+            ['teclado', 'Nada de comida ni bebidas', 'Las migajas y los líquidos pueden dañar el teclado. Come lejos de la computadora.'],
+            ['gabinete', 'Deja respirar a la computadora', 'No tapes las rejillas de ventilación: por ahí sale el aire caliente.'],
+            ['sistema', 'Apágala correctamente', 'Usa el menú de apagar. Si la desconectas de golpe, puedes perder tus archivos.'],
+            ['candado', 'Contraseñas seguras', 'Una buena contraseña es larga y mezcla letras, números y símbolos. No se la digas a nadie, solo a tus papás o tutores.'],
+            ['escudo', 'Tus datos son privados', 'No compartas en internet tu dirección, tu teléfono, tu escuela ni tus contraseñas.'],
+            ['chat', 'Si algo te incomoda, avisa', 'Si un desconocido te escribe o ves algo raro, cierra la ventana y avisa a un adulto de confianza.']
+          ] },
+        { type: 'sort', name: '¿Buena o mala idea?', min: 6, intro: '¿Esto cuida la computadora o la pone en peligro?',
+          bins: [['buena', 'Buena idea', 'la cuida'], ['mala', 'Mala idea', 'la pone en peligro']],
+          hintBad: 'Piensa: ¿eso ayuda a que la computadora dure más o la puede dañar?',
+          items: [['monitor', 'buena', 'Limpiar la pantalla con un paño seco'], ['teclado', 'mala', 'Comer papitas sobre el teclado'], ['sistema', 'buena', 'Apagar la computadora desde el menú'],
+            ['gabinete', 'mala', 'Tapar las rejillas de ventilación'], ['chat', 'buena', 'Pedir ayuda a un adulto si algo falla'], ['monitor', 'mala', 'Echar agua directo a la pantalla'],
+            ['corriente', 'mala', 'Desconectar el cable de golpe'], ['disco', 'buena', 'Guardar tu trabajo seguido']] },
+        { type: 'sort', name: '¿Lo puedo compartir?', min: 6, intro: 'Algunos datos se pueden compartir y otros son privados. ¿Cuál es cuál?',
+          bins: [['puedo', 'Lo puedo compartir', 'no dice quién soy ni dónde estoy'], ['privado', 'Es privado', 'solo para mi familia']],
+          hintBad: 'Pregúntate: ¿alguien podría encontrarme o entrar a mis cuentas con ese dato?',
+          items: [['dibujo', 'puedo', 'Tu color favorito'], ['candado', 'privado', 'Tu contraseña'], ['videojuego', 'puedo', 'Tu videojuego favorito'], ['escudo', 'privado', 'La dirección de tu casa'],
+            ['chat', 'privado', 'Tu número de teléfono'], ['dibujo', 'puedo', 'Tu animal favorito'], ['escudo', 'privado', 'El nombre de tu escuela'], ['camara', 'privado', 'Una foto de tu casa por fuera']] },
+        { type: 'match', name: 'Problema y solución', min: 7, intro: '¿Qué haces en cada caso?',
+          items: [
+            ['candado', 'Pedir ayuda a un adulto para crear una nueva', 'Olvidé mi contraseña'],
+            ['chat', 'Cerrar la ventana y avisar a un adulto', 'Un desconocido me escribe'],
+            ['sistema', 'Cerrar los programas que no uso', 'La computadora va muy lenta'],
+            ['monitor', 'Apagarla y limpiarla con un paño seco', 'La pantalla tiene polvo'],
+            ['gabinete', 'Revisar que nada tape las rejillas', 'La computadora está muy caliente'],
+            ['mouse', 'Revisar que el cable esté bien conectado', 'El mouse no funciona']
+          ] },
+        { type: 'password', name: 'Crea una contraseña súper segura', min: 8, intro: 'Inventa una contraseña y mira cómo se hace más fuerte. ¡Cumple todos los retos!' },
+        { type: 'quiz', name: 'Quiz de seguridad', min: 9, intro: '¡Último reto! Demuestra que sabes cuidarte.',
+          items: [
+            ['¿Con qué limpias la pantalla?', ['Con un paño seco y suave', 'Con agua y jabón directo', 'Con una esponja mojada']],
+            ['¿Cuál es la contraseña más segura?', ['Gato!Azul7Salta', '123456', 'minombre']],
+            ['¿A quién le puedes decir tu contraseña?', ['A mis papás o tutores', 'A mi mejor amigo', 'A quien me la pida']],
+            ['En un juego, un desconocido te pide tu dirección. ¿Qué haces?', ['No se la doy y aviso a un adulto', 'Se la doy', 'Le mando una foto de mi casa']],
+            ['¿Por qué no hay que tapar las rejillas?', ['Porque por ahí sale el aire caliente', 'Porque se ve feo', 'Porque ahí se guardan los archivos']],
+            ['¿Cómo apagas bien la computadora?', ['Desde el menú de apagar', 'Desconectando el cable', 'Cerrando la tapa con fuerza']],
+            ['¿Cuál de estos datos es privado?', ['Mi número de teléfono', 'Mi color favorito', 'Mi animal favorito']],
+            ['Si ves algo en internet que te incomoda, ¿qué haces?', ['Cierro la ventana y aviso a un adulto', 'Lo comparto con mis amigos', 'Lo guardo en secreto']]
+          ] }
+      ] },
+    { type: 'session', name: 'Sesión: archivos y almacenamiento', intro: 'Hoy aprenderás dónde y cómo guarda las cosas una computadora. Son 7 misiones.',
+      missions: [
+        { type: 'learn', name: 'Archivos, carpetas y espacio', min: 9, intro: 'Lee cada tarjeta con tu maestro. ¡Vas a ser experto en archivos!',
+          cards: [
+            ['file:jpg', 'Archivo', 'Un archivo guarda una cosa: una foto, una canción, un dibujo o un trabajo de la escuela.'],
+            ['carpeta', 'Carpeta', 'Una carpeta guarda archivos ordenados, como un cajón. Puedes tener carpetas dentro de carpetas.'],
+            ['file:mp3', 'Extensión', 'Son las letras después del punto: .jpg y .png son fotos, .mp3 es música, .mp4 es video, .docx y .pdf son documentos.'],
+            ['cpu', 'Bit y byte', 'La computadora guarda todo con ceros y unos. Cada 0 o 1 es un bit. 8 bits forman un byte, que alcanza para una letra.'],
+            ['disco', 'KB, MB, GB y TB', 'Kilobyte, megabyte, gigabyte y terabyte miden cuánto espacio ocupa algo. Cada uno es unas mil veces más grande que el anterior.'],
+            ['usbmem', 'Memoria USB y tarjeta SD', 'Sirven para llevar tus archivos a otro lugar. La tarjeta SD se usa mucho en cámaras y tabletas.'],
+            ['nube', 'La nube', 'Guardar en la nube es guardar en computadoras de internet. Así abres tus archivos desde otro lugar con tu cuenta.']
+          ] },
+        { type: 'sort', name: 'Ordena los archivos', min: 6, intro: 'Mete cada archivo en su carpeta. ¡Fíjate en la extensión!',
+          bins: [['fotos', 'Fotos', '.jpg .png'], ['musica', 'Música', '.mp3'], ['videos', 'Videos', '.mp4'], ['documentos', 'Documentos', '.docx .pdf']],
+          hintBad: 'Mira las letras después del punto: esa es la pista.',
+          items: [['file:jpg', 'fotos', 'playa.jpg'], ['file:mp3', 'musica', 'cancion.mp3'], ['file:mp4', 'videos', 'cumpleanos.mp4'], ['file:docx', 'documentos', 'tarea.docx'],
+            ['file:png', 'fotos', 'dibujo.png'], ['file:pdf', 'documentos', 'temario.pdf'], ['file:mp3', 'musica', 'himno.mp3'], ['file:mp4', 'videos', 'tutorial.mp4'], ['file:jpg', 'fotos', 'perrito.jpg'], ['file:pdf', 'documentos', 'diploma.pdf']] },
+        { type: 'order', name: 'Del más pequeño al más grande', min: 4, intro: 'Toca las medidas en orden, de la más pequeña a la más grande.',
+          items: ['Bit', 'Byte', 'Kilobyte (KB)', 'Megabyte (MB)', 'Gigabyte (GB)', 'Terabyte (TB)'] },
+        { type: 'order', name: '¿Qué ocupa más espacio?', min: 4, intro: 'Ordena del que ocupa menos espacio al que ocupa más.',
+          items: ['Una letra', 'Una página de texto', 'Una foto', 'Un video de 10 minutos'] },
+        { type: 'match', name: '¿Dónde se guarda?', min: 6, intro: '¿Qué hace cada lugar donde se guardan los archivos?',
+          items: [
+            ['disco', 'Guarda todo dentro de la computadora, aunque la apagues'],
+            ['ram', 'Se borra al apagar: solo guarda lo que usas en este momento'],
+            ['usbmem', 'Lleva archivos en tu bolsillo a otra computadora'],
+            ['sd', 'Tarjeta pequeña para cámaras y tabletas'],
+            ['nube', 'Guarda en internet y lo abres desde otro lugar']
+          ] },
+        { type: 'checklist', name: 'Reto: organiza tu carpeta', min: 9, intro: 'Con un adulto, organiza archivos en una computadora de verdad.',
+          note: 'Pide permiso antes de crear, mover o borrar archivos.',
+          tasks: ['Abre el explorador de archivos (o la app Archivos).', 'Crea una carpeta nueva llamada "Mis proyectos".', 'Guarda dentro un dibujo o un documento.',
+            'Cámbiale el nombre al archivo por uno que diga qué es.', 'Busca cuánto espacio ocupa tu archivo (KB o MB).'] },
+        { type: 'quiz', name: 'Quiz de archivos', min: 7, intro: '¡Último reto! Cada respuesta correcta te acerca al tesoro.',
+          items: [
+            ['¿Qué es una carpeta?', ['Un lugar para guardar archivos ordenados', 'Un programa para dibujar', 'Una pieza del gabinete']],
+            ['¿Qué tipo de archivo es "vacaciones.jpg"?', ['Una foto', 'Una canción', 'Un video']],
+            ['¿Cuántos bits tiene un byte?', ['8', '2', '100']],
+            ['¿Qué es más grande?', ['1 gigabyte (GB)', '1 megabyte (MB)', '1 kilobyte (KB)']],
+            ['¿Qué memoria se borra al apagar la computadora?', ['La RAM', 'El disco duro', 'La memoria USB']],
+            ['¿Qué extensión tiene una canción?', ['.mp3', '.jpg', '.docx']],
+            ['¿Qué significa guardar en la nube?', ['Guardar en computadoras de internet', 'Guardar en el cielo de verdad', 'Borrar el archivo']],
+            ['¿Para qué sirve una memoria USB?', ['Para llevar archivos a otra computadora', 'Para dar energía', 'Para ver la imagen']]
+          ] }
+      ] }
+  );
+
   // ---------- Compañeros ----------
   var BUDDIES = [['perro', 'Perrito'], ['gato', 'Gatito'], ['pirata', 'Pirata'], ['ninja', 'Ninja'], ['vikinga', 'Vikinga']];
   var CHEERS = ['¡Muy bien!', '¡Excelente!', '¡Lo sabías!', '¡Genial!', '¡Bravo!'];
@@ -116,8 +294,7 @@
 
   // ---------- Utilidades ----------
   function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  var bubble = $('hw-bubble'), play = $('hw-play'), buddyEl = $('hw-buddy'), overlay = $('hw-overlay');
+  var bubble = $('hw-bubble'), play = $('hw-area') || $('hw-play'), buddyEl = $('hw-buddy'), overlay = $('hw-overlay');
   function say(t) { bubble.textContent = t; }
   function react(kind) {
     buddyEl.classList.remove('is-happy', 'is-sad');
@@ -178,17 +355,177 @@
     });
   }
 
-  function setLevel(i) {
+  var START = { tap: startTap, sort: startSort, match: startMatch, build: startBuild, quiz: startQuiz,
+    learn: startLearn, order: startOrder, checklist: startChecklist, password: startPassword };
+  var session = null; // { L, i } cuando el nivel es una sesión de 45 minutos
+  var SKEY = 'ik-hardware-sesion';
+  function readPos() { try { return JSON.parse(localStorage.getItem(SKEY) || 'null'); } catch (e) { return null; } }
+  function savePos() { try { localStorage.setItem(SKEY, JSON.stringify({ level: level, i: session.i, errors: errors })); } catch (e) { /* sin almacenamiento */ } }
+  function clearPos() { try { localStorage.removeItem(SKEY); } catch (e) { /* sin almacenamiento */ } }
+
+  function setLevel(i, fresh) {
     if (!unlocked(i)) return;
-    level = i; errors = 0;
+    level = i; errors = 0; session = null; doneLock = false;
     overlay.hidden = true; overlay.innerHTML = '';
     var L = LEVELS[i];
-    $('hw-kicker').textContent = 'Nivel ' + (i + 1) + ' de ' + LEVELS.length;
+    $('hw-kicker').textContent = 'Nivel ' + (i + 1) + ' de ' + LEVELS.length + (L.type === 'session' ? ' · Sesión de 45 min' : '');
     $('hw-title').textContent = L.name;
     app.setAttribute('data-tipo', L.type);
     renderLevels();
-    say(L.intro);
-    ({ tap: startTap, sort: startSort, match: startMatch, build: startBuild, quiz: startQuiz })[L.type](L);
+    var steps = $('hw-steps');
+    if (L.type !== 'session') {
+      if (steps) steps.hidden = true;
+      say(L.intro);
+      START[L.type](L);
+      return;
+    }
+    var pos = readPos();
+    session = { L: L, i: 0 };
+    if (!fresh && pos && pos.level === i && pos.i > 0 && pos.i < L.missions.length) { session.i = pos.i; errors = pos.errors || 0; }
+    startMission(session.i === 0 ? L.intro : '¡Bienvenido de vuelta! Seguimos en la misión ' + (session.i + 1) + '.');
+  }
+  function startMission(msg) {
+    doneLock = false;
+    var M = session.L.missions[session.i];
+    renderSteps();
+    say(msg || M.intro);
+    START[M.type](M);
+    if (msg) setTimeout(function () { if (session && session.L.missions[session.i] === M) say(M.intro); }, 3500);
+  }
+  function renderSteps() {
+    var steps = $('hw-steps');
+    if (!steps) return;
+    var ms = session.L.missions, M = ms[session.i];
+    var html = '<ol class="hw-steps-list" aria-label="Misiones de la sesión">';
+    ms.forEach(function (m, k) {
+      html += '<li class="' + (k < session.i ? 'is-done' : k === session.i ? 'is-current' : '') + '"' + (k === session.i ? ' aria-current="step"' : '') + '><span class="sr-only">Misión ' + (k + 1) + ': ' + esc(m.name) + (k < session.i ? ' (completada)' : '') + '</span></li>';
+    });
+    html += '</ol><p class="hw-steps-text"><strong>Misión ' + (session.i + 1) + ' de ' + ms.length + ':</strong> ' + esc(M.name) + ' <span>· ~' + M.min + ' min</span></p>';
+    steps.innerHTML = html;
+    steps.hidden = false;
+  }
+  // Termina una misión o un nivel normal
+  var doneLock = false;
+  function done() {
+    if (doneLock) return; // evita terminar dos veces con toques rápidos
+    doneLock = true;
+    if (!session) return win();
+    session.i++;
+    if (session.i >= session.L.missions.length) { clearPos(); return win(); }
+    savePos();
+    sfx('win');
+    var next = session.L.missions[session.i];
+    overlay.className = 'game-overlay is-win hw-overlay';
+    overlay.innerHTML = '<div class="overlay-card"><p class="overlay-title">¡Misión ' + session.i + ' completada!</p>' +
+      '<p class="overlay-msg">Siguiente: ' + esc(next.name) + ' (~' + next.min + ' min)</p>' +
+      '<div class="overlay-actions"><button type="button" class="btn btn-yellow" data-act="mission">Continuar</button></div></div>';
+    overlay.hidden = false;
+    overlay.querySelector('button').focus({ preventScroll: true });
+  }
+
+  // ---------- Misión tipo "aprende" (tarjetas) ----------
+  function startLearn(M) {
+    state = { k: 0 };
+    play.innerHTML = '<div class="hw-learn"><div class="hw-learn-card" id="hw-learn" aria-live="polite"></div>' +
+      '<div class="hw-learn-nav"><button type="button" class="btn btn-ghost-light" id="hw-prev">Anterior</button><span id="hw-learn-n"></span>' +
+      '<button type="button" class="btn btn-yellow" id="hw-next">Siguiente</button></div></div>';
+    function show() {
+      var c = M.cards[state.k];
+      $('hw-learn').innerHTML = '<div class="hw-learn-icon">' + icon(c[0], c[1]) + '</div><div><h3>' + esc(c[1]) + '</h3><p>' + esc(c[2]) + '</p></div>';
+      $('hw-learn-n').textContent = (state.k + 1) + ' de ' + M.cards.length;
+      $('hw-prev').disabled = state.k === 0;
+      $('hw-next').textContent = state.k === M.cards.length - 1 ? '¡Entendido!' : 'Siguiente';
+      say(c[1] + ': ' + c[2]);
+    }
+    $('hw-prev').addEventListener('click', function () { if (state.k > 0) { state.k--; sfx('click'); show(); } });
+    $('hw-next').addEventListener('click', function () {
+      if (state.k < M.cards.length - 1) { state.k++; sfx('click'); show(); } else { react('ok'); done(); }
+    });
+    show();
+  }
+
+  // ---------- Misión tipo "ordena" ----------
+  function startOrder(M) {
+    state = { k: 0 };
+    play.innerHTML = '<div class="hw-order"><ol class="hw-order-done" id="hw-order-done" aria-label="Tu orden"></ol>' +
+      '<div class="hw-options hw-order-opts" id="hw-options" role="group" aria-label="Opciones"></div><p class="hw-left" id="hw-left"></p></div>';
+    var box = $('hw-options');
+    shuffle(M.items).forEach(function (t) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'hw-opt'; b.textContent = t;
+      b.addEventListener('click', function () {
+        if (t === M.items[state.k]) {
+          var li = document.createElement('li'); li.textContent = t;
+          $('hw-order-done').appendChild(li);
+          b.remove(); state.k++;
+          react('ok');
+          if (state.k === M.items.length) { say(cheer() + ' Quedó en orden: ' + M.items.join(' → ') + '.'); setTimeout(done, 900); }
+          else { say(cheer() + ' Sigue: ¿cuál va después de "' + t + '"?'); $('hw-left').textContent = 'Faltan ' + (M.items.length - state.k); }
+        } else {
+          errors++; react('bad'); b.classList.add('is-bad'); setTimeout(function () { b.classList.remove('is-bad'); }, 500);
+          say('Todavía no va ese. Busca el que sigue en tamaño.');
+        }
+      });
+      box.appendChild(b);
+    });
+    $('hw-left').textContent = 'Faltan ' + M.items.length;
+  }
+
+  // ---------- Misión tipo "reto práctico" ----------
+  function startChecklist(M) {
+    var html = '<div class="hw-check"><ul class="hw-check-list">';
+    M.tasks.forEach(function (t, k) {
+      html += '<li><label class="hw-check-item"><input type="checkbox" data-k="' + k + '"><span>' + esc(t) + '</span></label></li>';
+    });
+    html += '</ul>' + (M.note ? '<p class="hw-note">' + esc(M.note) + '</p>' : '') +
+      '<button type="button" class="btn btn-yellow" id="hw-check-ok" disabled>¡Terminé el reto!</button></div>';
+    play.innerHTML = html;
+    var boxes = play.querySelectorAll('input[type=checkbox]');
+    boxes.forEach(function (c) {
+      c.addEventListener('change', function () {
+        var all = Array.prototype.every.call(boxes, function (x) { return x.checked; });
+        $('hw-check-ok').disabled = !all;
+        if (c.checked) { sfx('ok'); say(all ? '¡Lo lograste todo! Presiona "¡Terminé el reto!".' : cheer() + ' Sigue con el siguiente reto.'); }
+      });
+    });
+    $('hw-check-ok').addEventListener('click', function () { react('ok'); done(); });
+  }
+
+  // ---------- Misión tipo "contraseña segura" (no se guarda ni se envía) ----------
+  function startPassword(M) {
+    var RULES = [
+      ['Tiene 12 caracteres o más', function (v) { return v.length >= 12; }],
+      ['Tiene una letra mayúscula', function (v) { return /[A-ZÁÉÍÓÚÑ]/.test(v); }],
+      ['Tiene una letra minúscula', function (v) { return /[a-záéíóúñ]/.test(v); }],
+      ['Tiene un número', function (v) { return /\d/.test(v); }],
+      ['Tiene un símbolo, como ! ? # $ *', function (v) { return /[^A-Za-zÁÉÍÓÚÑáéíóúñ0-9\s]/.test(v); }],
+      ['No usa cosas fáciles como 123, abc o "contraseña"', function (v) { return v.length > 0 && !/123|abc|qwerty|contrase|password|1111|0000/i.test(v); }]
+    ];
+    play.innerHTML = '<div class="hw-pass"><div class="field"><label for="hw-pass-in">Escribe una contraseña inventada</label>' +
+      '<input id="hw-pass-in" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"></div>' +
+      '<div class="hw-meter" aria-hidden="true"><span id="hw-meter-bar"></span></div><p class="hw-meter-label" id="hw-meter-label" aria-live="polite">Empieza a escribir</p>' +
+      '<ul class="hw-rules" id="hw-rules"></ul>' +
+      '<p class="hw-note">Truco: usa una frase que solo tú recuerdes, con números y símbolos. Esta página no guarda ni envía lo que escribes. No uses aquí tu contraseña real.</p>' +
+      '<button type="button" class="btn btn-yellow" id="hw-pass-ok" disabled>¡Mi contraseña es súper segura!</button></div>';
+    var input = $('hw-pass-in'), last = 0;
+    function check() {
+      var v = input.value, n = 0, html = '';
+      RULES.forEach(function (r) { var ok = r[1](v); if (ok) n++; html += '<li class="' + (ok ? 'is-ok' : '') + '"><span aria-hidden="true">' + (ok ? '✓' : '•') + '</span> ' + esc(r[0]) + '<span class="sr-only">' + (ok ? ': cumplido' : ': falta') + '</span></li>'; });
+      $('hw-rules').innerHTML = html;
+      var pct = Math.round(n / RULES.length * 100);
+      var bar = $('hw-meter-bar');
+      bar.style.width = pct + '%';
+      bar.style.background = n <= 2 ? '#EF5350' : n <= 4 ? '#FFB300' : n === 5 ? '#9CCC65' : '#2E7D32';
+      $('hw-meter-label').textContent = !v ? 'Empieza a escribir' : n <= 2 ? 'Débil' : n <= 4 ? 'Regular' : n === 5 ? 'Fuerte' : '¡Súper segura!';
+      $('hw-pass-ok').disabled = n < RULES.length;
+      if (n > last) sfx('ok');
+      if (n === RULES.length && last < n) say('¡Excelente! Esa contraseña es muy difícil de adivinar. Recuerda: no se la digas a nadie.');
+      last = n;
+    }
+    input.addEventListener('input', check);
+    $('hw-pass-ok').addEventListener('click', function () { input.value = ''; react('ok'); done(); });
+    check();
+    say(M.intro);
   }
 
   // ---------- Nivel tipo "toca" ----------
@@ -209,11 +546,11 @@
     nextTap();
   }
   function nextTap() {
-    if (!state.queue.length) return win();
+    if (!state.queue.length) return done();
     $('hw-ask').innerHTML = 'Toca: <strong>' + esc(NOMBRES[state.queue[0][0]]) + '</strong>';
   }
   function tapPick(b) {
-    if (!state.queue.length || state.done[b.dataset.id]) return;
+    if (!state.queue.length || state.done[b.dataset.id] || state.busy) return;
     var want = state.queue[0];
     if (b.dataset.id === want[0]) {
       state.done[want[0]] = true;
@@ -223,7 +560,8 @@
       b.querySelector('svg').setAttribute('aria-label', NOMBRES[want[0]]);
       react('ok'); say(cheer() + ' ' + want[1]);
       state.queue.shift();
-      setTimeout(nextTap, 300);
+      state.busy = true;
+      setTimeout(function () { state.busy = false; nextTap(); }, 300);
     } else {
       errors++; react('bad');
       b.classList.add('is-bad'); setTimeout(function () { b.classList.remove('is-bad'); }, 500);
@@ -234,7 +572,7 @@
   // ---------- Nivel tipo "clasifica" ----------
   function startSort(L) {
     state = { queue: shuffle(L.items), counts: {} };
-    var html = '<div class="hw-sort"><div class="hw-current" id="hw-current" aria-live="polite"></div><div class="hw-bins">';
+    var html = '<div class="hw-sort"><div class="hw-current" id="hw-current" aria-live="polite"></div><div class="hw-bins' + (L.bins.length > 2 ? ' is-many' : '') + '">';
     L.bins.forEach(function (bn) {
       state.counts[bn[0]] = 0;
       html += '<button type="button" class="hw-bin" data-bin="' + bn[0] + '"><strong>' + esc(bn[1]) + '</strong><small>' + esc(bn[2]) + '</small><span class="hw-bin-items" id="bin-' + bn[0] + '"></span></button>';
@@ -246,9 +584,9 @@
   }
   function nextSort() {
     var cur = $('hw-current');
-    if (!state.queue.length) { cur.innerHTML = ''; return win(); }
+    if (!state.queue.length) { cur.innerHTML = ''; return done(); }
     var it = state.queue[0];
-    cur.innerHTML = '<div class="hw-card is-big">' + icon(it[0], NOMBRES[it[0]]) + '<span class="hw-card-label">' + esc(NOMBRES[it[0]]) + '</span></div>';
+    cur.innerHTML = bigCard(it[0], labelOf(it));
     $('hw-left').textContent = 'Faltan ' + state.queue.length;
   }
   function sortPick(L, b) {
@@ -257,15 +595,16 @@
     if (b.dataset.bin === it[1]) {
       var mini = document.createElement('span');
       mini.className = 'hw-mini';
-      mini.innerHTML = icon(it[0], NOMBRES[it[0]]);
+      mini.innerHTML = hasIcon(it[0]) ? icon(it[0], labelOf(it)) : '<span class="hw-mini-dot" title="' + esc(labelOf(it)) + '"></span>';
       $('bin-' + it[1]).appendChild(mini);
-      react('ok'); say(cheer() + ' ' + NOMBRES[it[0]] + ': ' + L.why[it[1]].charAt(0).toLowerCase() + L.why[it[1]].slice(1));
+      var binName = L.bins.filter(function (x) { return x[0] === it[1]; })[0][1];
+      react('ok'); say(cheer() + ' ' + labelOf(it) + ': ' + (L.why ? L.why[it[1]].charAt(0).toLowerCase() + L.why[it[1]].slice(1) : binName.toLowerCase() + '.'));
       state.queue.shift();
       nextSort();
     } else {
       errors++; react('bad');
       b.classList.add('is-bad'); setTimeout(function () { b.classList.remove('is-bad'); }, 500);
-      say('Mmm… piensa otra vez: ' + (L.bins[0][0] === 'entrada' ? '¿le da información a la computadora o nos muestra algo?' : '¿se puede tocar o es un programa?'));
+      say('Mmm… piensa otra vez: ' + (L.hintBad || (L.bins[0][0] === 'entrada' ? '¿le da información a la computadora o nos muestra algo?' : '¿se puede tocar o es un programa?')));
     }
   }
 
@@ -276,10 +615,10 @@
     nextMatch();
   }
   function nextMatch() {
-    if (!state.queue.length) return win();
+    if (!state.queue.length) return done();
     var it = state.queue[0];
-    $('hw-current').innerHTML = '<div class="hw-card is-big">' + icon(it[0], NOMBRES[it[0]]) + '<span class="hw-card-label">' + esc(NOMBRES[it[0]]) + '</span></div>';
-    var others = shuffle(state.all.filter(function (x) { return x[0] !== it[0]; })).slice(0, 2);
+    $('hw-current').innerHTML = bigCard(it[0], labelOf(it));
+    var others = shuffle(state.all.filter(function (x) { return x !== it; })).slice(0, 2);
     var opts = shuffle([it].concat(others));
     var box = $('hw-options');
     box.innerHTML = '';
@@ -287,9 +626,10 @@
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'hw-opt'; b.textContent = o[1];
       b.addEventListener('click', function () {
-        if (o[0] === it[0]) {
-          react('ok'); say(cheer() + ' ' + NOMBRES[it[0]] + ': ' + o[1].charAt(0).toLowerCase() + o[1].slice(1) + '.');
+        if (o === it) {
+          react('ok'); say(cheer() + ' ' + labelOf(it) + ': ' + o[1].charAt(0).toLowerCase() + o[1].slice(1) + '.');
           b.classList.add('is-ok');
+          box.querySelectorAll('button').forEach(function (x) { x.disabled = true; });
           state.queue.shift();
           setTimeout(nextMatch, 650);
         } else {
@@ -346,7 +686,7 @@
               pw.disabled = true; sfx('power');
               $('hw-board').classList.add('is-on');
               say('¡Bip bup! La computadora encendió. ¡Eres todo un técnico!');
-              setTimeout(win, 1200);
+              setTimeout(done, 1200);
             }, { once: true });
           }
         } else {
@@ -385,7 +725,7 @@
       sfx('treasure');
       say('¡Encontraste el tesoro! Sabes mucho de computadoras.');
       $('hw-ask').textContent = ''; $('hw-options').innerHTML = '';
-      setTimeout(win, 1300);
+      setTimeout(done, 1300);
       return;
     }
     var q = state.queue[0];
@@ -413,12 +753,13 @@
 
   // ---------- Resultado ----------
   function win() {
-    var stars = errors <= 1 ? 3 : errors <= 3 ? 2 : 1;
+    var ses = LEVELS[level].type === 'session';
+    var stars = ses ? (errors <= 3 ? 3 : errors <= 8 ? 2 : 1) : (errors <= 1 ? 3 : errors <= 3 ? 2 : 1);
     if ((progress[level] || 0) < stars) { progress[level] = stars; saveProgress(); }
     renderLevels();
     if (LEVELS[level].type !== 'quiz') sfx('win');
     var last = level === LEVELS.length - 1;
-    var html = '<div class="overlay-card"><p class="overlay-title">' + (last ? '¡Terminaste Computación básica!' : '¡Nivel superado!') + '</p>' +
+    var html = '<div class="overlay-card"><p class="overlay-title">' + (last ? '¡Terminaste Computación básica!' : ses ? '¡Sesión completada!' : '¡Nivel superado!') + '</p>' +
       '<p class="overlay-stars" aria-label="' + stars + ' de 3 estrellas">';
     for (var i = 0; i < 3; i++) html += '<span class="' + (i < stars ? 'on' : '') + '" aria-hidden="true">★</span>';
     html += '</p><p class="overlay-msg">' + (errors === 0 ? '¡Sin errores!' : errors === 1 ? 'Solo 1 error.' : errors + ' errores. ¡Juega otra vez para ganar más estrellas!') + '</p><div class="overlay-actions">';
@@ -433,7 +774,8 @@
   overlay.addEventListener('click', function (e) {
     var b = e.target.closest('[data-act]');
     if (!b) return;
-    if (b.dataset.act === 'next') setLevel(level + 1); else setLevel(level);
+    if (b.dataset.act === 'mission') { overlay.hidden = true; overlay.innerHTML = ''; startMission(); return; }
+    if (b.dataset.act === 'next') setLevel(level + 1); else setLevel(level, true);
   });
 
   renderBuddy();

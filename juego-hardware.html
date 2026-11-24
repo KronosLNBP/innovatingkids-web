@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Juego de computación básica: partes de la computadora | Innovating Kids</title>
-  <meta name="description" content="Juego para niños con 6 niveles: conoce las partes de la computadora, entrada y salida, hardware y software, arma una PC y busca el tesoro pirata. Con sonidos y compañeros animales.">
+  <meta name="description" content="Juego para niños con 9 niveles: partes de la computadora, entrada y salida, hardware y software, arma una PC, el tesoro pirata y 3 sesiones de 45 minutos sobre puertos, seguridad y archivos.">
   <link rel="canonical" href="https://www.innovatingkids.com.mx/juego-hardware.html">
   <meta name="theme-color" content="#254E64">
 
@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css?v=20261124c">
-  <link rel="stylesheet" href="css/bloques.css?v=20261124a">
+  <link rel="stylesheet" href="css/bloques.css?v=20261124b">
 </head>
 <body data-juego="hardware">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -62,7 +62,7 @@
       <div class="container page-hero-inner">
         <nav class="breadcrumb" aria-label="Ruta de navegación"><a href="index.html">Inicio</a> <span aria-hidden="true">/</span> <span>Computación básica</span></nav>
         <h1 class="display">Computación básica: el juego del hardware</h1>
-        <p class="hero-lead">Elige a tu compañero y descubre cómo es una computadora por fuera y por dentro: sus partes, qué es entrada y salida, qué es hardware y software, arma tu propia PC y termina buscando el tesoro pirata.</p>
+        <p class="hero-lead">Elige a tu compañero y descubre cómo es una computadora por fuera y por dentro: sus partes, qué es entrada y salida, qué es hardware y software, arma tu propia PC y busca el tesoro pirata. Después vienen 3 sesiones de 45 minutos: puertos y conexiones, cuidado de la computadora y tus datos, y archivos y almacenamiento.</p>
         <div class="hero-ctas">
           <a class="btn btn-yellow" href="#juego">¡A jugar!</a>
           <a class="btn btn-ghost-light" href="programacion-con-bloques.html">Programación con bloques</a>
@@ -75,7 +75,7 @@
         <div class="gm-app hw-app" id="hw-app">
           <div class="gm-top">
             <div class="gm-title">
-              <p class="gm-kicker" id="hw-kicker">Nivel 1 de 6</p>
+              <p class="gm-kicker" id="hw-kicker">Nivel 1 de 9</p>
               <h2 id="hw-title">Conoce la computadora</h2>
             </div>
             <nav class="gm-levels-nav" aria-label="Niveles">
@@ -103,7 +103,10 @@
               <div class="hw-buddy" id="hw-buddy"></div>
               <p class="hw-bubble" id="hw-bubble" aria-live="polite"></p>
             </div>
-            <div class="hw-play" id="hw-play"></div>
+            <div class="hw-play" id="hw-play">
+              <div class="hw-steps" id="hw-steps" hidden></div>
+              <div class="hw-area" id="hw-area"></div>
+            </div>
             <div class="game-overlay" id="hw-overlay" hidden></div>
           </div>
           <noscript><p>Para jugar necesitas activar JavaScript.</p></noscript>
@@ -197,7 +200,7 @@
   <script src="js/main.js?v=20261124a"></script>
   <script src="js/ik-sprites.js?v=20261124a"></script>
   <script src="js/ik-audio.js?v=20261124a"></script>
-  <script src="js/hardware.js?v=20261124a"></script>
+  <script src="js/hardware.js?v=20261124b"></script>
   <script type="module" src="js/progreso.js?v=20261124a"></script>
 </body>
 </html>

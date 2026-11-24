@@ -11,8 +11,8 @@ index.html                 Página de inicio
 clase-muestra.html         Página de aterrizaje para anuncios: beneficio, 3 pasos, cursos, modalidades y formulario de clase muestra (encabezado sin menú)
 cursos.html                Detalle de los 6 cursos y temarios descargables (PDF en temarios/)
 modalidades.html           Modalidades online, híbrida y presencial a detalle
-programacion-con-bloques.html  Juego de programación con bloques (30 niveles en 4 capítulos; mundos bosque, espacio, parque, isla pirata y castillo; ?profe=1 desbloquea todo)
-juego-hardware.html        Juego de computación básica: hardware (6 niveles; ?profe=1 desbloquea todo)
+programacion-con-bloques.html  Juego de programación con bloques (51 niveles en 7 capítulos; los capítulos 5–7 son sesiones de 45 min con el bloque «truco» (funciones); mundos bosque, espacio, parque, isla pirata y castillo; ?profe=1 desbloquea todo)
+juego-hardware.html        Juego de computación básica: hardware (9 niveles: 6 cortos + 3 sesiones de 45 min con misiones — puertos y conexiones, cuidado y seguridad, archivos y almacenamiento; la sesión se puede retomar donde se quedó; ?profe=1 desbloquea todo)
 alumnos.html / admin.html  Portal de alumnos y panel del maestro (Firebase)
 aviso-de-privacidad.html   Aviso de privacidad (borrador)
 404.html                   Página de error

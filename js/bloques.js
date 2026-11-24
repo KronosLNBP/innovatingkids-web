@@ -9,7 +9,10 @@
     { name: 'Secuencias', desc: 'Dar instrucciones en orden' },
     { name: 'Ciclos', desc: 'Repetir sin escribir de más' },
     { name: 'Condicionales', desc: 'Decidir según lo que pasa' },
-    { name: 'Gran reto', desc: 'Usa todo lo que aprendiste' }
+    { name: 'Gran reto', desc: 'Usa todo lo que aprendiste' },
+    { name: 'Trucos', desc: 'Crea tus propios bloques (funciones)', session: true },
+    { name: 'Patrullas', desc: 'Trucos que deciden solos', session: true },
+    { name: 'Expedición', desc: 'Mapas gigantes con todo', session: true }
   ];
   var B_MOVE = ['right', 'left', 'up', 'down'];
   var B_ATK = B_MOVE.concat(['attack']);
@@ -17,6 +20,9 @@
   var B_IF = B_LOOP.concat(['ifEnemy']);
   var B_UNTIL = B_IF.concat(['untilGoal']);
   var B_ALL = B_UNTIL.concat(['ifPath']);
+  var B_FN1 = B_LOOP.concat(['defFn', 'callFn']);
+  var B_FN2 = B_ALL.concat(['defFn', 'callFn']);
+  var B_ALLFN = B_FN2;
 
   // ---------- Niveles ----------
   // Leyenda: . camino  # obstáculo  H héroe  G gema  E slime  F bandera
@@ -117,7 +123,75 @@
       map: ['H.E..#####', '####.#####', '####G.E.##', '#######.##', '#######.##', '#######G.F', '##########'], blocks: B_ALL, best: 6 },
     { ch: 3, name: 'Gran final', goal: 'El último reto: sube, derrota a los slimes y recoge las gemas.',
       hint: 'Repetir hasta la meta: si hay enemigo, atacar; si hay camino arriba, subir; si no, avanzar a la derecha.',
-      map: ['##########', '######G..F', '######.###', '###..E.###', '###G######', '###.######', 'H.E.######'], blocks: B_ALL, best: 6 }
+      map: ['##########', '######G..F', '######.###', '###..E.###', '###G######', '###.######', 'H.E.######'], blocks: B_ALL, best: 6 },
+    // Capítulo 5: Trucos (funciones) — sesión de 45 min
+    { ch: 4, name: 'Mi primer truco', goal: "Hay 3 cuevas con gemas. Crea un truco para entrar y salir de una cueva.",
+      hint: "Mete \"mover arriba, arriba, abajo, abajo\" en \"definir truco\". Luego usa \"hacer truco\" frente a cada cueva.",
+      map: ['########', '##G#GG##', '##.#..##', 'H......F', '########', '########'], blocks: B_FN1, best: 15 },
+    { ch: 4, name: 'Cuevas de abajo', goal: "Ahora las cuevas están abajo. Cambia tu truco.",
+      hint: "El truco es: abajo, abajo, arriba, arriba. Úsalo en cada cueva.",
+      map: ['########', 'H......F', '#.#.##.#', '#G#G##G#', '########', '########'], blocks: B_FN1, best: 15 },
+    { ch: 4, name: 'El truco del slime', goal: "Los slimes aparecen sin orden. Haz un truco para derrotar y avanzar.",
+      hint: "Truco: atacar, mover derecha, mover derecha. Úsalo cuando tengas un slime enfrente.",
+      map: ['##########', '##########', 'HE..E.E..F', '##########', '##########'], blocks: B_FN1, best: 10 },
+    { ch: 4, name: 'Torres de gemas', goal: "Torres altas con gemas en la punta. ¡Un truco te ahorra muchos bloques!",
+      hint: "Truco: sube 3 y baja 3. Las torres están en distintos lugares: cuenta los pasos entre ellas.",
+      map: ['#GG##G##', '#..##.##', '#..##.##', 'H......F', '########', '########'], blocks: B_FN1, best: 17 },
+    { ch: 4, name: 'Repetir dentro del truco', goal: "Torres de 4 pisos. Usa \"repetir\" dentro del truco.",
+      hint: "Dentro de \"definir truco\": repetir 4 veces subir y repetir 4 veces bajar.",
+      map: ['##GG##G#', '##..##.#', '##..##.#', '##..##.#', 'H......F', '########'], blocks: B_FN1, best: 15 },
+    { ch: 4, name: 'Slimes en las cuevas', goal: "Cada cueva tiene un slime cuidando la gema.",
+      hint: "Truco: baja, ataca, baja 2, sube 3. Úsalo en cada cueva.",
+      map: ['########', 'H......F', '#.##.#.#', '#E##E#E#', '#G##G#G#', '########'], blocks: B_FN1, best: 18 },
+    { ch: 4, name: 'Puente de slimes', goal: "Un puente largo lleno de slimes. ¡Que tu truco haga el trabajo!",
+      hint: "Truco: atacar y mover derecha. Úsalo cada vez que haya un slime junto a ti.",
+      map: ['###########', '###########', 'H.E.EE..E.F', '###########', '###########'], blocks: B_FN1, best: 13 },
+    { ch: 4, name: 'Reto de trucos', goal: "Cuevas, gemas y un slime. Usa todo lo que aprendiste de trucos.",
+      hint: "Truco para las cuevas: arriba, arriba, abajo, abajo. No olvides atacar al slime.",
+      map: ['##G#G##G##', '##.#.##.##', 'H.....E..F', '##########', '##########', '##########'], blocks: B_FN1, best: 18 },
+
+    // Capítulo 6: Patrullas inteligentes — sesión de 45 min
+    { ch: 5, name: 'Truco inteligente', goal: "Un truco que decide solo: si hay slime, ataca; luego avanza.",
+      hint: "Truco: \"si hay enemigo enfrente → atacar\" y \"mover derecha\". Programa: \"repetir hasta la meta\" con \"hacer truco\".",
+      map: ['############', '############', 'H.E..EE.E..F', '############', '############'], blocks: B_FN2, best: 6 },
+    { ch: 5, name: 'Escalera vigilada', goal: "Una escalera con slimes. El truco revisa antes de cada paso.",
+      hint: "Truco: si hay enemigo enfrente, atacar; mover derecha. Programa: repetir hasta la meta: hacer truco 2 veces y bajar 2.",
+      map: ['H.E#####', '##.#####', '##..E###', '####.###', '####..E#', '######.#', '######F#'], blocks: B_FN2, best: 9 },
+    { ch: 5, name: 'Laberinto con truco', goal: "Sigue el camino: el truco decide hacia dónde ir.",
+      hint: "Truco: si hay camino a la derecha, mover derecha; si no, mover abajo. Repite hasta la meta.",
+      map: ['H..#######', '##.#######', '##....####', '#####.####', '#####....#', '########.F'], blocks: B_FN2, best: 6 },
+    { ch: 5, name: 'Gemas del laberinto', goal: "El laberinto tiene gemas y slimes. Mejora tu truco.",
+      hint: "Truco: primero \"si hay enemigo → atacar\", luego \"si hay camino a la derecha… si no…\".",
+      map: ['H.G#######', '##.#######', '##E.G.####', '#####.####', '#####E.G.#', '########.F'], blocks: B_FN2, best: 8 },
+    { ch: 5, name: 'Cuevas en el laberinto', goal: "Hay cuevas con gemas a la mitad del camino.",
+      hint: "Recorre el pasillo: en cada cueva usa el truco de subir y bajar. Puedes combinar trucos con \"repetir\".",
+      map: ['#G##G#####', '#.##.#####', 'H.......##', '#######.##', '#######..F', '##########'], blocks: B_FN2, best: 18 },
+    { ch: 5, name: 'El castillo de slimes', goal: "Un camino largo hacia abajo con slimes en las esquinas.",
+      hint: "Truco: si hay enemigo, atacar; si hay camino abajo, bajar; si no, avanzar a la derecha.",
+      map: ['H.E.######', '###.######', '###E######', '###.G.E.##', '#######.##', '#######.##', '#######F##'], blocks: B_FN2, best: 8 },
+    { ch: 5, name: 'Patrulla final', goal: "Combina trucos y condiciones en el laberinto más largo del capítulo.",
+      hint: "El truco de \"El castillo de slimes\" te puede servir. Primero ataca, luego decide.",
+      map: ['H.E.G.####', '#####.####', '#####E####', '#####.G..#', '########.#', '########E#', '########.#', '########F#'], blocks: B_FN2, best: 8 },
+
+    // Capítulo 7: Expedición final — sesión de 45 min
+    { ch: 6, name: 'Expedición: el río', goal: "Cruza el gran mapa: recoge todo y llega a la meta.",
+      hint: "Divide el mapa en partes: pasillo de arriba, bajada y pasillo de abajo hacia la izquierda.",
+      map: ['H.G.E.G.E.#', '#########.#', '#F.G.E.G..#', '###########', '###########', '###########'], blocks: B_ALLFN, best: 15 },
+    { ch: 6, name: 'Expedición: las torres', goal: "Muchas torres con gemas en un mapa gigante.",
+      hint: "Un truco para cada torre (sube 2 y baja 2) y avanza entre ellas.",
+      map: ['#G#G##G#G##G', '#.#.##.#.##.', 'H..........F', '############', '############', '############'], blocks: B_ALLFN, best: 21 },
+    { ch: 6, name: 'Expedición: la mina', goal: "Una mina con caminos que bajan. Encuentra la salida.",
+      hint: "Repite hasta la meta: si hay enemigo atacar; si hay camino abajo, bajar; si no, derecha.",
+      map: ['H..E#######', '###.#######', '###.G.E####', '######.####', '######.G.##', '########.##', '########F##'], blocks: B_ALLFN, best: 8 },
+    { ch: 6, name: 'Expedición: ida y vuelta', goal: "Ve por la gema del fondo y regresa por el otro camino.",
+      hint: "Primero baja por la izquierda, recorre el fondo y sube por la derecha.",
+      map: ['H#######F#', '.#######.#', '.#######.#', '..GE..GE.#', '##########', '##########'], blocks: B_ALLFN, best: 12 },
+    { ch: 6, name: 'Expedición: el laberinto', goal: "El laberinto más grande. ¡Tu mejor programa!",
+      hint: "Combina un truco con \"repetir hasta la meta\" y las dos condiciones.",
+      map: ['H.E..#######', '####.#######', '####..G.E###', '########.###', '########..G#', '##########.#', '##########.F'], blocks: B_ALLFN, best: 8 },
+    { ch: 6, name: 'Expedición: el tesoro final', goal: "El gran final: gemas, slimes, cuevas y un camino largo.",
+      hint: "Usa un truco para las cuevas y \"repetir\" para el pasillo con slimes.",
+      map: ['##G##G##G###', '##.##.##.###', 'H..........#', '##########.#', '#F.E.E.E...#', '############'], blocks: B_ALLFN, best: 27 }
   ];
 
   var DIRS = {
@@ -136,7 +210,9 @@
     repeat: { label: 'repetir', icon: '↻', cls: 'b-loop', container: true },
     ifEnemy: { label: 'si hay enemigo enfrente', icon: '?', cls: 'b-if', container: true, code: 'if heroe.hay_enemigo_enfrente():' },
     untilGoal: { label: 'repetir hasta llegar a la meta', icon: '⟳', cls: 'b-loop', container: true, code: 'while not heroe.en_la_meta():' },
-    ifPath: { label: 'si hay camino … si no', icon: '?', cls: 'b-if', container: true, hasElse: true }
+    ifPath: { label: 'si hay camino … si no', icon: '?', cls: 'b-if', container: true, hasElse: true },
+    defFn: { label: 'definir truco', icon: '★', cls: 'b-fn', container: true, code: 'def truco():' },
+    callFn: { label: 'hacer truco', icon: '★', cls: 'b-fn', code: 'truco()' }
   };
   var PATH_DIRS = [['right', 'derecha', 'derecha'], ['left', 'izquierda', 'izquierda'], ['up', 'arriba', 'arriba'], ['down', 'abajo', 'abajo']];
 
@@ -362,11 +438,22 @@
     });
   }
 
+  function findType(type, list) {
+    list = list || program;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].type === type) return list[i];
+      var k = findType(type, kids(list[i]));
+      if (k) return k;
+    }
+    return null;
+  }
   function addBlock(type) {
     if (running) return;
+    if (type === 'defFn' && findType('defFn')) { say('Ya tienes un truco. Mete los bloques dentro de "definir truco".'); return; }
     if (countBlocks() >= MAX_BLOCKS) { say('Tu programa ya tiene ' + MAX_BLOCKS + ' bloques. Prueba con "repetir".'); return; }
     var node = newNode(type);
     var target = program;
+    if (type === 'defFn') { program.unshift(node); selectedId = node.id; selectedBranch = 'body'; renderWorkspace(); return; }
     if (selectedId) {
       var loc = find(selectedId);
       if (loc && loc.node.body) target = branchList(loc.node, selectedBranch) || loc.node.body; else selectedId = null;
@@ -389,7 +476,8 @@
     var c = countBlocks();
     countEl.textContent = c + (c === 1 ? ' bloque' : ' bloques');
     renderGoals();
-    codeOut.textContent = toCode(program, '') || '# Tu programa está vacío';
+    var ordered = program.filter(function (n) { return n.type === 'defFn'; }).concat(program.filter(function (n) { return n.type !== 'defFn'; }));
+    codeOut.textContent = toCode(ordered, '') || '# Tu programa está vacío';
   }
 
   function renderNode(node) {
@@ -512,6 +600,9 @@
     return list.map(function (n) {
       if (n.type === 'repeat') {
         return pad + 'for i in range(' + n.n + '):\n' + (toCode(n.body, pad + '    ') || pad + '    pass');
+      }
+      if (n.type === 'defFn') {
+        return pad + 'def truco():\n' + (toCode(n.body, pad + '    ') || pad + '    pass') + '\n';
       }
       if (n.type === 'ifEnemy' || n.type === 'untilGoal') {
         return pad + BLOCKS[n.type].code + '\n' + (toCode(n.body, pad + '    ') || pad + '    pass');
@@ -673,6 +764,7 @@
       t.list.splice(idx, 0, loc.node);
     } else {
       if (countBlocks() >= MAX_BLOCKS) { say('Tu programa ya tiene ' + MAX_BLOCKS + ' bloques. Prueba con "repetir".'); return; }
+      if (drag.source.type === 'defFn' && findType('defFn')) { say('Ya tienes un truco. Mete los bloques dentro de "definir truco".'); return; }
       t.list.splice(t.index, 0, newNode(drag.source.type));
     }
     renderWorkspace();
@@ -709,10 +801,23 @@
   }
 
   // Ejecuta el programa paso a paso (cada "yield" es una acción animada)
+  var fnDepth = 0;
   function* exec(list) {
     for (var i = 0; i < list.length; i++) {
       var n = list[i];
       if (game.failed) return;
+      if (n.type === 'defFn') continue; // la definición no se ejecuta sola
+      if (n.type === 'callFn') {
+        var def = findType('defFn');
+        yield { highlight: n.id, wait: true };
+        if (!def) { fail('Usaste "hacer truco", pero todavía no defines el truco. Agrega "definir truco" con bloques adentro.'); return; }
+        if (fnDepth > 6) { fail('El truco se llama a sí mismo sin parar. Quita "hacer truco" de adentro de "definir truco".'); return; }
+        fnDepth++;
+        yield* exec(def.body);
+        fnDepth--;
+        if (game.failed || game.won) return;
+        continue;
+      }
       if (n.type === 'repeat') {
         for (var k = 0; k < n.n; k++) {
           yield { highlight: n.id, wait: true };
@@ -785,6 +890,7 @@
     if (!program.length) { say('Primero agrega bloques a tu programa.'); return; }
     hideOverlay();
     loadGame();
+    fnDepth = 0;
     running = true;
     document.body.classList.add('game-running');
     runBtn.disabled = true;
@@ -905,7 +1011,7 @@
         b.innerHTML = '<span class="gm-ch-num">' + (locked ? ICON_LOCK : (done === idx.length ? ICON_CHECK : (c + 1))) + '</span>' +
           '<span class="gm-ch-text"><strong></strong><small></small></span>';
         b.querySelector('strong').textContent = C.name;
-        b.querySelector('small').textContent = locked ? 'Bloqueado' : done + ' de ' + idx.length + ' niveles';
+        b.querySelector('small').textContent = (C.session ? 'Sesión 45 min · ' : '') + (locked ? 'Bloqueado' : done + ' de ' + idx.length + ' niveles');
         b.setAttribute('aria-label', 'Capítulo ' + (c + 1) + ': ' + C.name + (locked ? ' (bloqueado)' : ', ' + done + ' de ' + idx.length + ' niveles'));
         if (c === curCh) b.setAttribute('aria-current', 'true');
         b.addEventListener('click', function () {
