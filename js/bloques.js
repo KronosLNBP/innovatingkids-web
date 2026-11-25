@@ -220,7 +220,10 @@
   };
   var SHORT = { right: 'derecha', left: 'izquierda', up: 'arriba', down: 'abajo', attack: 'atacar', repeat: 'repetir',
     ifEnemy: 'si enemigo', untilGoal: 'hasta la meta', ifPath: 'si hay camino', defFn: 'definir truco', callFn: 'hacer truco' };
-  var SHORT_WORLD = { navidad: { attack: 'bola de nieve', ifEnemy: 'si muñeco' }, parque: { attack: 'espantar' } };
+  var SHORT_WORLD = { navidad: { attack: 'bola de nieve', ifEnemy: 'si muñeco' }, parque: { attack: 'espantar' }, jurasico: { attack: 'rugir', ifEnemy: 'si raptor', untilGoal: 'hasta el nido' } };
+  // Nombres del código Python en algunos mundos (solo en la vista de código)
+  var CODE_WORDS = { jurasico: [[/heroe\./g, ''], [/atacar\(\)/g, 'rugir()'], [/hay_enemigo_enfrente/g, 'hay_raptor_enfrente'], [/en_la_meta/g, 'en_el_nido']] };
+  function codeWords(t) { var l = CODE_WORDS[prefs.world]; if (l) l.forEach(function (r) { t = t.replace(r[0], r[1]); }); return t; }
   function shortLabel(t) { var w = SHORT_WORLD[prefs.world]; return (w && w[t]) || SHORT[t] || t; }
   var PATH_DIRS = [['right', 'derecha', 'derecha'], ['left', 'izquierda', 'izquierda'], ['up', 'arriba', 'arriba'], ['down', 'abajo', 'abajo']];
 
@@ -316,6 +319,9 @@
     { id: 'ninja', name: 'Ninja' },
     { id: 'vikinga', name: 'Guerrera vikinga' },
     { id: 'elfo', name: 'Elfo' },
+    { id: 'dino', name: 'Dino bebé' },
+    { id: 'tricera', name: 'Triceratops' },
+    { id: 'exploradora', name: 'Exploradora' },
     { id: 'reno', name: 'Reno' },
     { id: 'piloto', name: 'Piloto espacial' },
     { id: 'astronauta', name: 'Astronauta' },
@@ -328,10 +334,11 @@
     { id: 'parque', name: 'Parque' },
     { id: 'pirata', name: 'Isla pirata' },
     { id: 'castillo', name: 'Castillo' },
-    { id: 'navidad', name: 'Navidad' }
+    { id: 'navidad', name: 'Navidad' },
+    { id: 'jurasico', name: 'Jurásico' }
   ];
   // Héroe que se elige solo al cambiar de mundo (si el niño no había elegido otro)
-  var WORLD_HERO = { parque: 'perro', pirata: 'pirata', castillo: 'vikinga', espacio: 'astronauta', bosque: 'ik', navidad: 'elfo' };
+  var WORLD_HERO = { parque: 'perro', pirata: 'pirata', castillo: 'vikinga', espacio: 'astronauta', bosque: 'ik', navidad: 'elfo', jurasico: 'dino' };
   if (CFG && CFG.heroes) HEROES = HEROES.filter(function (h) { return CFG.heroes.indexOf(h.id) > -1; });
   if (CFG && CFG.world) WORLDS = WORLDS.filter(function (w) { return w.id === CFG.world; });
   var PREFS_KEY = (CFG && CFG.prefsKey) || 'ik-bloques-prefs';
@@ -377,6 +384,15 @@
       [/Slimes/g, 'Murciélagos'], [/Slime/g, 'Murciélago'], [/slimes/g, 'murciélagos'], [/slime/g, 'murciélago'],
       [/a la bandera/g, 'a la puerta'], [/la bandera/g, 'la puerta'], [/La bandera/g, 'La puerta'], [/bandera/g, 'puerta'],
       [/los árboles/g, 'los muros'], [/árboles/g, 'muros']
+    ],
+    jurasico: [
+      [/todas las gemas/g, 'todos los huevos'], [/las gemas/g, 'los huevos'], [/Las gemas/g, 'Los huevos'], [/una gema/g, 'un huevo'],
+      [/las (\d+) gemas/g, 'los $1 huevos'], [/gemas/g, 'huevos'], [/gema/g, 'huevo'], [/encima de ella/g, 'encima de él'], [/Gemas/g, 'Huevos'], [/Gema/g, 'Huevo'],
+      [/Derrota a los slimes/g, 'Asusta a los raptores'], [/Derrótalo/g, 'Asústalo'], [/derrota/g, 'asusta'],
+      [/Slimes/g, 'Raptores'], [/Slime/g, 'Raptor'], [/slimes/g, 'raptores'], [/slime/g, 'raptor'],
+      [/hasta la bandera/g, 'hasta el nido'], [/a la bandera/g, 'al nido'], [/la bandera/g, 'el nido'], [/La bandera/g, 'El nido'], [/bandera/g, 'nido'],
+      [/si hay enemigo enfrente/g, 'si hay raptor enfrente'], [/atacar/g, 'rugir'],
+      [/los árboles/g, 'las rocas'], [/árboles/g, 'rocas']
     ],
     navidad: [
       [/todas las gemas/g, 'todos los regalos'], [/las gemas/g, 'los regalos'], [/Las gemas/g, 'Los regalos'], [/una gema/g, 'un regalo'],
@@ -499,7 +515,8 @@
     countEl.textContent = c + (c === 1 ? ' bloque' : ' bloques');
     renderGoals();
     var ordered = program.filter(function (n) { return n.type === 'defFn'; }).concat(program.filter(function (n) { return n.type !== 'defFn'; }));
-    codeOut.textContent = toCode(ordered, '') || '# Tu programa está vacío';
+    codeOut.textContent = codeWords(toCode(ordered, '')) || '# Tu programa está vacío';
+    if (window.IKBloques) emit('change');
   }
 
   function renderNode(node) {
@@ -881,8 +898,8 @@
     if (DIRS[type]) {
       game.dir = type;
       var nx = h.x + DIRS[type].dx, ny = h.y + DIRS[type].dy;
-      if (blocked(nx, ny)) { bump(nx, ny); sfx('bump'); return fail('¡Ups! El héroe chocó. Revisa hacia dónde se mueve.'); }
-      if (game.enemies[nx + ',' + ny]) { bump(nx, ny); sfx('bump'); return fail('¡Un slime bloquea el camino! Usa "atacar" antes de avanzar.'); }
+      if (blocked(nx, ny)) { bump(nx, ny); sfx('bump'); game.failKind = 'choque'; return fail('¡Ups! El héroe chocó. Revisa hacia dónde se mueve.'); }
+      if (game.enemies[nx + ',' + ny]) { bump(nx, ny); sfx('bump'); game.failKind = 'enemigo'; return fail('¡Un slime bloquea el camino! Usa "atacar" antes de avanzar.'); }
       sfx('step');
       anim = { fx: h.x, fy: h.y, tx: nx, ty: ny, start: performance.now(), dur: stepMs() * 0.8 };
       h.x = nx; h.y = ny;
@@ -894,7 +911,7 @@
       var fk = frontKey();
       var p = fk.split(',');
       effects.push({ kind: 'slash', x: +p[0], y: +p[1], start: performance.now() });
-      sfx(prefs.hero === 'perro' ? 'woof' : prefs.hero === 'gato' ? 'meow' : 'hit');
+      sfx(prefs.hero === 'perro' ? 'woof' : prefs.hero === 'gato' ? 'meow' : (prefs.hero === 'dino' || prefs.hero === 'tricera') ? 'roar' : 'hit');
       if (game.enemies[fk]) {
         delete game.enemies[fk];
         effects.push({ kind: 'poof', x: +p[0], y: +p[1], start: performance.now() });
@@ -905,11 +922,17 @@
   function bump(x, y) { effects.push({ kind: 'bump', x: x, y: y, start: performance.now() }); }
   function fail(msg) { game.failed = msg; }
 
+  function emit(type, extra) {
+    var d = { type: type, level: levelIndex, count: countBlocks() };
+    if (extra) Object.keys(extra).forEach(function (k) { d[k] = extra[k]; });
+    document.dispatchEvent(new CustomEvent('ik:bloques', { detail: d }));
+  }
   function stepMs() { return fast ? 190 : 420; }
 
   function run() {
     if (running) return;
-    if (!program.length) { say('Primero agrega bloques a tu programa.'); return; }
+    if (window.IKBloques && typeof window.IKBloques.beforeRun === 'function' && window.IKBloques.beforeRun() === false) return;
+    if (!program.length) { say('Primero agrega bloques a tu programa.'); emit('empty'); return; }
     hideOverlay();
     loadGame();
     fnDepth = 0;
@@ -917,6 +940,7 @@
     document.body.classList.add('game-running');
     runBtn.disabled = true;
     say('Ejecutando tu programa…');
+    emit('run');
     if (window.innerWidth <= 640) {
       var wrapEl = canvas.parentNode, rct = wrapEl.getBoundingClientRect();
       if (rct.top < 0 || rct.bottom > window.innerHeight) wrapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -940,7 +964,7 @@
     document.body.classList.remove('game-running');
     runBtn.disabled = false;
     clearHighlight();
-    if (game.failed) { say(game.failed); showOverlay(false, game.failed); sfx('lose'); return; }
+    if (game.failed) { say(game.failed); showOverlay(false, game.failed); sfx('lose'); emit('fail', { msg: game.failed, kind: game.failKind || 'otro' }); return; }
     if (game.won) {
       sfx(prefs.world === 'pirata' ? 'treasure' : 'win');
       renderGoals();
@@ -953,6 +977,7 @@
         'Usaste ' + used + ' bloques. Reto: ¿puedes hacerlo con ' + best + '?';
       say('¡Nivel superado! ' + msg);
       showOverlay(true, msg, stars);
+      emit('win', { stars: stars, used: used, best: best, last: levelIndex === LEVELS.length - 1 });
       return;
     }
     var m = (game.flag.x === game.hero.x && game.flag.y === game.hero.y && gemsLeft()) ?
@@ -961,6 +986,7 @@
     say(m);
     showOverlay(false, m);
     sfx('lose');
+    emit('fail', { msg: m, kind: gemsLeft() && game.flag.x === game.hero.x && game.flag.y === game.hero.y ? 'gemas' : 'corto', left: gemsLeft() });
   }
 
   function stop() {
@@ -975,6 +1001,7 @@
   }
 
   function highlight(id) {
+    emit('step', { id: id });
     var el = workspace.querySelector('[data-id="' + id + '"]');
     if (el) el.classList.add('is-running');
     // En celular, que el bloque que se ejecuta se vea debajo del mapa
@@ -1205,6 +1232,7 @@
     loadGame();
     resize();
     say('Arma tu programa y presiona Ejecutar.');
+    emit('level', { L: LEVELS[i] });
   }
 
   // ---------- Dibujo ----------
@@ -1436,7 +1464,8 @@
     parque: { ground: ['#9BDB7A', '#90D36F'], path: ['#ECE6D6', '#E4DCC8'], edge: '#B9AE96', item: 'hueso', itemScale: 0.5, enemy: 'abeja', goal: 'casita' },
     pirata: { ground: ['#2E9BD6', '#2A93CC'], path: ['#F6DDA4', '#F0D394'], edge: '#C9A45E', item: 'moneda', itemScale: 0.42, enemy: 'cangrejo', goal: 'cofre', goalReady: 'cofreAbierto' },
     castillo: { ground: ['#3B3F5C', '#363A55'], path: ['#C3C3D1', '#B9B9C8'], edge: '#7E7E92', item: 'llave', itemScale: 0.55, enemy: 'murcielago', goal: 'puerta' },
-    navidad: { ground: ['#EEF5FB', '#E3EEF7'], path: ['#BFE3F5', '#B2DBEF'], edge: '#7FB3CF', item: 'regalo', itemScale: 0.5, enemy: 'munieco', goal: 'trineo' }
+    navidad: { ground: ['#EEF5FB', '#E3EEF7'], path: ['#BFE3F5', '#B2DBEF'], edge: '#7FB3CF', item: 'regalo', itemScale: 0.5, enemy: 'munieco', goal: 'trineo' },
+    jurasico: { ground: ['#7CB342', '#72A83B'], path: ['#DDC195', '#D3B585'], edge: '#A1835A', item: 'huevo', itemScale: 0.46, enemy: 'raptor', goal: 'nido' }
   };
   function drawThemeMap(T, now, w) {
     var th = THEME_MAP[w], x, y;
@@ -1479,6 +1508,7 @@
         if (w === 'parque') drawBush(x * T, y * T, T, hv);
         else if (w === 'pirata') { if (hv > 0.55) drawRock(x * T, y * T, T, hv); else if (hv < 0.18) drawPalm(x * T, y * T, T, now, hv); }
         else if (w === 'navidad') drawPine(x * T, y * T, T, hv, now);
+        else if (w === 'jurasico') drawJungle(x * T, y * T, T, hv, now);
         else drawWall(x * T, y * T, T, hv, now);
       }
     }
@@ -1491,6 +1521,38 @@
         ctx.beginPath(); ctx.arc(sxp, syp, Math.max(1.5, T * (0.025 + hash(k, 3) * 0.025)), 0, 7); ctx.fill();
       }
     }
+  }
+  function drawJungle(x, y, T, hv, now) {
+    var cx = x + T / 2;
+    if (hv > 0.8) { // volcán con lava
+      ctx.fillStyle = '#6D4C41';
+      ctx.beginPath(); ctx.moveTo(x + T * 0.08, y + T * 0.9); ctx.lineTo(cx - T * 0.12, y + T * 0.3); ctx.lineTo(cx + T * 0.12, y + T * 0.3); ctx.lineTo(x + T * 0.92, y + T * 0.9); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#FF7043';
+      ctx.beginPath(); ctx.moveTo(cx - T * 0.12, y + T * 0.3); ctx.lineTo(cx + T * 0.12, y + T * 0.3); ctx.lineTo(cx + T * 0.04, y + T * 0.5); ctx.lineTo(cx - T * 0.06, y + T * 0.44); ctx.closePath(); ctx.fill();
+      var puff = (now / 1200 + hv * 5) % 1;
+      ctx.fillStyle = 'rgba(200,200,200,' + (0.6 * (1 - puff)) + ')';
+      ctx.beginPath(); ctx.arc(cx, y + T * (0.25 - puff * 0.2), T * (0.06 + puff * 0.08), 0, 7); ctx.fill();
+      return;
+    }
+    if (hv > 0.55) { // roca
+      ctx.fillStyle = 'rgba(0,0,0,.18)';
+      ctx.beginPath(); ctx.ellipse(cx, y + T * 0.84, T * 0.32, T * 0.08, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = '#8D8D8D';
+      ctx.beginPath(); ctx.moveTo(x + T * 0.18, y + T * 0.84); ctx.lineTo(x + T * 0.26, y + T * 0.46); ctx.lineTo(cx, y + T * 0.32); ctx.lineTo(x + T * 0.76, y + T * 0.44); ctx.lineTo(x + T * 0.84, y + T * 0.84); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#B0B0B0';
+      ctx.beginPath(); ctx.moveTo(x + T * 0.3, y + T * 0.5); ctx.lineTo(cx, y + T * 0.36); ctx.lineTo(cx, y + T * 0.6); ctx.closePath(); ctx.fill();
+      return;
+    }
+    // helecho gigante
+    var sway = Math.sin(now / 900 + hv * 9) * 0.08;
+    ctx.strokeStyle = '#2E7D32'; ctx.lineWidth = Math.max(2, T * 0.07); ctx.lineCap = 'round';
+    [-1.1, -0.6, 0, 0.6, 1.1].forEach(function (a, i) {
+      a += sway;
+      ctx.strokeStyle = i % 2 ? '#388E3C' : '#2E7D32';
+      ctx.beginPath(); ctx.moveTo(cx, y + T * 0.85);
+      ctx.quadraticCurveTo(cx + Math.sin(a) * T * 0.25, y + T * 0.45, cx + Math.sin(a) * T * 0.42, y + T * (0.2 + Math.abs(a) * 0.15));
+      ctx.stroke();
+    });
   }
   function drawPine(x, y, T, hv, now) {
     var cx = x + T / 2;
@@ -1746,6 +1808,26 @@
       document.body.classList.toggle('gm-in-view', entries[0].intersectionRatio > 0.25);
     }, { threshold: [0, 0.25, 0.5] }).observe(app);
   }
+
+  // API para páginas que agregan cosas al juego (p. ej. el tutor virtual de dinosaurios.html)
+  function fromSpec(spec) {
+    return spec.map(function (sp) {
+      var n = newNode(sp.t);
+      if (sp.n) n.n = sp.n;
+      if (sp.dir) n.dir = sp.dir;
+      if (sp.line) n.line = sp.line;
+      if (sp.body && n.body) n.body = fromSpec(sp.body);
+      if (sp.elseBody && n.elseBody) n.elseBody = fromSpec(sp.elseBody);
+      return n;
+    });
+  }
+  window.IKBloques = window.IKBloques || {};
+  window.IKBloques.setProgram = function (spec) { if (running) return; program = fromSpec(spec); selectedId = null; renderWorkspace(); };
+  window.IKBloques.program = function () { return program; };
+  window.IKBloques.level = function () { return { index: levelIndex, L: LEVELS[levelIndex], total: LEVELS.length, progress: progress }; };
+  window.IKBloques.run = function () { run(); };
+  window.IKBloques.isRunning = function () { return running; };
+  window.IKBloques.tr = tr;
 
   // Empieza en el primer nivel sin terminar
   var start = 0;

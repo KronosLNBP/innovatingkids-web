@@ -70,6 +70,41 @@
       pal: { r: '#D32F2F', R: '#8E1B1B', y: '#FFD23F', g: '#2E9D3E', G: '#1B6E2A' },
       rows: ['..gg......r.', '..gG..rrrrr.', '.yy..rrrrrr.', '.yyrrrrrrrr.', '.rrrrrrrrrr.', '.rrrrrrrrr..', '..RRRRRRR...', '.y.y...y.y..', 'yyyyyyyyyyy.']
     },
+    // ---------- Dinosaurios ----------
+    dino: {
+      pal: { g: '#4CAF50', G: '#2E7D32', y: '#C5E1A5', k: '#1B1B1B', w: '#FFFFFF', r: '#E57373' },
+      rows: ['......gggg..', '.....gggggg.', '.....gwkgggg', '.....ggggggg', '.....ggggrr.', 'G...ggggg...',
+        'GG.gggggggg.', '.GGgyyyggg..', '..ggyyyyg...', '...ggggg....', '...gg..gg...', '...GG..GG...']
+    },
+    tricera: {
+      pal: { o: '#FF9800', O: '#E65100', y: '#FFE0B2', k: '#1B1B1B', w: '#FFFFFF', b: '#8D6E63' },
+      rows: ['..w.....w...', '..ww...ww...', '.oooooooo...', 'oOoooooooo..', 'oOwkoooooow.', 'oOoooooooww.',
+        '.ooooooooo..', '..oyyyyoooo.', '..oyyyyooooo', '...oooooooo.', '...oo..oo...', '...OO..OO...']
+    },
+    exploradora: {
+      pal: { h: '#D7B377', H: '#A1887F', s: '#F2C29B', k: '#1B1B1B', b: '#5D4037', g: '#689F38', G: '#33691E', r: '#E57373' },
+      rows: ['............', '...hhhhhh...', '.HHHHHHHHHH.', '..bssssssb..', '..bskssksb..', '..bssrrssb..',
+        '...ssssss...', '..gggggggg..', '.sggGggGggs.', '..gggggggg..', '...GG..GG...', '...bb..bb...']
+    },
+    huevo: {
+      pal: { e: '#FFF8E1', E: '#E0D3B0', g: '#81C784', o: '#A1887F' },
+      rows: ['...eeee...', '..eeeeee..', '.eeggeeee.', '.eeeeeoee.', 'eeoeeeeeee', 'eeeeeggeee', 'eEeeeeeeEe', '.EEeeeeEE.', '..EEEEEE..']
+    },
+    raptor: {
+      pal: { p: '#8E24AA', P: '#5E35B1', y: '#FFD54F', k: '#1B1B1B', w: '#FFFFFF' },
+      rows: ['.....pppp...', '....pppppp..', '....pwkpppyy', '....pppppp..', 'P...pppp....', 'PP.pppppp...',
+        '.PPpppyypp..', '..pppyyp.p..', '...ppppp....', '...p...p....', '..pp...pp...', '..PP...PP...']
+    },
+    nido: {
+      pal: { b: '#8D6E63', B: '#5D4037', y: '#D7CCC8', e: '#FFF8E1', g: '#81C784' },
+      rows: ['............', '....e..e....', '...eee.ee...', '..BeeegeeB..', '.bBBbbbbBBb.', 'bbBbbBbbBbbb', '.bbbBbbBbbb.', '..BBBBBBBB..']
+    },
+    profeRex: {
+      pal: { g: '#66BB6A', G: '#2E7D32', y: '#DCEDC8', k: '#1B1B1B', w: '#FFFFFF', b: '#1E88E5', r: '#E57373', o: '#FFB300' },
+      rows: ['.......ggggggg..', '......ggggggggg.', '.....ggkkkgkkkg.', '.....ggkwbkkwbkk', '.....ggkkkgkkkg.', '.....ggggggggggg',
+        '.....gggggggrrr.', '..G..ggggggggg..', '.GG.gggggggggg..', 'GGggggggoggg....', '.G.ggyyyyogg.g..', '...ggyyyyyggg...',
+        '...ggyyyyygg....', '....ggggggg.....', '....gg...gg.....', '...GGG..GGG.....']
+    },
     // ---------- Objetos ----------
     hueso: {
       pal: { w: '#FFFFFF', g: '#CFD8DC' },

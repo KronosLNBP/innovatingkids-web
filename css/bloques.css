@@ -646,3 +646,71 @@ button.hw-card:hover:not(:disabled) { transform: translateY(-3px); border-color:
   .palette-list .pblk .pblk-short { display: none; }
   .palette-list .pblk .blk-icon { width: 32px; height: 32px; font-size: 22px; background: transparent; }
 }
+
+/* ===== Vivir con dinosaurios: Profe Rex y editor de código (dinosaurios.html) ===== */
+.is-dinos .game-hero { background-color: #2E5E1F; background-image: radial-gradient(rgba(255, 255, 255, .08) 2px, transparent 2.5px), linear-gradient(160deg, #3E7B27, #1F4A1A); background-size: 34px 34px, auto; }
+.is-dinos .gm-app { box-shadow: 0 0 0 4px #8BC34A, 0 24px 60px rgba(11, 37, 69, .28); }
+.gm-canvas-wrap[data-world="jurasico"] { background: #7CB342; }
+.dt-tutor { display: flex; align-items: flex-start; gap: 12px; }
+.dt-avatar { flex: none; width: 72px; height: 72px; border-radius: 18px; background: #E8F5E9; display: flex; align-items: center; justify-content: center; }
+.dt-avatar canvas { display: block; }
+.dt-tutor.is-talk .dt-avatar { animation: dt-talk .6s ease 2; }
+.dt-tutor.is-happy .dt-avatar, .dt-tutor.is-party .dt-avatar { animation: dt-jump .5s ease 3; }
+.dt-tutor.is-worry .dt-avatar { animation: dt-shake .45s ease 2; }
+.dt-tutor.is-think .dt-avatar { animation: dt-tilt 1.2s ease 1; }
+@keyframes dt-talk { 50% { transform: scale(1.06); } }
+@keyframes dt-jump { 40% { transform: translateY(-12px) rotate(-4deg); } }
+@keyframes dt-shake { 25%, 75% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
+@keyframes dt-tilt { 50% { transform: rotate(-8deg); } }
+.dt-bubble { position: relative; flex: 1; min-width: 0; background: #FFFFFF; color: #1D3F51; border-radius: 16px; padding: 10px 14px; box-shadow: 0 6px 16px rgba(0, 0, 0, .18); }
+.dt-bubble::before { content: ''; position: absolute; left: -8px; top: 22px; border: 8px solid transparent; border-left: 0; border-right-color: #FFFFFF; }
+.dt-name { margin: 0; font-size: 12px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: #2E7D32; }
+.dt-text { margin: 2px 0 8px; font-size: 16px; font-weight: 700; line-height: 1.4; min-height: 44px; white-space: pre-line; }
+.dt-tutor.is-party .dt-bubble { background: #FFF8E1; }
+.dt-tutor.is-party .dt-bubble::before { border-right-color: #FFF8E1; }
+.dt-tutor.is-worry .dt-bubble { background: #FFF3E0; }
+.dt-tutor.is-worry .dt-bubble::before { border-right-color: #FFF3E0; }
+.dt-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.dt-btn { min-height: 40px; padding: 0 12px; border-radius: 10px; border: 2px solid #C8E6C9; background: #F1F8E9; color: #1B5E20; font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; }
+.dt-btn:hover { border-color: #66BB6A; }
+#dt-help { background: #2E7D32; color: #fff; border-color: #2E7D32; }
+.dt-clock { margin: 4px 0 0; font-size: 14px; font-weight: 800; color: #C5E1A5; }
+.dt-code { display: none; background: var(--gm-panel); border: 1px solid var(--gm-line); border-radius: 20px; padding: 14px; flex-direction: column; gap: 10px; min-width: 0; }
+.gm-app.is-code .dt-code { display: flex; }
+.gm-app.is-code .gm-code, .gm-app.is-code .palette { display: none !important; }
+.gm-app.is-code .gm-editor { grid-template-columns: minmax(0, 1fr); }
+.dt-code h3 { font-size: 13px; font-weight: 900; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gm-muted); margin: 0; }
+.dt-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.dt-chip { min-height: 40px; padding: 0 10px; border-radius: 10px; border: 0; background: #1E6FD9; color: #fff; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(0, 0, 0, .25); }
+.dt-chip:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, .25); }
+.dt-ed { position: relative; display: flex; height: 300px; background: #0E2230; border-radius: 14px; border: 1px solid rgba(255, 255, 255, .12); overflow: hidden; }
+.dt-ed:focus-within { border-color: var(--yellow); }
+.dt-lines, .dt-ed textarea { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 15px; line-height: 22px; padding: 10px 0; margin: 0; }
+.dt-lines { width: 38px; flex: none; text-align: right; padding-right: 8px; color: #5F7F95; background: #0A1B27; overflow: hidden; white-space: pre; user-select: none; }
+.dt-ed textarea { flex: 1; min-width: 0; border: 0; outline: none; resize: none; background: transparent; color: #E6F1F8; padding-left: 10px; padding-right: 10px; white-space: pre; overflow: auto; caret-color: var(--yellow); tab-size: 4; }
+.dt-mark { position: absolute; left: 0; right: 0; pointer-events: none; border-left: 4px solid #FFD23F; background: rgba(255, 210, 63, .18); }
+.dt-mark.is-error { border-left-color: #EF5350; background: rgba(239, 83, 80, .25); }
+.dt-err { margin: 0; padding: 10px 12px; border-radius: 10px; background: rgba(239, 83, 80, .18); color: #FFCCBC; font-weight: 700; }
+@media (max-width: 640px) {
+  .dt-tutor { gap: 8px; }
+  .dt-avatar { width: 48px; height: 48px; border-radius: 12px; }
+  .dt-avatar canvas { width: 46px !important; height: 46px !important; }
+  .dt-bubble { padding: 7px 10px; border-radius: 12px; }
+  .dt-bubble::before { top: 14px; }
+  .dt-name { display: none; }
+  .dt-text { font-size: 14px; margin: 0 0 6px; min-height: 0; max-height: 4.2em; overflow-y: auto; }
+  .dt-btn { min-height: 34px; font-size: 13px; padding: 0 10px; }
+  .dt-ed { height: 220px; }
+  .dt-lines, .dt-ed textarea { font-size: 14px; line-height: 21px; }
+  .dt-chip { min-height: 38px; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .dt-tutor .dt-avatar { animation: none !important; } }
+.game-running .dt-run .gm-btn-run { opacity: .55; pointer-events: none; }
+@media (max-width: 960px) { .dt-run { display: none; } }
+@media (max-width: 640px) {
+  .dt-typing .gm-mapzone { position: static; }
+  .dt-code { padding: 10px; gap: 8px; }
+  .dt-code .ws-head h3 { font-size: 12px; }
+  .dt-code .ws-clear { min-height: 36px; padding: 0 10px; font-size: 13px; }
+  .dt-chips { gap: 5px; }
+}

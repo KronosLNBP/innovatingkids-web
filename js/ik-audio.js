@@ -55,6 +55,7 @@
     woof: function (t) { tone(420, t, 0.08, 'sawtooth', 0.2, null, 240); tone(380, t + 0.13, 0.09, 'sawtooth', 0.2, null, 220); },
     meow: function (t) { tone(600, t, 0.35, 'triangle', 0.18, null, 900); tone(900, t + 0.18, 0.25, 'triangle', 0.12, null, 500); },
     treasure: function (t) { [523, 784, 1047, 1319, 1568, 2093].forEach(function (f, i) { tone(f, t + i * 0.07, 0.2, 'triangle', 0.13); }); },
+    roar: function (t) { tone(140, t, 0.45, 'sawtooth', 0.22, null, 70); noise(t, 0.4, 0.25, 500); tone(210, t + 0.05, 0.3, 'square', 0.08, null, 90); },
     power: function (t) { tone(200, t, 0.5, 'sawtooth', 0.12, null, 1200); }
   };
   function play(name) {
@@ -69,6 +70,7 @@
     parque: { bpm: 132, wave: 'square', notes: [0, 2, 4, 7, 4, 2, 0, 7, 9, 7, 4, 2, 4, 2, 0, -5], base: 440 },
     pirata: { bpm: 140, wave: 'square', notes: [0, 3, 7, 3, 0, 3, 7, 10, 8, 7, 3, 7, 5, 3, 2, -5], base: 294 },
     castillo: { bpm: 104, wave: 'sawtooth', notes: [0, 3, 7, 12, 10, 7, 3, 5, 7, 3, 0, -2, 0, 3, 2, -5], base: 262 },
+    jurasico: { bpm: 112, wave: 'triangle', notes: [0, 3, 5, 7, 5, 3, 0, -99, 0, 3, 5, 10, 7, 5, 3, -99], base: 220 },
     navidad: { bpm: 150, wave: 'triangle', notes: [4, 4, 4, -99, 4, 4, 4, -99, 4, 7, 0, 2, 4, -99, -99, -99, 5, 5, 5, 5, 5, 4, 4, 4, 4, 2, 2, 4, 2, -99, 7, -99], base: 523 },
     hardware: { bpm: 124, wave: 'square', notes: [0, 4, 7, 11, 12, 11, 7, 4, 2, 5, 9, 12, 9, 5, 2, 7], base: 392 }
   };

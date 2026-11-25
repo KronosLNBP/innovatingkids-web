@@ -26,6 +26,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.innovatingkids.com.mx/dinosaurios.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.innovatingkids.com.mx/navidad.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
