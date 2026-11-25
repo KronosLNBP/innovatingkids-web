@@ -1,5 +1,6 @@
 // Panel de administración del portal de alumnos (admin.html).
 // Solo funciona para cuentas con documento admins/{uid} en Firestore (ver firestore.rules).
+import { CONTENIDO, URL_GUIA } from './contenido-cursos.js';
 import {
   listo, entrar, salir, alCambiarSesion, recuperar, leer, listar, guardar, ahora,
   crearCuenta, usuarioAEmail, usuarioValido, esCorreoReal, mensajeError, esc, urlSegura
@@ -373,6 +374,7 @@ $('f-reemplazo').addEventListener('submit', async (ev) => {
 // ---------- Cursos ----------
 function pintarCursos() {
   $('btn-semilla').hidden = cursos.length > 0;
+  $('btn-contenido').hidden = !cursosSinContenido().length;
   $('lista-cursos').innerHTML = cursos.length
     ? cursos.map((c) =>
       '<article class="portal-card admin-curso"><div class="admin-edit-head"><h3>' + esc(c.nombre) + '</h3>' +
@@ -386,12 +388,41 @@ $('btn-semilla').addEventListener('click', async () => {
   try {
     for (let i = 0; i < CURSOS_SITIO.length; i++) {
       const [id, nombre] = CURSOS_SITIO[i];
-      await guardar('cursos/' + id, { nombre, orden: i + 1, modulos: [] }, false);
-      const items = (TEMARIOS[id] || []).map(([titulo, url]) => ({ titulo, url }));
-      await guardar('cursos/' + id + '/privado/materiales', { items }, false);
+      await guardar('cursos/' + id, { nombre, orden: i + 1, modulos: modulosSugeridos(id) }, false);
+      await guardar('cursos/' + id + '/privado/materiales', { items: materialesSugeridos(id, []) }, false);
     }
     await cargarTodo();
-    aviso('Se cargaron los 6 cursos. Ahora agrega sus módulos.');
+    aviso('Se cargaron los 6 cursos con sus módulos, su guía y sus temarios.');
+  } catch (e) { aviso(mensajeError(e), true); }
+  b.disabled = false;
+});
+
+// Contenido sugerido (js/contenido-cursos.js): módulos y guía del alumno de cada curso del sitio
+function modulosSugeridos(id) {
+  const c = CONTENIDO.find((x) => x.id === id);
+  return c ? c.modulos.map((m) => ({ id: idModulo(), titulo: m.titulo })) : [];
+}
+function materialesSugeridos(id, actuales) {
+  const items = actuales.slice();
+  const agregar = (titulo, url) => { if (!items.some((m) => m.url === url)) items.push({ titulo, url }); };
+  if (CONTENIDO.some((x) => x.id === id)) agregar('Guía del curso: módulos, actividades y retos', URL_GUIA + id);
+  (TEMARIOS[id] || []).forEach(([titulo, url]) => agregar(titulo, url));
+  return items;
+}
+function cursosSinContenido() {
+  return cursos.filter((c) => !(c.modulos || []).length && CONTENIDO.some((x) => x.id === c.id));
+}
+$('btn-contenido').addEventListener('click', async () => {
+  const b = $('btn-contenido'); b.disabled = true;
+  const pendientes = cursosSinContenido();
+  try {
+    for (const c of pendientes) {
+      await guardar('cursos/' + c.id, { modulos: modulosSugeridos(c.id) });
+      const mat = await leer('cursos/' + c.id + '/privado/materiales').catch(() => null);
+      await guardar('cursos/' + c.id + '/privado/materiales', { items: materialesSugeridos(c.id, (mat && mat.items) || []) }, false);
+    }
+    await cargarTodo();
+    aviso(pendientes.length === 1 ? 'Se agregó el contenido a 1 curso.' : 'Se agregó el contenido a ' + pendientes.length + ' cursos.');
   } catch (e) { aviso(mensajeError(e), true); }
   b.disabled = false;
 });

@@ -141,3 +141,10 @@ python3 -m http.server 8000
 ```
 
 y entra a http://localhost:8000.
+
+## Contenido de los cursos
+
+`js/contenido-cursos.js` tiene los 8 módulos sugeridos de cada curso del sitio (objetivo, temas, actividad y reto).
+En el panel (pestaña Cursos), el botón «Agregar módulos y guías sugeridos» llena los cursos que todavía no tienen
+módulos y agrega a sus materiales la guía del alumno (`guia.html?curso=ID`, solo para alumnos con sesión) y los temarios en PDF.
+Los cursos que ya tienen módulos no se modifican.
