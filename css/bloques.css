@@ -727,3 +727,40 @@ button.hw-card:hover:not(:disabled) { transform: translateY(-3px); border-color:
 .gate-state .hero-ctas { justify-content: center; }
 .gate-locked .game-hero .hero-ctas { display: none; }
 @media (max-width: 640px) { .gate-locked .game-hero .page-hero-inner { padding-top: 28px; padding-bottom: 28px; } .gate { padding: 24px 0 40px; } }
+
+/* ===== Pista: bloque que falló y bloques sugeridos parpadean ===== */
+.blk-head.is-fail { animation: gm-blink-fail .55s ease-in-out 5; box-shadow: 0 0 0 4px #FF5252, 0 4px 0 rgba(0, 0, 0, .28); }
+@keyframes gm-blink-fail { 50% { box-shadow: 0 0 0 6px #FFD23F, 0 0 18px 4px rgba(255, 210, 63, .8); filter: brightness(1.25); } }
+.pblk.is-hint { animation: gm-blink-hint .6s ease-in-out 8; }
+@keyframes gm-blink-hint { 50% { box-shadow: 0 0 0 5px #FFD23F, 0 0 20px 6px rgba(255, 210, 63, .85); transform: scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .blk-head.is-fail, .pblk.is-hint { animation: none; } .pblk.is-hint { box-shadow: 0 0 0 4px #FFD23F; } }
+
+/* ===== Ejecutar arriba (escritorio) y pantalla completa ===== */
+.gm-topbar { display: flex; gap: 10px; width: 100%; flex-basis: 100%; }
+.gm-topbar .gm-btn-run { flex: 1 1 260px; max-width: 420px; min-height: 52px; font-size: 19px; }
+.gm-topbar .gm-btn { min-height: 52px; }
+@media (max-width: 960px) { .gm-topbar { display: none; } }
+.gm-custom { flex-wrap: wrap; }
+.gm-fs { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .08); color: var(--gm-text); font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; order: 10; margin-left: auto; }
+.gm-fs:hover { border-color: var(--yellow); }
+.gm-fs[aria-pressed="true"] { background: var(--yellow); color: var(--navy); border-color: var(--yellow); }
+.gm-full body { overflow: hidden; }
+.gm-full .gm-app { position: fixed; inset: 0; z-index: 300; border-radius: 0; overflow-y: auto; overscroll-behavior: contain; max-width: none; margin: 0; box-shadow: none !important; padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+.gm-app:fullscreen { overflow-y: auto; background: var(--gm-bg); }
+.gm-full .gm-mapzone { top: 0; }
+.gm-full .mobile-bar, .gm-full .wa-float, .gm-full .back-to-top { display: none !important; }
+@media (max-width: 640px) {
+  .gm-fs { padding: 0 12px; margin: 0; order: -1; }
+  .gm-fs span { display: inline; font-size: 13px; }
+  .gm-full .gm-mapzone { margin: 0 -14px; }
+}
+.dt-mark.is-blink { animation: dt-blink .5s ease-in-out 6; }
+@keyframes dt-blink { 50% { background: rgba(255, 210, 63, .45); border-left-color: #FFD23F; } }
+@media (prefers-reduced-motion: reduce) { .dt-mark.is-blink { animation: none; } }
+/* Valle de criaturas */
+.is-criaturas .game-hero { background-color: #3949AB; background-image: radial-gradient(rgba(255, 255, 255, .12) 2px, transparent 2.5px), linear-gradient(160deg, #5C6BC0, #283593); background-size: 30px 30px, auto; }
+.is-criaturas .gm-app { box-shadow: 0 0 0 4px #F48FB1, 0 24px 60px rgba(11, 37, 69, .28); }
+.gm-canvas-wrap[data-world="criaturas"] { background: #A5D6A7; }
+.is-criaturas .dt-name { color: #6A1B9A; }
+.is-criaturas #dt-help { background: #6A1B9A; border-color: #6A1B9A; }
+.is-criaturas .dt-avatar { background: #F3E5F5; }

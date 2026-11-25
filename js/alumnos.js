@@ -10,6 +10,7 @@ import {
 // Rutas de aprendizaje (juegos). total = número de niveles de cada juego.
 const NIVELES = [
   { id: 'hardware', titulo: 'Computación básica: hardware', texto: 'Partes de la computadora, arma una PC y 3 sesiones de 45 min: puertos, seguridad y archivos.', url: 'juego-hardware.html', total: 9, sprite: 'perro' },
+  { id: 'criaturas', titulo: 'Exploradores de criaturas', texto: 'Clase de 45 min: hazte amigo de las criaturas del Valle con bloques y código, con Lumi como tutora.', url: 'criaturas.html', total: 9, sprite: 'ajolin' },
   { id: 'dinosaurios', titulo: 'Vivir con dinosaurios', texto: 'Clase de 45 min: 9 misiones con bloques y código, con Profe Rex como tutor.', url: 'dinosaurios.html', total: 9, sprite: 'dino' },
   { id: 'navidad', titulo: 'Aventura de Navidad', texto: 'Guía al elfo con bloques: recoge regalos y llega al trineo. Para 6 a 10 años.', url: 'navidad.html', total: 8, sprite: 'elfo' },
   { id: 'cubos', titulo: 'Mundo de Cubos (3D)', texto: 'Da instrucciones a Cubi para construir puentes y escaleras de cubos. Para 6 a 12 años, unos 20 minutos.', url: 'juego-cubos.html', total: 8, sprite: 'gato' },

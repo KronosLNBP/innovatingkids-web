@@ -1,4 +1,5 @@
-/* Innovating Kids — Profe Rex: tutor virtual de la clase "Vivir con dinosaurios".
+/* Innovating Kids — Tutor virtual de las clases con bloques y código (Profe Rex, Lumi…).
+   Los textos y nombres salen de window.IK_BLOQUES_CONFIG.tutor (ver js/dino-niveles.js o js/criaturas-niveles.js).
    Reacciona en tiempo real a lo que hace el alumno (escucha los eventos "ik:bloques" de js/bloques.js):
    presenta cada misión, da pistas si pasa tiempo sin avanzar, explica los errores y celebra.
    Es un tutor con reglas (no usa inteligencia artificial ni envía datos). También agrega el
@@ -6,6 +7,13 @@
 (function () {
   'use strict';
   var API = window.IKBloques, CFG = window.IK_BLOQUES_CONFIG;
+  var T = Object.assign({
+    nombre: 'Profe Rex', sprite: 'profeRex', alumno: 'guardián', heroe: 'Rexi', enemigo: 'raptor', item: 'huevo', items: 'huevos', meta: 'nido',
+    accion: 'rugir', obstaculo: 'una roca', emoji: '🦖', sonido: 'roar',
+    vivas: ['¡RAAAR de alegría! ¡Lo hiciste perfecto!', '¡Increíble, guardián! ¡Tres estrellas!', '¡Eres un genio del Jurásico!'],
+    final: '¡Completaste la clase! Gracias por tu ayuda, guardián.',
+    code: { attack: 'rugir', ifEnemy: 'hay_raptor_enfrente', untilGoal: 'en_el_nido' }
+  }, (CFG && CFG.tutor) || {});
   var zone = document.querySelector('.gm-mapzone'), app = document.querySelector('.gm-app');
   if (!API || !CFG || !zone || !app) return;
   var sfx = function (n) { if (window.IKAudio) window.IKAudio.play(n); };
@@ -17,12 +25,12 @@
   var tutor = document.createElement('div');
   tutor.className = 'dt-tutor';
   tutor.innerHTML = '<div class="dt-avatar" id="dt-avatar" aria-hidden="true"></div>' +
-    '<div class="dt-bubble"><p class="dt-name">Profe Rex</p><p class="dt-text" id="dt-text" aria-live="polite"></p>' +
+    '<div class="dt-bubble"><p class="dt-name">' + T.nombre + '</p><p class="dt-text" id="dt-text" aria-live="polite"></p>' +
     '<div class="dt-actions"><button type="button" class="dt-btn" id="dt-help">¿Me ayudas?</button>' +
     '<button type="button" class="dt-btn" id="dt-voice" aria-pressed="false">🔊 Voz: no</button></div></div>';
   zone.insertBefore(tutor, zone.firstChild);
   var avatar = document.getElementById('dt-avatar'), textEl = document.getElementById('dt-text');
-  if (window.IKSprites) avatar.appendChild(window.IKSprites.canvasOf('profeRex', 72));
+  if (window.IKSprites) avatar.appendChild(window.IKSprites.canvasOf(T.sprite, 72));
 
   var voice = false;
   try { voice = localStorage.getItem('dino-voz') === '1'; } catch (e) { /* sin almacenamiento */ }
@@ -67,7 +75,7 @@
     var m = Math.floor((Date.now() - start) / 60000);
     clock.textContent = '⏱ ' + Math.min(m, 99) + ' de 45 min';
     var lv = API.level();
-    [[15, '¡Llevamos 15 minutos de clase! Vas muy bien, guardián.'], [30, '¡30 minutos! Ya eres casi un experto en dinosaurios y programación.'],
+    [[15, '¡Llevamos 15 minutos de clase! Vas muy bien, ' + T.alumno + '.'], [30, '¡30 minutos! Ya eres casi un experto en programación.'],
       [40, 'Quedan 5 minutos de clase. ¡Vamos por la misión que sigue!']].forEach(function (p) {
       if (m >= p[0] && !said[p[0]] && !API.isRunning()) { said[p[0]] = true; if (lv.index < lv.total - 1 || !lv.progress[lv.index]) say(p[1], 'happy'); }
     });
@@ -95,8 +103,8 @@
   document.getElementById('dt-run').addEventListener('click', function () { API.run(); });
   var src = document.getElementById('dt-src'), linesEl = document.getElementById('dt-lines'), errEl = document.getElementById('dt-err');
   var CHIPS = {
-    right: 'mover_derecha()', left: 'mover_izquierda()', up: 'mover_arriba()', down: 'mover_abajo()', attack: 'rugir()',
-    repeat: 'for i in range(3):', ifEnemy: 'if hay_raptor_enfrente():', untilGoal: 'while not en_el_nido():', ifPath: "if hay_camino('abajo'):"
+    right: 'mover_derecha()', left: 'mover_izquierda()', up: 'mover_arriba()', down: 'mover_abajo()', attack: T.code.attack + '()',
+    repeat: 'for i in range(3):', ifEnemy: 'if ' + T.code.ifEnemy + '():', untilGoal: 'while not ' + T.code.untilGoal + '():', ifPath: "if hay_camino('abajo'):"
   };
   function renderChips(L) {
     var box = document.getElementById('dt-chips');
@@ -188,8 +196,12 @@
   });
 
   // ---------- Del código a los bloques ----------
-  var NAMES = ['mover_derecha', 'mover_izquierda', 'mover_arriba', 'mover_abajo', 'rugir', 'hay_raptor_enfrente', 'en_el_nido', 'hay_camino', 'range', 'for', 'while', 'if', 'else'];
-  var TYPE_NAME = { right: 'mover_derecha()', left: 'mover_izquierda()', up: 'mover_arriba()', down: 'mover_abajo()', attack: 'rugir()', repeat: 'for', ifEnemy: 'if hay_raptor_enfrente()', untilGoal: 'while not en_el_nido()', ifPath: 'if hay_camino()' };
+  var NAMES = ['mover_derecha', 'mover_izquierda', 'mover_arriba', 'mover_abajo', T.code.attack, T.code.ifEnemy, T.code.untilGoal, 'hay_camino', 'range', 'for', 'while', 'if', 'else'];
+  var TYPE_NAME = { right: 'mover_derecha()', left: 'mover_izquierda()', up: 'mover_arriba()', down: 'mover_abajo()', attack: T.code.attack + '()', repeat: 'for', ifEnemy: 'if ' + T.code.ifEnemy + '()', untilGoal: 'while not ' + T.code.untilGoal + '()', ifPath: 'if hay_camino()' };
+  function alt(a, b) { return '(?:' + a + '|' + b + ')'; }
+  var RE_ATTACK = new RegExp('^' + alt(T.code.attack, 'atacar') + '\\s*\\(\\s*\\)$');
+  var RE_IFE = new RegExp('^if\\s+(heroe\\.|dino\\.)?' + alt(T.code.ifEnemy, 'hay_enemigo_enfrente') + '\\s*\\(\\s*\\)\\s*:$');
+  var RE_UNTIL = new RegExp('^while\\s+not\\s+(heroe\\.|dino\\.)?' + alt(T.code.untilGoal, 'en_la_meta') + '\\s*\\(\\s*\\)\\s*:$');
   function lev(a, b) {
     var m = [], i, j;
     for (i = 0; i <= a.length; i++) { m[i] = [i]; }
@@ -224,16 +236,16 @@
       var m, node = null, header = false;
       var s = t.replace(/^(heroe|dino|rexi)\./i, '');
       if ((m = s.match(/^mover_(derecha|izquierda|arriba|abajo)\s*\(\s*\)$/))) node = { t: { derecha: 'right', izquierda: 'left', arriba: 'up', abajo: 'down' }[m[1]] };
-      else if (/^(rugir|atacar)\s*\(\s*\)$/.test(s)) node = { t: 'attack' };
+      else if (RE_ATTACK.test(s)) node = { t: 'attack' };
       else if ((m = s.match(/^for\s+\w+\s+in\s+range\s*\(\s*(\d+)\s*\)\s*:$/)) || (m = s.match(/^repetir\s*\(?\s*(\d+)\s*\)?\s*(?:veces)?\s*:$/))) {
         var n = +m[1];
         if (n < 1 || n > 20) throw new ParseError(ln, 'Usa un número de veces entre 1 y 20.');
         node = { t: 'repeat', n: n, body: [] }; header = true;
-      } else if (/^if\s+(heroe\.|dino\.)?(hay_raptor_enfrente|hay_enemigo_enfrente)\s*\(\s*\)\s*:$/.test(s)) { node = { t: 'ifEnemy', body: [] }; header = true; }
-      else if (/^while\s+not\s+(heroe\.|dino\.)?(en_el_nido|en_la_meta)\s*\(\s*\)\s*:$/.test(s)) { node = { t: 'untilGoal', body: [] }; header = true; }
+      } else if (RE_IFE.test(s)) { node = { t: 'ifEnemy', body: [] }; header = true; }
+      else if (RE_UNTIL.test(s)) { node = { t: 'untilGoal', body: [] }; header = true; }
       else if ((m = s.match(/^if\s+(?:heroe\.|dino\.)?hay_camino\s*\(\s*['"](derecha|izquierda|arriba|abajo)['"]\s*\)\s*:$/))) { node = { t: 'ifPath', dir: { derecha: 'right', izquierda: 'left', arriba: 'up', abajo: 'down' }[m[1]], body: [] }; header = true; }
       else if (/^(for|if|while|repetir)\b/.test(s) && !/:$/.test(s)) throw new ParseError(ln, 'Falta ":" al final de la línea. En Python, for, if y while terminan con dos puntos.');
-      else if (/^mover_(derecha|izquierda|arriba|abajo)$/.test(s) || /^rugir$/.test(s)) throw new ParseError(ln, 'Faltan los paréntesis: escribe ' + s + '()');
+      else if (/^mover_(derecha|izquierda|arriba|abajo)$/.test(s) || s === T.code.attack) throw new ParseError(ln, 'Faltan los paréntesis: escribe ' + s + '()');
       else if (/^for\s/.test(s)) throw new ParseError(ln, 'El for se escribe así: for i in range(3):');
       else {
         var word = (s.match(/^[A-Za-zÁÉÍÓÚáéíóúñÑ_]+/) || [s])[0].toLowerCase();
@@ -263,7 +275,7 @@
     } catch (e) {
       if (!(e instanceof ParseError)) throw e;
       errEl.innerHTML = '<strong>Línea ' + e.line + ':</strong> ' + esc(e.msg);
-      errEl.hidden = false; markLine(e.line, 'is-error');
+      errEl.hidden = false; markLine(e.line, 'is-error is-blink');
       say('¡Ups! En la línea ' + e.line + ' hay algo raro. ' + e.msg, 'worry');
       sfx('bad'); poke();
       return false;
@@ -275,13 +287,14 @@
   function poke() {
     clearTimeout(idle); clearTimeout(idle2);
     if (wonHere) return;
-    idle = setTimeout(function () { if (!API.isRunning()) { helpStep = Math.max(helpStep, 1); say('¿Te ayudo? Pista: ' + API.tr(API.level().L.hint), 'think'); } }, 30000);
+    idle = setTimeout(function () { if (!API.isRunning()) { var L0 = API.level().L; helpStep = Math.max(helpStep, 1); if (!isCode() && L0.hintBlocks) API.flashPalette(L0.hintBlocks); say('¿Te ayudo? Pista: ' + API.tr(L0.hint), 'think'); } }, 30000);
     idle2 = setTimeout(function () { if (!API.isRunning()) { helpStep = Math.max(helpStep, 2); say('Mira, así se puede: ' + API.tr(API.level().L.hint2), 'think'); } }, 60000);
   }
   document.getElementById('dt-help').addEventListener('click', function () {
     var L = API.level().L;
     helpStep++;
-    if (helpStep === 1) say('¡Claro! ' + API.tr(L.hint), 'think');
+    if (!isCode() && L.hintBlocks) API.flashPalette(L.hintBlocks);
+    if (helpStep === 1) say('¡Claro! ' + API.tr(L.hint) + (L.hintBlocks && !isCode() ? ' Mira los bloques que parpadean.' : ''), 'think');
     else if (helpStep === 2) say('Te doy una pista más grande: ' + API.tr(L.hint2), 'think');
     else say('Hazlo paso a paso: ' + API.tr(L.hint2) + ' Si sigues atorado, levanta la mano y tu maestro te ayuda.', 'think');
     poke();
@@ -310,7 +323,7 @@
       lastCount = d.count; poke();
     } else if (d.type === 'run') {
       markLine(0);
-      say(rnd(['¡Vamos, Rexi! A ver si funciona…', '¡Ejecutando! Mira con atención el mapa.', '¡Allá va Rexi! 🦖']), 'happy');
+      say(rnd(['¡Vamos, ' + T.heroe + '! A ver si funciona…', '¡Ejecutando! Mira con atención el mapa.', '¡Allá va ' + T.heroe + '! ' + T.emoji]), 'happy');
       clearTimeout(idle); clearTimeout(idle2);
     } else if (d.type === 'step') {
       if (isCode() && idLine[d.id]) markLine(idLine[d.id], 'is-run');
@@ -319,12 +332,15 @@
     } else if (d.type === 'fail') {
       fails++;
       markLine(0);
+      var where = d.id ? (isCode() ? (idLine[d.id] ? ' Revisa la línea ' + idLine[d.id] + ', la que parpadea.' : '') : ' Mira el bloque que parpadea.') : '';
       var why = {
-        choque: rnd(['¡Ouch! Rexi chocó con una roca. Cuenta otra vez los cuadritos.', '¡Pum! Ahí hay un obstáculo. Revisa hacia dónde se mueve Rexi.']),
-        enemigo: '¡Un raptor está en el camino! Usa ' + (isCode() ? 'rugir()' : '"rugir"') + ' cuando lo tengas enfrente.',
-        gemas: '¡Llegaste al nido, pero olvidaste ' + (d.left === 1 ? 'un huevo' : d.left + ' huevos') + '! Pasa por encima de todos.',
-        corto: 'Rexi se quedó a medio camino. ¡Te faltan instrucciones!'
+        choque: rnd(['¡Ouch! ' + T.heroe + ' chocó con ' + T.obstaculo + '. Cuenta otra vez los cuadritos.', '¡Pum! Ahí hay un obstáculo. Revisa hacia dónde se mueve ' + T.heroe + '.']) + where,
+        enemigo: '¡Un ' + T.enemigo + ' está en el camino! Usa ' + (isCode() ? T.code.attack + '()' : '"' + T.accion + '"') + ' cuando lo tengas enfrente.' + where,
+        gemas: '¡Llegaste al ' + T.meta + ', pero te faltó ' + (d.left === 1 ? 'un ' + T.item : d.left + ' ' + T.items) + '! Pasa por encima de todos.',
+        corto: T.heroe + ' se quedó a medio camino. ¡Te faltan instrucciones después ' + (isCode() ? 'de la última línea' : 'del bloque que parpadea') + '!'
       }[d.kind] || 'Casi lo logras. Revisa tu programa.';
+      if (d.kind === 'enemigo' && !isCode()) API.flashPalette(['attack']);
+      if (isCode() && d.id && idLine[d.id]) markLine(idLine[d.id], 'is-error is-blink');
       if (fails >= 2) { why += ' Pista: ' + API.tr(L.hint); helpStep = Math.max(helpStep, 1); }
       if (fails >= 4) { why = 'No te rindas, ¡los programadores se equivocan mucho! ' + API.tr(L.hint2); helpStep = 2; }
       say(why, 'worry');
@@ -332,12 +348,12 @@
     } else if (d.type === 'win') {
       wonHere = true; clearTimeout(idle); clearTimeout(idle2);
       if (isCode()) markLine(0);
-      var cheer = d.stars === 3 ? rnd(['¡RAAAR de alegría! ¡Lo hiciste perfecto!', '¡Increíble, guardián! ¡Tres estrellas!', '¡Eres un genio del Jurásico!']) :
+      var cheer = d.stars === 3 ? rnd(T.vivas) :
         '¡Lo lograste! Reto extra: ¿puedes hacerlo con ' + d.best + (isCode() ? ' líneas' : ' bloques') + '?';
-      if (d.last) cheer = '¡Completaste la clase "Vivir con dinosaurios"! Rexi y todos los dinosaurios del valle te dan las gracias, guardián. 🦖🥚';
+      if (d.last) cheer = T.final;
       else if (d.level === 4) cheer += ' Ahora viene lo mejor: ¡vas a escribir código de verdad!';
       say(cheer, 'party');
-      sfx('roar');
+      sfx(T.sonido);
     }
   });
 

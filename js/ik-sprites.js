@@ -105,6 +105,53 @@
         '.....gggggggrrr.', '..G..ggggggggg..', '.GG.gggggggggg..', 'GGggggggoggg....', '.G.ggyyyyogg.g..', '...ggyyyyyggg...',
         '...ggyyyyygg....', '....ggggggg.....', '....gg...gg.....', '...GGG..GGG.....']
     },
+    // ---------- Criaturas del Valle (originales, inspiradas en fauna de México) ----------
+    ajolin: { // ajolote rosa con branquias
+      pal: { p: '#F48FB1', P: '#D81B60', r: '#C2185B', k: '#1B1B1B', w: '#FFFFFF', y: '#FCE4EC' },
+      rows: ['r..........r', 'rr.pppppp.rr', '.rpppppppppr', 'rrpkwppkwprr', '..pkkppkkp..', '..pppyyppp..',
+        '...pppppp...', '..pppppppp..', '.ppPppppPpp.', '..pppppppp.P', '...pp..pp.PP', '...PP..PP...']
+    },
+    xolin: { // perrito xoloitzcuintle con copete
+      pal: { g: '#616161', G: '#424242', k: '#1B1B1B', w: '#FFFFFF', p: '#F48FB1', y: '#FFCA28' },
+      rows: ['.G...yy...G.', '.GG.yyyy.GG.', '.GGggggggGG.', '..gggggggg..', '..gwkggwkg..', '..gggpggggg.',
+        '...gggggg...', '..gggggggg..', '.gggggggggg.', '..gggggggg.G', '..gg....gg..', '..GG....GG..']
+    },
+    chispa: { // colibrí con cola de chispas
+      pal: { g: '#26A69A', G: '#00796B', o: '#FF7043', y: '#FFEB3B', k: '#1B1B1B', w: '#FFFFFF', b: '#4E342E' },
+      rows: ['............', '....gggg....', '...gggwkg...', '...ggggggbbb', '..ggggggg...', '.gGgggggg...',
+        'GGGgggggg...', '.GGggggg....', '..ggggg.....', '.yo.gg......', 'yoyo........', '.oyo........']
+    },
+    nopalin: { // nopal con flor
+      pal: { g: '#7CB342', G: '#558B2F', k: '#1B1B1B', w: '#FFFFFF', r: '#EC407A', y: '#FFEB3B', s: '#C5E1A5' },
+      rows: ['....rrr.....', '....ryr.....', '...gggggg...', '..ggsggsgg..', '..gkwggkwg..', '..gggggggg..',
+        'gg.ggsggsg.g', 'gg.gggrrgg.g', '.gggggggggg.', '..gsggggsg..', '..gggggggg..', '...GG..GG...']
+    },
+    monarca: { // mariposa monarca
+      pal: { o: '#FB8C00', O: '#E65100', k: '#212121', w: '#FFFFFF', b: '#3E2723' },
+      rows: ['k..........k', '.k........k.', 'kkk..bb..kkk', 'kook.bb.kook', 'koook..koook', 'kowok..kowok',
+        'koook..koook', '.kook..kook.', '.kOok..koOk.', '..kkk..kkk..', '....b..b....', '............']
+    },
+    nubarron: { // nube de tormenta gruñona
+      pal: { g: '#90A4AE', G: '#607D8B', k: '#263238', w: '#FFFFFF', y: '#FFEB3B' },
+      rows: ['....gggg....', '..gggggggg..', '.gggggggggg.', 'gggkkggkkggg', 'ggkwkggkwkgg', 'gggggggggggg',
+        'ggggkkkkgggg', '.GGGGGGGGGG.', '...y...y....', '..y...y.....', '...y...y....', '............']
+    },
+    campamento: { // tienda de campaña con bandera
+      pal: { r: '#E53935', R: '#B71C1C', y: '#FFD54F', b: '#6D4C41', k: '#3E2723', g: '#43A047' },
+      rows: ['......by....', '......byy...', '......b.....', '.....rRr....', '....rrRrr...', '...rrrRrrr..',
+        '..rrrrkrrrr.', '.rrrrkkkrrrr', 'rrrrkkkkkrrr', 'RRRRkkkkkRRR', 'gggggggggggg']
+    },
+    explorador: {
+      pal: { c: '#1E88E5', C: '#0D47A1', s: '#F2C29B', k: '#1B1B1B', b: '#6D4C41', o: '#FB8C00', g: '#7CB342', n: '#37474F' },
+      rows: ['............', '...cccccc...', '..cccccccCC.', '..bssssssb..', '..bskssksb..', '...ssssss...',
+        '...ssssss...', '..oooooooo..', '.soooooooos.', '..oonnnnoo..', '...nn..nn...', '...kk..kk...']
+    },
+    lumi: { // luciérnaga guía (tutora)
+      pal: { y: '#FFF176', Y: '#FDD835', g: '#AED581', G: '#689F38', k: '#1B1B1B', w: '#FFFFFF', b: '#81D4FA', p: '#F48FB1' },
+      rows: ['...k......k.....', '....k....k......', '.....kkkk.......', '....gggggg......', '...ggkwggkwg....', '...ggkkggkkg....',
+        '...gggppgggg....', 'bb..gggggg..bb..', 'bbb.GGGGGG.bbb..', '.bbbGyyyyGbbb...', '..b.yyYYyy.b....', '....yYYYYy......',
+        '....yyYYyy......', '.....yyyy.......', '......yy........', '................']
+    },
     // ---------- Objetos ----------
     hueso: {
       pal: { w: '#FFFFFF', g: '#CFD8DC' },
