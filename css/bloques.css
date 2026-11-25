@@ -570,3 +570,31 @@ button.hw-card:hover:not(:disabled) { transform: translateY(-3px); border-color:
   .overlay-msg { font-size: 15px; }
   .overlay-actions .btn { min-height: 46px; font-size: 15px; padding: 0 16px; }
 }
+
+/* Botones de ejecutar junto al mapa y barra fija (tableta y celular) */
+.gm-mapbar { display: none; gap: 10px; }
+.gm-dock { display: none; }
+.game-running .gm-run-extra.gm-btn-run { opacity: .55; pointer-events: none; }
+@media (max-width: 960px) {
+  .gm-mapbar { display: flex; margin-top: -4px; }
+  .gm-mapbar .gm-btn-run { flex: 1; }
+}
+@media (max-width: 640px) {
+  .gm-mapbar .gm-btn span { display: none; }
+  .gm-mapbar .gm-btn { width: 56px; padding: 0; }
+  .gm-dock { display: flex; gap: 10px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 61; padding: 10px 16px calc(12px + env(safe-area-inset-bottom)); background: rgba(29, 63, 81, .97); border-top: 1px solid rgba(255, 255, 255, .15); transform: translateY(110%); transition: transform .25s ease; }
+  .gm-dock .gm-btn-run { flex: 1; min-height: 52px; font-size: 18px; }
+  .gm-dock .gm-btn { width: 56px; min-height: 52px; padding: 0; }
+  .gm-dock .gm-btn span { display: none; }
+  .gm-in-view:not(.gm-mapbar-visible) .gm-dock { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .gm-dock { transition: none; } }
+.gm-mapbar { width: 100%; }
+@media (max-width: 640px) {
+  .gm-in-view .back-to-top { display: none; }
+  .gm-dock .gm-btn { background: rgba(255, 255, 255, .16); color: #fff; }
+}
+@media (min-width: 641px) and (max-width: 960px) {
+  .gm-stage .gm-mapbar { grid-column: 1; grid-row: 2; margin-top: 0; }
+  .gm-stage .gm-mission { grid-column: 2; grid-row: 1 / span 2; }
+}

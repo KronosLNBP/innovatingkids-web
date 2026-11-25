@@ -1674,6 +1674,33 @@
     $('speed-label').textContent = fast ? 'Rápido' : 'Normal';
   });
   resetBtn.addEventListener('click', stop);
+
+  // Ejecutar junto al mapa (tableta y celular) y barra fija abajo en celular,
+  // para ver al personaje moverse sin tener que buscar el botón.
+  (function () {
+    var play = runBtn.querySelector('svg') ? runBtn.querySelector('svg').outerHTML : '';
+    var again = resetBtn.querySelector('svg') ? resetBtn.querySelector('svg').outerHTML : '';
+    function bar(cls) {
+      var el = document.createElement('div');
+      el.className = cls;
+      el.innerHTML = '<button type="button" class="gm-btn-run gm-run-extra">' + play + '<span>Ejecutar</span></button>' +
+        '<button type="button" class="gm-btn gm-run-extra" aria-label="Reiniciar nivel">' + again + '<span>Reiniciar</span></button>';
+      el.children[0].addEventListener('click', run);
+      el.children[1].addEventListener('click', stop);
+      return el;
+    }
+    var mapBar = bar('gm-mapbar');
+    canvas.parentNode.insertAdjacentElement('afterend', mapBar);
+    var dock = bar('gm-dock');
+    dock.setAttribute('role', 'region');
+    dock.setAttribute('aria-label', 'Ejecutar programa');
+    document.body.appendChild(dock);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) {
+        document.body.classList.toggle('gm-mapbar-visible', en[0].isIntersecting);
+      }, { threshold: 0.6 }).observe(mapBar);
+    }
+  })();
   clearBtn.addEventListener('click', function () {
     if (running) return;
     program = []; selectedId = null; renderWorkspace(); say('Programa borrado.');
