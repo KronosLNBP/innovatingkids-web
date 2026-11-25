@@ -218,6 +218,10 @@
     defFn: { label: 'definir truco', icon: '★', cls: 'b-fn', container: true, code: 'def truco():' },
     callFn: { label: 'hacer truco', icon: '★', cls: 'b-fn', code: 'truco()' }
   };
+  var SHORT = { right: 'derecha', left: 'izquierda', up: 'arriba', down: 'abajo', attack: 'atacar', repeat: 'repetir',
+    ifEnemy: 'si enemigo', untilGoal: 'hasta la meta', ifPath: 'si hay camino', defFn: 'definir truco', callFn: 'hacer truco' };
+  var SHORT_WORLD = { navidad: { attack: 'bola de nieve', ifEnemy: 'si muñeco' }, parque: { attack: 'espantar' } };
+  function shortLabel(t) { var w = SHORT_WORLD[prefs.world]; return (w && w[t]) || SHORT[t] || t; }
   var PATH_DIRS = [['right', 'derecha', 'derecha'], ['left', 'izquierda', 'izquierda'], ['up', 'arriba', 'arriba'], ['down', 'abajo', 'abajo']];
 
   var MAX_BLOCKS = 40;
@@ -444,7 +448,7 @@
       b.type = 'button';
       b.className = 'pblk ' + def.cls + (def.container ? ' is-container' : '');
       b.dataset.type = type;
-      b.innerHTML = '<span class="blk-icon" aria-hidden="true">' + def.icon + '</span><span>' + tr(def.label) + (type === 'repeat' ? ' … veces' : '') + '</span>';
+      b.innerHTML = '<span class="blk-icon" aria-hidden="true">' + def.icon + '</span><span class="pblk-long">' + tr(def.label) + (type === 'repeat' ? ' … veces' : '') + '</span><span class="pblk-short" aria-hidden="true">' + shortLabel(type) + '</span>';
       b.setAttribute('aria-label', 'Agregar bloque ' + tr(def.label));
       b.addEventListener('pointerdown', function (e) { pointerDown(e, { type: type }, b); });
       b.addEventListener('click', function () {
@@ -973,6 +977,14 @@
   function highlight(id) {
     var el = workspace.querySelector('[data-id="' + id + '"]');
     if (el) el.classList.add('is-running');
+    // En celular, que el bloque que se ejecuta se vea debajo del mapa
+    if (el && window.innerWidth <= 640) {
+      var zoneEl = document.querySelector('.gm-mapzone');
+      var head = el.querySelector('.blk-head') || el, r = head.getBoundingClientRect();
+      var topLimit = zoneEl ? zoneEl.getBoundingClientRect().bottom + 8 : 80;
+      if (r.top < topLimit) window.scrollBy({ top: r.top - topLimit, behavior: 'smooth' });
+      else if (r.bottom > window.innerHeight - 8) window.scrollBy({ top: r.bottom - window.innerHeight + 8, behavior: 'smooth' });
+    }
   }
   function clearHighlight() {
     workspace.querySelectorAll('.is-running').forEach(function (el) { el.classList.remove('is-running'); });
@@ -1199,7 +1211,10 @@
   var tile = 40, dpr = 1;
   function resize() {
     var w = canvas.parentNode.clientWidth;
-    tile = Math.floor(w / game.cols);
+    var maxH = window.innerWidth <= 640 ? Math.max(170, Math.round(window.innerHeight * 0.3)) : Infinity;
+    tile = Math.floor(Math.min(w / game.cols, maxH / game.rows));
+    var hdr = document.querySelector('.site-header');
+    if (hdr) document.documentElement.style.setProperty('--gm-top', hdr.offsetHeight + 'px');
     dpr = window.devicePixelRatio || 1;
     canvas.style.width = (tile * game.cols) + 'px';
     canvas.style.height = (tile * game.rows) + 'px';
@@ -1690,7 +1705,20 @@
       return el;
     }
     var mapBar = bar('gm-mapbar');
-    canvas.parentNode.insertAdjacentElement('afterend', mapBar);
+    var wrapEl = canvas.parentNode, zone = document.createElement('div');
+    zone.className = 'gm-mapzone';
+    wrapEl.parentNode.insertBefore(zone, wrapEl);
+    zone.appendChild(wrapEl);
+    zone.appendChild(mapBar);
+    // En celular, la paleta de bloques sube junto al mapa: mapa, bloques y Ejecutar siempre a la vista
+    var palBox = paletteEl.closest('.palette'), palHome = palBox && palBox.parentNode, mq = window.matchMedia('(max-width: 640px)');
+    function placePalette() {
+      if (!palBox) return;
+      if (mq.matches) { if (palBox.parentNode !== zone) zone.insertBefore(palBox, mapBar); }
+      else if (palBox.parentNode !== palHome) palHome.insertBefore(palBox, palHome.firstChild);
+    }
+    placePalette();
+    if (mq.addEventListener) mq.addEventListener('change', placePalette); else if (mq.addListener) mq.addListener(placePalette);
     var dock = bar('gm-dock');
     dock.setAttribute('role', 'region');
     dock.setAttribute('aria-label', 'Ejecutar programa');
