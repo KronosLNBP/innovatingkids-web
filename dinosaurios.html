@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vivir con dinosaurios: clase de programación | Innovating Kids</title>
+  <meta name="robots" content="noindex, nofollow">
   <meta name="description" content="Clase de 45 minutos para aprender a programar con bloques y con código Python ayudando a Rexi, un dinosaurio bebé. Con Profe Rex, un tutor virtual que te ayuda mientras juegas.">
   <link rel="canonical" href="https://www.innovatingkids.com.mx/dinosaurios.html">
   <meta name="theme-color" content="#254E64">
@@ -17,12 +18,13 @@
   <meta property="og:image" content="https://www.innovatingkids.com.mx/img/student/1.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
+  <script>document.documentElement.classList.add('gate-locked');</script>
   <link rel="icon" href="img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20261124c">
-  <link rel="stylesheet" href="css/bloques.css?v=20261125d">
+  <link rel="stylesheet" href="css/styles.css?v=20261125a">
+  <link rel="stylesheet" href="css/bloques.css?v=20261125e">
 </head>
 <body data-juego="dinosaurios" class="is-dinos">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -65,6 +67,38 @@
         <p class="hero-lead">Eres el guardián del Valle Jurásico. En esta clase de 45 minutos cumplirás 9 misiones para cuidar a Rexi, un dinosaurio bebé: primero con bloques y después escribiendo código de verdad. Profe Rex, tu tutor virtual, te acompaña y te ayuda en todo momento.</p>
         <div class="hero-ctas">
           <a class="btn btn-yellow" href="#juego">¡A jugar!</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gate" id="gate" aria-live="polite">
+      <div class="container">
+        <div class="portal-card gate-card">
+          <div class="gate-state" data-gate="revisando">
+            <div class="portal-spinner" aria-hidden="true"></div>
+            <p>Revisando tu sesión…</p>
+          </div>
+          <div class="gate-state" data-gate="login" hidden>
+            <h2 class="display">Esta clase es para alumnos de Innovating Kids</h2>
+            <p>Entra al portal de alumnos con tu usuario y contraseña. Al entrar, te traemos de regreso a la clase.</p>
+            <div class="hero-ctas">
+              <a class="btn btn-yellow" href="alumnos.html?volver=dinosaurios.html">Entrar al portal</a>
+              <a class="btn btn-outline" href="clase-muestra.html">¿Aún no eres alumno? Clase muestra gratis</a>
+            </div>
+          </div>
+          <div class="gate-state" data-gate="sinacceso" hidden>
+            <h2 class="display">Tu cuenta todavía no tiene acceso</h2>
+            <p>Tu cuenta no está activa como alumno. Pide ayuda a tu maestro.</p>
+            <div class="hero-ctas">
+              <a class="btn btn-yellow" href="alumnos.html">Ir al portal</a>
+              <a class="btn btn-outline js-wa" href="#" data-msg="Hola, mi cuenta del portal de Innovating Kids no tiene acceso a la clase Vivir con dinosaurios.">Escribir por WhatsApp</a>
+            </div>
+          </div>
+          <div class="gate-state" data-gate="error" hidden>
+            <h2 class="display">No pudimos revisar tu sesión</h2>
+            <p>Revisa tu conexión a internet y vuelve a cargar la página.</p>
+            <div class="hero-ctas"><a class="btn btn-yellow" href="dinosaurios.html">Volver a cargar</a></div>
+          </div>
         </div>
       </div>
     </section>
@@ -227,7 +261,6 @@
           <a href="cursos.html">Detalle de cursos</a>
           <a href="programacion-con-bloques.html">Programación con bloques</a>
           <a href="navidad.html">Aventura de Navidad</a>
-          <a href="dinosaurios.html">Vivir con dinosaurios</a>
           <a href="juego-hardware.html">Computación básica (juego)</a>
           <a href="juego-cubos.html">Mundo de Cubos (3D)</a>
           <a href="tutorial-astro-salto.html">Crea tu videojuego (JavaScript)</a>
@@ -264,6 +297,8 @@
   <script src="js/dino-niveles.js?v=20261125a"></script>
   <script src="js/bloques.js?v=20261125d"></script>
   <script src="js/dino-tutor.js?v=20261125b"></script>
+  <script type="module" src="js/solo-alumnos.js?v=20261125a"></script>
+  <script>setTimeout(function () { if (window.IK_GATE_OK) return; document.querySelectorAll('[data-gate]').forEach(function (e) { e.hidden = e.getAttribute('data-gate') !== 'error'; }); }, 12000);</script>
   <script type="module" src="js/progreso.js?v=20261124a"></script>
 </body>
 </html>

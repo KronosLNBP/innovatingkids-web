@@ -714,3 +714,16 @@ button.hw-card:hover:not(:disabled) { transform: translateY(-3px); border-color:
   .dt-code .ws-clear { min-height: 36px; padding: 0 10px; font-size: 13px; }
   .dt-chips { gap: 5px; }
 }
+
+/* Páginas solo para alumnos (dinosaurios.html) */
+.gate { display: none; padding: 40px 0 64px; }
+.gate-locked .gate { display: block; }
+.gate-locked #juego, .gate-locked #siguiente { display: none; }
+.gate-card { max-width: 640px; margin: 0 auto; text-align: center; }
+.gate-state { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.gate-state[hidden] { display: none; }
+.gate-state .display { font-size: clamp(24px, 4vw, 32px); margin: 0; color: var(--navy); }
+.gate-state p { margin: 0; color: var(--muted); font-size: 17px; }
+.gate-state .hero-ctas { justify-content: center; }
+.gate-locked .game-hero .hero-ctas { display: none; }
+@media (max-width: 640px) { .gate-locked .game-hero .page-hero-inner { padding-top: 28px; padding-bottom: 28px; } .gate { padding: 24px 0 40px; } }

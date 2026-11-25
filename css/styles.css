@@ -739,3 +739,4 @@ button, input, select, textarea { font: inherit; }
   .btn-login-m span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 @media (max-width: 360px) { .site-header .brand-name { font-size: 15px; } .site-header .brand img { width: 40px; height: 40px; } }
+.portal-volver { margin: 0; padding: 10px 14px; border-radius: 12px; background: #FFF8E1; color: #5D4037; font-weight: 700; }

@@ -18,6 +18,8 @@ const NIVELES = [
 ];
 
 window.IK_PORTAL_OK = true;
+// Si el alumno llegó desde una clase solo para alumnos (?volver=dinosaurios.html), regresa ahí al entrar
+const volver = (() => { const v = new URLSearchParams(location.search).get('volver') || ''; return /^[a-z0-9-]+\.html$/.test(v) ? v : ''; })();
 const $ = (id) => document.getElementById(id);
 const vistas = ['v-cargando', 'v-inactivo', 'v-login', 'v-sin-acceso', 'v-portal'];
 function mostrar(id) {
@@ -30,6 +32,12 @@ function waLink(msg) {
   return 'https://wa.me/' + n + '?text=' + encodeURIComponent(msg);
 }
 
+if (volver && $('login-t')) {
+  const aviso = document.createElement('p');
+  aviso.className = 'portal-volver';
+  aviso.textContent = 'Entra con tu usuario para abrir tu clase. Al entrar te llevamos directo a ella.';
+  $('login-t').insertAdjacentElement('afterend', aviso);
+}
 if (!listo) {
   mostrar('v-inactivo');
 } else {
@@ -39,6 +47,7 @@ if (!listo) {
     try {
       const alumno = await leer('alumnos/' + user.uid);
       if (!alumno || alumno.activo === false) { await sinAcceso(user, alumno); return; }
+      if (volver) { location.replace(volver); return; }
       await pintarPortal(user.uid, alumno);
       mostrar('v-portal');
     } catch (e) {
@@ -53,6 +62,7 @@ async function sinAcceso(user, alumno, error) {
   $('sa-admin').hidden = true; $('sa-wa').hidden = false; $('sa-detalle').hidden = true;
   let admin = null;
   try { admin = await leer('admins/' + user.uid); } catch (e) { /* sin permiso */ }
+  if (admin && volver) { location.replace(volver); return; }
   if (admin) {
     $('sa-titulo').textContent = 'Esta es tu cuenta de maestro';
     $('sa-msg').textContent = 'Los alumnos entran aquí. Para dar de alta alumnos, asignar cursos y ver su avance, entra al panel del maestro.';
